@@ -1,5 +1,5 @@
 # my gaming web
-welcome to my python-based gaming website!
+welcome to my html-based gaming website!
 ## about this project
 this is a online gaming platform where you can laern and play meaning full and logical games
 this website is made by using python
