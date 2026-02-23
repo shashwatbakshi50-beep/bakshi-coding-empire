@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>index.html</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html>
+<head>
+<title>Bakshi Coding Empire - Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://www.paypal.com/sdk/js?client-id=https://www.paypal.com/ncp/payment/PBPB3YZLWTASC"></script>
+upi://pay?pa=8307077846@ybl@patym&pn=bakshicodingempire=inr
+<style>
+body{
+  margin:0;
+  font-family:Segoe UI, sans-serif;
+  background:#0f0f0f;
+  color:white;
+  text-align:center;
+  overflow-x:hidden;
+}
+.hero{
+  padding:120px 20px;
+  background:linear-gradient(135deg,#111,#000);
+  animation:fadeIn 2s ease-in-out;
+}
+h1{
+  color:gold;
+  font-size:50px;
+  margin:0;
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(-30px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.btn{
+  background:gold;
+  color:black;
+  padding:12px 25px;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.3s;
+}
+.btn:hover{transform:scale(1.05);}
+.section{padding:60px 20px;}
+.card{
+  background:#1a1a1a;
+  padding:20px;
+  margin:20px auto;
+  border-radius:15px;
+  max-width:300px;
+  transition:0.3s;
+  box-shadow:0 0 15px rgba(255,215,0,0.2);
+}
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 0 25px rgba(255,215,0,0.4);
+}
+img{width:100%;border-radius:10px;}
+select,input{padding:10px;margin:10px;border-radius:10px;border:none;}
+#preview img{margin-top:10px;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Bakshi Coding Empire</h1>
+  <p>Gaming With Purpose ❤️</p>
+</div>
+
+<!-- GAME SECTION -->
+<div class="section">
+  <h2>🎮 Game Store</h2>
+  <div id="games"></div>
+</div>
+
+<!-- DONATION SECTION -->
+<div class="section" style="background:#111;">
+  <h2>🐶 Support Street Dogs</h2>
+  <h3>Select Purpose</h3>
+  <select id="purpose">
+    <option value="Dog Food">Dog Food</option>
+    <option value="Shelter">Shelter</option>
+    <option value="Medical Help">Medical Help</option>
+    <option value="General Support">General Support</option>
+  </select>
+
+  <h3>Select Amount</h3>
+  <select id="amount">
+    <option value="10">₹10</option>
+    <option value="20">₹20</option>
+    <option value="50">₹50</option>
+    <option value="custom">Custom</option>
+  </select>
+  <br>
+  <input type="number" id="customAmount" placeholder="Enter custom amount" style="display:none">
+  <br><br>
+  <button class="btn" onclick="donate()">Donate Now</button>
+</div>
+
+<!-- DOG PHOTO PREVIEW -->
+<div class="section">
+  <h2>📸 Dog Feeding Proof</h2>
+  <input type="file" id="dogPhoto">
+  <br><br>
+  <button class="btn" onclick="previewPhoto()">Preview</button>
+  <div id="preview"></div>
+</div>
+
+<script>
+// Show custom amount input
+document.getElementById("amount").addEventListener("change", function(){
+  if(this.value==="custom"){
+    document.getElementById("customAmount").style.display="inline-block";
+  } else {
+    document.getElementById("customAmount").style.display="none";
+  }
+});
+
+// Load games from backend
+async function loadGames(){
+  try{
+    const res = await fetch("YOUR_BACKEND_URL/games");
+    const games = await res.json();
+    let html = "";
+    games.forEach(g=>{
+      html += `<div class="card">
+        <img src="${g.image}">
+        <h3>${g.title}</h3>
+        <p>₹${g.price}</p>
+        <button class="btn" onclick="pay(${g.price},'Game Purchase')">Buy</button>
+      </div>`;
+    });
+    document.getElementById("games").innerHTML = html;
+  } catch {
+    document.getElementById("games").innerHTML = "<p>Games loading soon...</p>";
+  }
+}
+loadGames();
+
+// Razorpay payment
+async function pay(amount,purpose){
+  const order = await fetch("YOUR_BACKEND_URL/create-order",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({amount,purpose})
+  }).then(r=>r.json());
+
+  var options = {
+    key:"YOUR_RAZORPAY_KEY",
+    amount: order.amount,
+    currency: "INR",
+    order_id: order.id,
+    handler: function(){ 
+      alert("Payment Successful ❤️ Thank you for giving food & shelter!"); 
+    }
+  };
+  new Razorpay(options).open();
+}
+
+// Donate function
+function donate(){
+  let amount = document.getElementById("amount").value;
+  const purpose = document.getElementById("purpose").value;
+  if(amount==="custom"){
+    amount = document.getElementById("customAmount").value;
+    if(!amount){ alert("Enter amount"); return; }
+  }
+  pay(amount,purpose);
+}
+
+// Dog photo preview
+function previewPhoto(){
+  const file = document.getElementById("dogPhoto").files[0];
+  if(!file) return alert("Select image");
+  const reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById("preview").innerHTML = `<img src="${e.target.result}" width="250" style="border-radius:15px;">`;
+  }
+  reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>
+    
+  </body>
+  
+</html>
