@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>admindashboaard.html</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html>
+<body>
+<h2>Admin Dashboard</h2>
+
+<h3>Add Game</h3>
+<form id="gameForm">
+<input name="title" placeholder="Title">
+<input name="price" placeholder="Price">
+<input type="file" name="image">
+<button>Add</button>
+</form>
+
+<h3>Donation Analytics</h3>
+<div id="analytics"></div>
+
+<script>
+const token=localStorage.getItem("token");
+
+document.getElementById("gameForm").onsubmit=async e=>{
+e.preventDefault();
+const formData=new FormData(e.target);
+await fetch("YOUR_BACKEND_URL/admin/add-game",{
+method:"POST",
+headers:{authorization:token},
+body:formData
+});
+alert("Game Added");
+};
+
+async function loadAnalytics(){
+const res=await fetch("YOUR_BACKEND_URL/admin/analytics",{
+headers:{authorization:token}
+});
+const data=await res.json();
+analytics.innerHTML=`Total Donations: ₹${data.total} | Count: ${data.count}`;
+}
+loadAnalytics();
+</script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
