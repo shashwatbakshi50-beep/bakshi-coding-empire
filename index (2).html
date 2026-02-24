@@ -1,143 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Harnaksh Royal Empire</title>
     <style>
-        /* Royal Gold & Black Theme */
-        body { 
-            background: radial-gradient(circle, #1a1a1a 0%, #000 100%); 
-            color: #f0b90b; 
-            font-family: 'Segoe UI', sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            margin: 0; 
-        }
-        .royal-card { 
-            background: #111; 
-            border: 2px solid #f0b90b; 
-            padding: 30px; 
-            border-radius: 20px; 
-            box-shadow: 0 0 40px rgba(240, 185, 11, 0.3); 
-            width: 400px; 
-            text-align: center; 
-        }
-        h1 { margin-bottom: 20px; text-transform: uppercase; letter-spacing: 3px; }
-        input { 
-            width: 90%; 
-            padding: 12px; 
-            margin: 10px 0; 
-            background: #222; 
-            border: 1px solid #444; 
-            color: white; 
-            border-radius: 8px; 
-            outline: none; 
-        }
-        input:focus { border-color: #f0b90b; }
-        button { 
-            width: 95%; 
-            padding: 14px; 
-            background: #f0b90b; 
-            color: black; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            font-size: 16px; 
-            cursor: pointer; 
-            margin-top: 15px; 
-            transition: 0.3s;
-        }
-        button:hover { background: #d9a608; transform: scale(1.02); }
-        #dashboard { display: none; width: 500px; }
-        .game-item { 
-            background: #222; 
-            padding: 15px; 
-            margin: 10px 0; 
-            border-radius: 10px; 
-            display: flex; 
-            justify-content: space-between; 
-            border-left: 5px solid #f0b90b; 
-        }
-        .logout { background: #ff4d4d; color: white; margin-top: 25px; }
+        body { background: #000; color: gold; font-family: 'Segoe UI', sans-serif; text-align: center; padding-top: 50px; }
+        .box { border: 3px solid gold; padding: 30px; display: inline-block; border-radius: 15px; background: #111; box-shadow: 0 0 20px gold; width: 350px; }
+        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: #fff; }
+        button { background: gold; color: #000; padding: 12px; border: none; font-weight: bold; cursor: pointer; width: 93%; border-radius: 5px; margin-top: 10px; }
+        #empire-dashboard { display: none; width: 500px; }
+        .item { background: #222; padding: 10px; margin: 10px 0; border-radius: 5px; display: flex; justify-content: space-between; border-left: 5px solid gold; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" class="royal-card">
-        <h1>👑 LOGIN</h1>
-        <p style="color: #888;">Enter Secret Credentials</p>
-        <input type="text" id="user" placeholder="Admin Name">
-        <input type="password" id="pass" placeholder="Secret Password">
-        <button onclick="checkAccess()">UNLOCK EMPIRE</button>
+    <div id="login-box" class="box">
+        <h1>👑 EMPIRE LOGIN</h1>
+        <p style="color: #888;">Enter Secret Keys</p>
+        <input type="text" id="u" placeholder="Admin Name">
+        <input type="password" id="p" placeholder="Password">
+        <button onclick="openEmpire()">UNLOCK SYSTEM</button>
+        <p style="font-size: 12px; color: #555; margin-top: 15px;">User: admin | Pass: admin123</p>
     </div>
 
-    <div id="dashboard" class="royal-card">
-        <h1>MASTER CONTROL</h1>
-        <p>Welcome, <b>Harnaksh Bhai</b></p>
-        <hr style="border: 0.5px solid #333;">
-        
-        <div style="margin: 20px 0;">
-            <input type="text" id="gName" placeholder="Game Name">
-            <input type="number" id="gPrice" placeholder="Game Price (₹)">
-            <button onclick="saveGame()">+ DEPLOY GAME</button>
-        </div>
-
-        <div id="game-list" style="text-align: left; max-height: 300px; overflow-y: auto;">
-            </div>
-
-        <button class="logout" onclick="location.reload()">🔒 LOCK SYSTEM</button>
+    <div id="empire-dashboard" class="box">
+        <h1>ROYAL DASHBOARD</h1>
+        <p>Owner: <b>Harnaksh Bhai</b></p>
+        <hr border="1" color="#333">
+        <input type="text" id="gn" placeholder="Game Name">
+        <input type="number" id="gp" placeholder="Price (₹)">
+        <button onclick="addGame()">+ DEPLOY GAME</button>
+        <div id="game-list" style="text-align: left; margin-top: 20px;"></div>
+        <button onclick="location.reload()" style="background:red; color:white; margin-top:20px;">LOCK EMPIRE</button>
     </div>
 
     <script>
-        // 🔐 SECRET KEYS
-        const SECRET_U = "admin";
-        const SECRET_P = "admin123";
-
-        function checkAccess() {
-            let u = document.getElementById('user').value;
-            let p = document.getElementById('pass').value;
-
-            if(u === SECRET_U && p === SECRET_P) {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                showGames();
+        function openEmpire() {
+            let user = document.getElementById('u').value;
+            let pass = document.getElementById('p').value;
+            // 100% Working Login
+            if(user === "admin" && pass === "admin123") {
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('empire-dashboard').style.display = 'block';
+                load();
             } else {
-                alert("⛔ ACCESS DENIED! Sahi password dalo bhai.");
+                alert("Oye Harnaksh bhai! Sahi password dalo.");
             }
         }
-
-        function saveGame() {
-            let name = document.getElementById('gName').value;
-            let price = document.getElementById('gPrice').value;
-
-            if(name && price) {
-                let db = JSON.parse(localStorage.getItem('royal_db') || '[]');
-                db.push({ name, price });
-                localStorage.setItem('royal_db', JSON.stringify(db));
-                
-                document.getElementById('gName').value = '';
-                document.getElementById('gPrice').value = '';
-                showGames();
-            } else {
-                alert("Bhai, Name aur Price dono bharo!");
+        function addGame() {
+            let n = document.getElementById('gn').value;
+            let p = document.getElementById('gp').value;
+            if(n && p) {
+                let db = JSON.parse(localStorage.getItem('king_db') || '[]');
+                db.push({n, p});
+                localStorage.setItem('king_db', JSON.stringify(db));
+                document.getElementById('gn').value = '';
+                document.getElementById('gp').value = '';
+                load();
             }
         }
-
-        function showGames() {
-            let db = JSON.parse(localStorage.getItem('royal_db') || '[]');
+        function load() {
+            let db = JSON.parse(localStorage.getItem('king_db') || '[]');
             let list = document.getElementById('game-list');
-            list.innerHTML = <h3 style="color:#fff">Active Assets: ${db.length}</h3>;
-            
-            db.forEach((game) => {
-                list.innerHTML += `
-                    <div class="game-item">
-                        <span style="color:white; font-weight:bold;">${game.name}</span>
-                        <span style="color:#f0b90b">₹${game.price}</span>
-                    </div>
-                `;
+            list.innerHTML = '<h3>Live Games: ' + db.length + '</h3>';
+            db.forEach(item => {
+                list.innerHTML += <div class="item"><span>${item.n}</span><span>₹${item.p}</span></div>;
             });
         }
     </script>
