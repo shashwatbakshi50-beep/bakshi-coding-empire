@@ -1,46 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>admin.html</title>
-    
-
-  </head>
-    
-  <body>
-  <!DOCTYPE html>
-<html>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Bakshi Coding Empire</title>
+    <style>
+        /* Modern Dark UI */
+        body { font-family: 'Segoe UI', sans-serif; background: #0b0e11; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: #181a20; padding: 40px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.6); width: 340px; text-align: center; border: 1px solid #2b3139; }
+        h2 { color: #f0b90b; margin-bottom: 25px; font-size: 24px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #2b3139; border: 1px solid #474d57; color: white; border-radius: 6px; box-sizing: border-box; }
+        input:focus { border-color: #f0b90b; outline: none; }
+        button { width: 100%; padding: 12px; background: #f0b90b; color: black; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 15px; transition: 0.2s; }
+        button:hover { background: #d9a508; }
+    </style>
+</head>
 <body>
-<h2 style="color:white;">admin login</h2>
 
-  <input id="email" type="email" placeholder="email">
-  <input id="pass" type="passward" placeholder="passward">
-  <button onclick="login()">login</button>button>
-  <script>
-    function login() {
-var e= document.getelementbyid("email").value;
-      var p= document.getelementbyid("pass").value;
-      if (e ==="shashwatbakshi80@outlook.com" && p==="admin@123") {
-        window.location.herf = "dashboard.html"; //
-      } else {
-        cosole.log("wrong passward")
+    <div class="login-card">
+        <h2>👑 Royal Admin</h2>
+        <input id="email" type="email" placeholder="Admin Email">
+        <input id="pass" type="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
 
-          </script>
-  
-  body:JSON.stringify({
-email:email.value,
-password:password.value
-})
-});
-const data=await res.json();
-localStorage.setItem("token",data.token);
-window.location="dashboard.html";
-}
-</script>
+    <script>
+        function login() {
+            var e = document.getElementById("email").value;
+            var p = document.getElementById("pass").value;
+
+            // Checking credentials from your source
+            if (e === "shashwatbakshi80@outlook.com" && p === "admin@123") {
+                // Token for secure dashboard access
+                localStorage.setItem("token", "HarnakshKing123");
+                
+                // Redirecting to your dashboard
+                window.location.href = "admindashboaard.html";
+            } else {
+                alert("Bhai, password galat hai! Dobara check karo.");
+            }
+        }
+    </script>
+
 </body>
-</html>
-    
-  </body>
-  
 </html>
