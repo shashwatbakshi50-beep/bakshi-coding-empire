@@ -12,17 +12,23 @@
   <!DOCTYPE html>
 <html>
 <body>
-<h2>Admin Login</h2>
-<input id="shashwatbakshi80@outlook.com" placeholder="shashwatbakshi80@outlook.com">
-<input id="admin@123" type="password" placeholder="admin@123">
-<button onclick="login()">Login</button>
+<h2 style="color:white;">admin login</h2>
 
-<script>
-async function login(){
-const res=await fetch("YOUR_BACKEND_URL/admin/login",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
+  <input id="email" type="email" placeholder="email">
+  <input id="pass" type="passward" placeholder="passward">
+  <button onclick="login()">login</button>button>
+  <script>
+    function login() {
+var e= document.getelementbyid("email").value;
+      var p= document.getelementbyid("pass").value;
+      if (e ==="shashwatbakshi80@outlook.com" && p==="admin@123") {
+        window.location.herf = "dashboard.html"; //
+      } else {
+        cosole.log("wrong passward")
+
+          </script>
+  
+  body:JSON.stringify({
 email:email.value,
 password:password.value
 })
