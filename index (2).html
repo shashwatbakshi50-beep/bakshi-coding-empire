@@ -1,69 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Harnaksh Royal Empire</title>
+    <meta charset="UTF-8">
+    <title>HARNAKSH EMPIRE | LOGIN & SYSTEM</title>
     <style>
-        body { background: #000; color: gold; font-family: 'Segoe UI', sans-serif; text-align: center; padding-top: 50px; }
-        .box { border: 3px solid gold; padding: 30px; display: inline-block; border-radius: 15px; background: #111; box-shadow: 0 0 20px gold; width: 350px; }
-        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: #fff; }
-        button { background: gold; color: #000; padding: 12px; border: none; font-weight: bold; cursor: pointer; width: 93%; border-radius: 5px; margin-top: 10px; }
-        #empire-dashboard { display: none; width: 500px; }
-        .item { background: #222; padding: 10px; margin: 10px 0; border-radius: 5px; display: flex; justify-content: space-between; border-left: 5px solid gold; }
+        :root { --gold: #f0b90b; --black: #0d0d0d; }
+        body { 
+            background: var(--black); color: white; 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; justify-content: center; align-items: center; 
+            height: 100vh; margin: 0; 
+        }
+        .box { 
+            background: #1a1a1a; border: 3px solid var(--gold); 
+            padding: 30px; border-radius: 20px; 
+            box-shadow: 0 0 40px rgba(240, 185, 11, 0.3); 
+            width: 380px; text-align: center; 
+        }
+        input { 
+            width: 85%; padding: 12px; margin: 10px 0; 
+            background: #252525; border: 1px solid #444; 
+            color: white; border-radius: 8px; 
+        }
+        button { 
+            width: 93%; padding: 15px; background: var(--gold); 
+            color: black; border: none; border-radius: 8px; 
+            font-weight: bold; cursor: pointer; font-size: 16px; 
+        }
+        button:hover { background: white; }
+        .hidden { display: none; }
+        #list { text-align: left; margin-top: 20px; border-top: 1px solid #333; padding-top: 10px; }
+        .game-card { 
+            background: #222; padding: 10px; margin-bottom: 5px; 
+            border-radius: 5px; display: flex; justify-content: space-between;
+            border-left: 4px solid var(--gold);
+        }
     </style>
 </head>
 <body>
 
-    <div id="login-box" class="box">
-        <h1>👑 EMPIRE LOGIN</h1>
-        <p style="color: #888;">Enter Secret Keys</p>
-        <input type="text" id="u" placeholder="Admin Name">
-        <input type="password" id="p" placeholder="Password">
-        <button onclick="openEmpire()">UNLOCK SYSTEM</button>
-        <p style="font-size: 12px; color: #555; margin-top: 15px;">User: admin | Pass: admin123</p>
+    <div id="login-screen" class="box">
+        <h1>👑 LOGIN</h1>
+        <p>Harnaksh Bhai, Password Daalo</p>
+        <input type="password" id="passInput" placeholder="Enter Password">
+        <button onclick="login()">UNLOCK SYSTEM</button>
+        <p style="color: #444; font-size: 12px; margin-top: 10px;">Hint: king123</p>
     </div>
 
-    <div id="empire-dashboard" class="box">
-        <h1>ROYAL DASHBOARD</h1>
-        <p>Owner: <b>Harnaksh Bhai</b></p>
-        <hr border="1" color="#333">
-        <input type="text" id="gn" placeholder="Game Name">
-        <input type="number" id="gp" placeholder="Price (₹)">
-        <button onclick="addGame()">+ DEPLOY GAME</button>
-        <div id="game-list" style="text-align: left; margin-top: 20px;"></div>
-        <button onclick="location.reload()" style="background:red; color:white; margin-top:20px;">LOCK EMPIRE</button>
+    <div id="dashboard-screen" class="box hidden">
+        <h1>🛠️ DASHBOARD</h1>
+        <p>Harnaksh Empire - System Active</p>
+        <input type="text" id="gName" placeholder="Game Name">
+        <input type="number" id="gPrice" placeholder="Price (₹)">
+        <button onclick="add()">DEPLOY GAME 🚀</button>
+        
+        <div id="list"></div>
+        <button onclick="location.reload()" style="background: #555; color: white; margin-top: 15px; padding: 10px;">LOGOUT</button>
     </div>
 
     <script>
-        function openEmpire() {
-            let user = document.getElementById('u').value;
-            let pass = document.getElementById('p').value;
-            // 100% Working Login
-            if(user === "admin" && pass === "admin123") {
-                document.getElementById('login-box').style.display = 'none';
-                document.getElementById('empire-dashboard').style.display = 'block';
-                load();
+        // Login Function
+        function login() {
+            let pass = document.getElementById('passInput').value;
+            if(pass === "king123") {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard-screen').classList.remove('hidden');
+                loadData();
             } else {
-                alert("Oye Harnaksh bhai! Sahi password dalo.");
+                alert("Oye! Sahi password daal!");
             }
         }
-        function addGame() {
-            let n = document.getElementById('gn').value;
-            let p = document.getElementById('gp').value;
+
+        // Add Game Function
+        function add() {
+            let n = document.getElementById('gName').value;
+            let p = document.getElementById('gPrice').value;
             if(n && p) {
-                let db = JSON.parse(localStorage.getItem('king_db') || '[]');
-                db.push({n, p});
-                localStorage.setItem('king_db', JSON.stringify(db));
-                document.getElementById('gn').value = '';
-                document.getElementById('gp').value = '';
-                load();
+                let data = JSON.parse(localStorage.getItem('final_db') || '[]');
+                data.push({n, p});
+                localStorage.setItem('final_db', JSON.stringify(data));
+                document.getElementById('gName').value = '';
+                document.getElementById('gPrice').value = '';
+                loadData();
             }
         }
-        function load() {
-            let db = JSON.parse(localStorage.getItem('king_db') || '[]');
-            let list = document.getElementById('game-list');
-            list.innerHTML = '<h3>Live Games: ' + db.length + '</h3>';
-            db.forEach(item => {
-                list.innerHTML += <div class="item"><span>${item.n}</span><span>₹${item.p}</span></div>;
+
+        // Load Data Function
+        function loadData() {
+            let data = JSON.parse(localStorage.getItem('final_db') || '[]');
+            let listDiv = document.getElementById('list');
+            listDiv.innerHTML = '<h3>Live Inventory:</h3>';
+            data.forEach(item => {
+                listDiv.innerHTML += `
+                    <div class="game-card">
+                        <span>🎮 ${item.n}</span>
+                        <span style="color:var(--gold)">₹${item.p}</span>
+                    </div>`;
             });
         }
     </script>
