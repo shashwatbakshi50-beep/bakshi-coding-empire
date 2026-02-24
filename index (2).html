@@ -12,7 +12,7 @@ color:white;
 }
 
 .container{
-max-width:900px;
+max-width:1000px;
 margin:auto;
 padding:40px;
 }
@@ -41,6 +41,7 @@ border:none;
 border-radius:6px;
 font-weight:bold;
 cursor:pointer;
+margin-top:5px;
 }
 
 .btn-primary{background:#f0b90b;color:black;}
@@ -53,10 +54,15 @@ h1{color:#f0b90b;text-align:center;}
 background:#1e2329;
 padding:15px;
 border-radius:8px;
-margin:10px 0;
+margin:15px 0;
 display:flex;
-justify-content:space-between;
-align-items:center;
+flex-direction:column;
+}
+
+.game-card img{
+max-width:150px;
+margin-top:10px;
+border-radius:8px;
 }
 </style>
 </head>
@@ -78,9 +84,16 @@ align-items:center;
 <div id="dashboard" style="display:none;">
 
 <div class="card">
-<h2>Dashboard</h2>
+<h2>Add New Game</h2>
 <input type="text" id="name" placeholder="Game Name">
 <input type="number" id="price" placeholder="Game Price">
+
+<label>Upload Game File:</label>
+<input type="file" id="gameFile">
+
+<label>Upload Game Image:</label>
+<input type="file" id="gameImage" accept="image/*">
+
 <button class="btn-success" onclick="addGame()">Add Game</button>
 <button class="btn-danger" onclick="logout()">Logout</button>
 </div>
@@ -96,83 +109,134 @@ align-items:center;
 
 <script>
 
-// ====== LOGIN DETAILS ======
-const ADMIN_EMAIL = "shashwatbakshi80@outlook.com";
-const ADMIN_PASSWORD = "admin@123";
+const ADMIN_EMAIL="shashwatbakshi80@outlook.com";
+const ADMIN_PASSWORD="admin@123";
 
-// ====== LOGIN FUNCTION ======
+// LOGIN
 function login(){
-    const email=document.getElementById("email").value;
-    const password=document.getElementById("password").value;
+const email=document.getElementById("email").value;
+const password=document.getElementById("password").value;
 
-    if(email===ADMIN_EMAIL && password===ADMIN_PASSWORD){
-        localStorage.setItem("adminLoggedIn","true");
-        document.getElementById("loginBox").style.display="none";
-        document.getElementById("dashboard").style.display="block";
-        loadGames();
-    }else{
-        alert("Invalid Email or Password");
-    }
+if(email===ADMIN_EMAIL && password===ADMIN_PASSWORD){
+localStorage.setItem("adminLoggedIn","true");
+showDashboard();
+}else{
+alert("Invalid Login");
+}
 }
 
-// ====== CHECK LOGIN ON LOAD ======
+function showDashboard(){
+document.getElementById("loginBox").style.display="none";
+document.getElementById("dashboard").style.display="block";
+loadGames();
+}
+
 window.onload=function(){
-    if(localStorage.getItem("adminLoggedIn")==="true"){
-        document.getElementById("loginBox").style.display="none";
-        document.getElementById("dashboard").style.display="block";
-        loadGames();
-    }
+if(localStorage.getItem("adminLoggedIn")==="true"){
+showDashboard();
+}
 }
 
-// ====== ADD GAME ======
+// ADD GAME WITH FILE
 function addGame(){
-    const name=document.getElementById("name").value;
-    const price=document.getElementById("price").value;
+const name=document.getElementById("name").value;
+const price=document.getElementById("price").value;
+const fileInput=document.getElementById("gameFile");
+const imageInput=document.getElementById("gameImage");
 
-    if(!name || !price){
-        alert("Enter all fields");
-        return;
-    }
-
-    let games=JSON.parse(localStorage.getItem("games")) || [];
-
-    games.push({
-        id:Date.now(),
-        name:name,
-        price:price
-    });
-
-    localStorage.setItem("games",JSON.stringify(games));
-    loadGames();
+if(!name || !price){
+alert("Fill all fields");
+return;
 }
 
-// ====== LOAD GAMES ======
+let reader=new FileReader();
+let imgReader=new FileReader();
+
+let games=JSON.parse(localStorage.getItem("games"))||[];
+
+let newGame={
+id:Date.now(),
+name:name,
+price:price,
+fileName:fileInput.files[0]?fileInput.files[0].name:"",
+fileData:"",
+imageData:""
+};
+
+if(fileInput.files[0]){
+reader.onload=function(e){
+newGame.fileData=e.target.result;
+saveImage();
+};
+reader.readAsDataURL(fileInput.files[0]);
+}else{
+saveImage();
+}
+
+function saveImage(){
+if(imageInput.files[0]){
+imgReader.onload=function(e){
+newGame.imageData=e.target.result;
+saveGame();
+};
+imgReader.readAsDataURL(imageInput.files[0]);
+}else{
+saveGame();
+}
+}
+
+function saveGame(){
+games.push(newGame);
+localStorage.setItem("games",JSON.stringify(games));
+loadGames();
+alert("Game Added Successfully");
+}
+}
+
+// LOAD GAMES
 function loadGames(){
-    let games=JSON.parse(localStorage.getItem("games")) || [];
-    const list=document.getElementById("gameList");
-    list.innerHTML="";
+let games=JSON.parse(localStorage.getItem("games"))||[];
+const list=document.getElementById("gameList");
+list.innerHTML="";
 
-    games.forEach(g=>{
-        list.innerHTML+=`
-        <div class="game-card">
-            <div>${g.name} - ₹${g.price}</div>
-            <button class="btn-danger" onclick="deleteGame(${g.id})">Delete</button>
-        </div>`;
-    });
+games.forEach(g=>{
+list.innerHTML+=`
+<div class="game-card">
+<b>${g.name}</b>
+Price: ₹${g.price}<br>
+File: ${g.fileName}<br>
+${g.imageData?`<img src="${g.imageData}">`:""}
+<button class="btn-primary" onclick="downloadGame('${g.fileData}','${g.fileName}')">Download</button>
+<button class="btn-danger" onclick="deleteGame(${g.id})">Delete</button>
+</div>
+`;
+});
 }
 
-// ====== DELETE GAME ======
+// DOWNLOAD
+function downloadGame(data,fileName){
+if(!data){
+alert("No file uploaded");
+return;
+}
+let a=document.createElement("a");
+a.href=data;
+a.download=fileName;
+a.click();
+}
+
+// DELETE
 function deleteGame(id){
-    let games=JSON.parse(localStorage.getItem("games")) || [];
-    games=games.filter(g=>g.id!==id);
-    localStorage.setItem("games",JSON.stringify(games));
-    loadGames();
+let games=JSON.parse(localStorage.getItem("games"))||[];
+games=games.filter(g=>g.id!==id);
+localStorage.setItem("games",JSON.stringify(games));
+loadGames();
 }
 
-// ====== LOGOUT ======
+// LOGOUT
 function logout(){
-    localStorage.removeItem("adminLoggedIn");
-    location.reload();
+localStorage.removeItem("adminLoggedIn");
+location.reload();
 }
 
 </script>
