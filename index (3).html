@@ -27,23 +27,15 @@ cursor:pointer;
 font-weight:bold;
 }
 
-.add-btn{ background:#0ecb81; }
-.delete-btn{ background:red; color:white; }
 .logout-btn{ background:gold; }
-
-.game-form{
-margin-bottom:30px;
-}
+.delete-btn{ background:red; color:white; }
+.add-btn{ background:#0ecb81; }
 
 input{
 padding:8px;
 margin-right:10px;
 border-radius:5px;
 border:none;
-}
-
-.game-list{
-margin-top:20px;
 }
 
 .game-item{
@@ -60,7 +52,6 @@ align-items:center;
 <body>
 
 <script>
-// 🔐 Protect Page
 if(localStorage.getItem("adminAuth")!=="true"){
 window.location.href="admin-login.html";
 }
@@ -71,13 +62,13 @@ window.location.href="admin-login.html";
 <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
 
-<div class="game-form">
+<h3>Add New Game</h3>
 <input type="text" id="gameName" placeholder="Game Name">
 <input type="number" id="gamePrice" placeholder="Price">
 <button class="add-btn" onclick="addGame()">Add Game</button>
-</div>
 
-<div class="game-list" id="gameList"></div>
+<h3 style="margin-top:30px;">Game List</h3>
+<div id="gameList"></div>
 
 <script>
 
@@ -87,37 +78,32 @@ window.location.href="admin-login.html";
 }
 
 function loadGames(){
-let games=JSON.parse(localStorage.getItem("games"))||[];
-let list=document.getElementById("gameList");
-list.innerHTML="";
+let games = JSON.parse(localStorage.getItem("games")) || [];
+let list = document.getElementById("gameList");
+list.innerHTML = "";
 
 games.forEach((game,index)=>{
-list.innerHTML+=`
+list.innerHTML += `
 <div class="game-item">
-<div>
-<b>${game.name}</b> - ₹${game.price}
-</div>
-<div>
+<div><b>${game.name}</b> - ₹${game.price}</div>
 <button class="delete-btn" onclick="deleteGame(${index})">Delete</button>
-</div>
 </div>
 `;
 });
 }
 
 function addGame(){
-let name=document.getElementById("gameName").value;
-let price=document.getElementById("gamePrice").value;
+let name = document.getElementById("gameName").value;
+let price = document.getElementById("gamePrice").value;
 
-if(name===""||price===""){
-alert("Enter all details");
+if(name==="" || price===""){
+alert("Fill all details");
 return;
 }
 
-let games=JSON.parse(localStorage.getItem("games"))||[];
-
-games.push({name:name,price:price});
-localStorage.setItem("games",JSON.stringify(games));
+let games = JSON.parse(localStorage.getItem("games")) || [];
+games.push({name:name, price:price});
+localStorage.setItem("games", JSON.stringify(games));
 
 document.getElementById("gameName").value="";
 document.getElementById("gamePrice").value="";
@@ -126,9 +112,9 @@ loadGames();
 }
 
 function deleteGame(index){
-let games=JSON.parse(localStorage.getItem("games"))||[];
+let games = JSON.parse(localStorage.getItem("games")) || [];
 games.splice(index,1);
-localStorage.setItem("games",JSON.stringify(games));
+localStorage.setItem("games", JSON.stringify(games));
 loadGames();
 }
 
