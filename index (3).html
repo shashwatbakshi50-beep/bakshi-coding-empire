@@ -1,60 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Royal Admin Dashboard</title>
-    <style>
-        /* Modern Dark Glassmorphism Design */
-        body { font-family: 'Segoe UI', sans-serif; background: #0b0e11; color: #eaecef; margin: 0; padding: 20px; }
-        .dashboard-container { max-width: 1100px; margin: auto; }
-        
-        /* Empire Control Box Style */
-        .empire-card {
-            background: #181a20; padding: 30px; border-radius: 15px; 
-            border: 2px solid #f0b90b; text-align: center; 
-            margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+<meta charset="UTF-8">
+<title>Royal Empire Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        /* Stats Cards Style */
-        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: #181a20; padding: 20px; border-radius: 12px; border-bottom: 3px solid #f0b90b; }
-        .stat-card h3 { margin: 0; color: #848e9c; font-size: 14px; }
-        .stat-card p { margin: 10px 0 0; font-size: 24px; font-weight: bold; color: #f0b90b; }
+<style>
 
-        .btn-update {
-            background: #f0b90b; color: black; border: none; 
-            padding: 12px 25px; border-radius: 6px; font-weight: bold; 
-            cursor: pointer; width: 100%; margin-top: 15px;
-        }
-    </style>
+/* ===== GLOBAL ===== */
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+overflow-x:hidden;
+}
+
+/* ===== LOGIN DESIGN ===== */
+.login-container{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.login-card{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(20px);
+padding:50px;
+border-radius:20px;
+width:350px;
+text-align:center;
+box-shadow:0 0 40px rgba(0,0,0,0.6);
+border:1px solid rgba(255,255,255,0.2);
+animation:fadeIn 1s ease;
+}
+
+.login-card h1{
+margin:0 0 20px;
+color:gold;
+}
+
+.login-card input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:8px;
+outline:none;
+font-size:15px;
+}
+
+.login-card button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:gold;
+color:black;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+.login-card button:hover{
+background:#ffd700;
+transform:scale(1.05);
+}
+
+/* ===== DASHBOARD ===== */
+.dashboard{
+display:none;
+padding:30px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(0,0,0,0.5);
+padding:20px;
+border-radius:15px;
+margin-bottom:30px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+}
+
+.stat-card{
+background:rgba(255,255,255,0.08);
+padding:25px;
+border-radius:15px;
+backdrop-filter:blur(15px);
+box-shadow:0 0 20px rgba(0,0,0,0.5);
+transition:0.3s;
+}
+
+.stat-card:hover{
+transform:translateY(-5px);
+}
+
+.stat-card h3{
+margin:0;
+font-size:14px;
+color:#ccc;
+}
+
+.stat-card p{
+margin:10px 0 0;
+font-size:26px;
+font-weight:bold;
+color:gold;
+}
+
+.logout-btn{
+background:red;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* Animation */
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(20px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+</style>
 </head>
+
 <body>
 
-    <div class="dashboard-container">
-        <div class="empire-card">
-            <h1 style="color: #f0b90b; margin: 0;">Bakshi Empire Control 👑</h1>
-            <p style="color: #848e9c;">Harnaksh Bhai, Aapka Dashboard Live Hai.</p>
-            
-            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                <div style="background: #2b3139; padding: 15px; border-radius: 10px; width: 45%;">
-                    <span style="color: #0ecb81; font-weight: bold;">Status</span>
-                    <p style="color: white; margin: 5px 0;">Verified ✅</p>
-                </div>
-                <div style="background: #2b3139; padding: 15px; border-radius: 10px; width: 45%;">
-                    <span style="color: #f0b90b; font-weight: bold;">Role</span>
-                    <p style="color: white; margin: 5px 0;">Super Admin</p>
-                </div>
-            </div>
-            <button class="btn-update">Update Empire Settings</button>
-        </div>
+<!-- LOGIN -->
+<div class="login-container" id="loginSection">
+<div class="login-card">
+<h1>👑 Empire Login</h1>
+<p>Secure Admin Access</p>
+<input type="password" id="password" placeholder="Enter Royal Password">
+<button onclick="login()">Enter Empire</button>
+</div>
+</div>
 
-        <div class="stats-row">
-            <div class="stat-card"><h3>Total Users</h3><p>1,250</p></div>
-            <div class="stat-card"><h3>Active Games</h3><p>48</p></div>
-            <div class="stat-card"><h3>Daily Revenue</h3><p>₹15,400</p></div>
-            <div class="stat-card"><h3>Server Load</h3><p>12%</p></div>
-        </div>
-    </div>
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboardSection">
+
+<div class="topbar">
+<h2>Bakshi Empire Control 👑</h2>
+<button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<div class="stats">
+<div class="stat-card">
+<h3>Total Users</h3>
+<p>1,250</p>
+</div>
+
+<div class="stat-card">
+<h3>Active Games</h3>
+<p>48</p>
+</div>
+
+<div class="stat-card">
+<h3>Daily Revenue</h3>
+<p>₹15,400</p>
+</div>
+
+<div class="stat-card">
+<h3>Server Load</h3>
+<p>12%</p>
+</div>
+</div>
+
+</div>
+
+<script>
+
+const ADMIN_PASSWORD = "Royal@123"; // Change password here
+
+function login(){
+let pass = document.getElementById("password").value;
+
+if(pass === ADMIN_PASSWORD){
+localStorage.setItem("empireLogin","true");
+showDashboard();
+}else{
+alert("Access Denied ❌");
+}
+}
+
+function logout(){
+localStorage.removeItem("empireLogin");
+document.getElementById("dashboardSection").style.display="none";
+document.getElementById("loginSection").style.display="flex";
+}
+
+function showDashboard(){
+document.getElementById("loginSection").style.display="none";
+document.getElementById("dashboardSection").style.display="block";
+}
+
+window.onload=function(){
+if(localStorage.getItem("empireLogin")==="true"){
+showDashboard();
+}
+}
+
+</script>
 
 </body>
 </html>
