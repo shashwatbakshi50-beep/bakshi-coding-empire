@@ -1,214 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Royal Empire Admin</title>
+<title>Royal Admin Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
-
-/* ===== GLOBAL ===== */
 body{
 margin:0;
-font-family:'Segoe UI',sans-serif;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+font-family:Segoe UI;
+background:#0b0e11;
 color:white;
-overflow-x:hidden;
-}
-
-/* ===== LOGIN DESIGN ===== */
-.login-container{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-}
-
-.login-card{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(20px);
-padding:50px;
-border-radius:20px;
-width:350px;
-text-align:center;
-box-shadow:0 0 40px rgba(0,0,0,0.6);
-border:1px solid rgba(255,255,255,0.2);
-animation:fadeIn 1s ease;
-}
-
-.login-card h1{
-margin:0 0 20px;
-color:gold;
-}
-
-.login-card input{
-width:100%;
-padding:12px;
-margin:10px 0;
-border:none;
-border-radius:8px;
-outline:none;
-font-size:15px;
-}
-
-.login-card button{
-width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
-background:gold;
-color:black;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-}
-
-.login-card button:hover{
-background:#ffd700;
-transform:scale(1.05);
-}
-
-/* ===== DASHBOARD ===== */
-.dashboard{
-display:none;
-padding:30px;
+padding:20px;
 }
 
 .topbar{
 display:flex;
 justify-content:space-between;
 align-items:center;
-background:rgba(0,0,0,0.5);
-padding:20px;
-border-radius:15px;
 margin-bottom:30px;
 }
 
-.stats{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
-}
-
-.stat-card{
-background:rgba(255,255,255,0.08);
-padding:25px;
-border-radius:15px;
-backdrop-filter:blur(15px);
-box-shadow:0 0 20px rgba(0,0,0,0.5);
-transition:0.3s;
-}
-
-.stat-card:hover{
-transform:translateY(-5px);
-}
-
-.stat-card h3{
-margin:0;
-font-size:14px;
-color:#ccc;
-}
-
-.stat-card p{
-margin:10px 0 0;
-font-size:26px;
-font-weight:bold;
-color:gold;
-}
-
-.logout-btn{
-background:red;
-color:white;
+button{
+padding:8px 15px;
 border:none;
-padding:10px 20px;
-border-radius:8px;
+border-radius:6px;
 cursor:pointer;
+font-weight:bold;
 }
 
-/* Animation */
-@keyframes fadeIn{
-from{opacity:0; transform:translateY(20px);}
-to{opacity:1; transform:translateY(0);}
+.add-btn{ background:#0ecb81; }
+.delete-btn{ background:red; color:white; }
+.logout-btn{ background:gold; }
+
+.game-form{
+margin-bottom:30px;
 }
 
+input{
+padding:8px;
+margin-right:10px;
+border-radius:5px;
+border:none;
+}
+
+.game-list{
+margin-top:20px;
+}
+
+.game-item{
+background:#181a20;
+padding:15px;
+border-radius:10px;
+margin-bottom:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
 </style>
 </head>
-
 <body>
 
-<!-- LOGIN -->
-<div class="login-container" id="loginSection">
-<div class="login-card">
-<h1>👑 Empire Login</h1>
-<p>Secure Admin Access</p>
-<input type="password" id="password" placeholder="Enter Royal Password">
-<button onclick="login()">Enter Empire</button>
-</div>
-</div>
-
-<!-- DASHBOARD -->
-<div class="dashboard" id="dashboardSection">
+<script>
+// 🔐 Protect Page
+if(localStorage.getItem("adminAuth")!=="true"){
+window.location.href="admin-login.html";
+}
+</script>
 
 <div class="topbar">
-<h2>Bakshi Empire Control 👑</h2>
+<h2>👑 Empire Dashboard</h2>
 <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
 
-<div class="stats">
-<div class="stat-card">
-<h3>Total Users</h3>
-<p>1,250</p>
+<div class="game-form">
+<input type="text" id="gameName" placeholder="Game Name">
+<input type="number" id="gamePrice" placeholder="Price">
+<button class="add-btn" onclick="addGame()">Add Game</button>
 </div>
 
-<div class="stat-card">
-<h3>Active Games</h3>
-<p>48</p>
-</div>
-
-<div class="stat-card">
-<h3>Daily Revenue</h3>
-<p>₹15,400</p>
-</div>
-
-<div class="stat-card">
-<h3>Server Load</h3>
-<p>12%</p>
-</div>
-</div>
-
-</div>
+<div class="game-list" id="gameList"></div>
 
 <script>
 
-const ADMIN_PASSWORD = "Royal@123"; // Change password here
-
-function login(){
-let pass = document.getElementById("password").value;
-
-if(pass === ADMIN_PASSWORD){
-localStorage.setItem("empireLogin","true");
-showDashboard();
-}else{
-alert("Access Denied ❌");
-}
-}
-
 function logout(){
-localStorage.removeItem("empireLogin");
-document.getElementById("dashboardSection").style.display="none";
-document.getElementById("loginSection").style.display="flex";
+localStorage.removeItem("adminAuth");
+window.location.href="admin-login.html";
 }
 
-function showDashboard(){
-document.getElementById("loginSection").style.display="none";
-document.getElementById("dashboardSection").style.display="block";
+function loadGames(){
+let games=JSON.parse(localStorage.getItem("games"))||[];
+let list=document.getElementById("gameList");
+list.innerHTML="";
+
+games.forEach((game,index)=>{
+list.innerHTML+=`
+<div class="game-item">
+<div>
+<b>${game.name}</b> - ₹${game.price}
+</div>
+<div>
+<button class="delete-btn" onclick="deleteGame(${index})">Delete</button>
+</div>
+</div>
+`;
+});
 }
 
-window.onload=function(){
-if(localStorage.getItem("empireLogin")==="true"){
-showDashboard();
+function addGame(){
+let name=document.getElementById("gameName").value;
+let price=document.getElementById("gamePrice").value;
+
+if(name===""||price===""){
+alert("Enter all details");
+return;
 }
+
+let games=JSON.parse(localStorage.getItem("games"))||[];
+
+games.push({name:name,price:price});
+localStorage.setItem("games",JSON.stringify(games));
+
+document.getElementById("gameName").value="";
+document.getElementById("gamePrice").value="";
+
+loadGames();
 }
+
+function deleteGame(index){
+let games=JSON.parse(localStorage.getItem("games"))||[];
+games.splice(index,1);
+localStorage.setItem("games",JSON.stringify(games));
+loadGames();
+}
+
+loadGames();
 
 </script>
 
