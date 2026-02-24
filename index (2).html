@@ -1,37 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Login</title>
-    <style>
-        body { background: #0b0e11; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-card { background: #181a20; padding: 30px; border-radius: 10px; border: 1px solid #2b3139; text-align: center; }
-        input { display: block; width: 250px; padding: 10px; margin: 10px auto; border-radius: 5px; border: 1px solid #474d57; background: #2b3139; color: white; }
-        button { background: #f0b90b; color: black; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
-    </style>
+<title>Royal Admin Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#141e30,#243b55);
+font-family:Segoe UI;
+color:white;
+}
+.login-box{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(20px);
+padding:50px;
+border-radius:20px;
+width:350px;
+text-align:center;
+box-shadow:0 0 40px rgba(0,0,0,0.6);
+}
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:8px;
+}
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:gold;
+font-weight:bold;
+cursor:pointer;
+}
+</style>
 </head>
 <body>
 
-    <div class="login-card">
-        <h2 style="color: #f0b90b;">👑 Admin Login</h2>
-        <input id="email" type="text" placeholder="Email" value="shashwatbakshi80@outlook.com">
-        <input id="pass" type="password" placeholder="Password" value="admin@123">
-        <button onclick="checkAdmin()">Login</button>
-    </div>
+<div class="login-box">
+<h1>👑 Empire Admin</h1>
+<p>Secure Login Access</p>
+<input type="password" id="password" placeholder="Enter Password">
+<button onclick="login()">Login</button>
+</div>
 
-    <script>
-        function checkAdmin() {
-            var e = document.getElementById("email").value;
-            var p = document.getElementById("pass").value;
+<script>
+const ADMIN_PASSWORD = "Empire@2026"; // change here
 
-            // Simple aur saaf login logic
-            if (e === "shashwatbakshi80@outlook.com" && p === "admin@123") {
-                // Seedha dashboard par redirect
-                window.location.href = "admindashboaard.html";
-            } else {
-                alert("Oye Bhai! Galat details hain.");
-            }
-        }
-    </script>
+function login(){
+let pass=document.getElementById("password").value;
+
+if(pass===ADMIN_PASSWORD){
+localStorage.setItem("adminAuth","true");
+window.location.href="admin-dashboard.html";
+}else{
+alert("Wrong Password ❌");
+}
+}
+</script>
 
 </body>
 </html>
