@@ -3,27 +3,33 @@
 <head>
 <title>Empire Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 body{
 margin:0;
 font-family:Segoe UI;
-background:linear-gradient(135deg,#141e30,#243b55);
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color:white;
 }
 
 .container{
-max-width:1000px;
+max-width:1100px;
 margin:auto;
 padding:40px;
 }
 
 .card{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(15px);
+background:rgba(255,255,255,0.07);
+backdrop-filter:blur(12px);
 padding:30px;
 border-radius:15px;
-box-shadow:0 0 40px rgba(0,0,0,0.5);
-margin-bottom:20px;
+box-shadow:0 0 30px rgba(0,0,0,0.6);
+margin-bottom:25px;
+}
+
+h1{
+text-align:center;
+color:#f0b90b;
 }
 
 input{
@@ -31,37 +37,41 @@ width:100%;
 padding:12px;
 margin:10px 0;
 border:none;
-border-radius:6px;
+border-radius:8px;
 outline:none;
 }
 
 button{
 padding:10px 15px;
 border:none;
-border-radius:6px;
-font-weight:bold;
+border-radius:8px;
 cursor:pointer;
+font-weight:bold;
 margin-top:5px;
 }
 
 .btn-primary{background:#f0b90b;color:black;}
-.btn-danger{background:red;color:white;}
-.btn-success{background:#0ecb81;color:black;}
-
-h1{color:#f0b90b;text-align:center;}
+.btn-success{background:#00c853;color:white;}
+.btn-danger{background:#ff1744;color:white;}
 
 .game-card{
-background:#1e2329;
-padding:15px;
-border-radius:8px;
-margin:15px 0;
+background:#111c26;
+padding:20px;
+border-radius:12px;
+margin-top:15px;
 display:flex;
-flex-direction:column;
+justify-content:space-between;
+flex-wrap:wrap;
 }
+
+.game-info{
+max-width:70%;
+}
+
 .game-card img{
 max-width:150px;
+border-radius:10px;
 margin-top:10px;
-border-radius:8px;
 }
 </style>
 </head>
@@ -84,21 +94,23 @@ border-radius:8px;
 
 <div class="card">
 <h2>Add New Game</h2>
-<input type="text" id="name" placeholder="Game Name">
-<input type="number" id="price" placeholder="Game Price">
 
-<label>Upload Game File:</label>
+<input type="text" id="gameName" placeholder="Game Name">
+<input type="number" id="gamePrice" placeholder="Game Price ₹">
+
+<label>Upload Game File</label>
 <input type="file" id="gameFile">
 
-<label>Upload Game Image:</label>
+<label>Upload Game Thumbnail</label>
 <input type="file" id="gameImage" accept="image/*">
 
 <button class="btn-success" onclick="addGame()">Add Game</button>
 <button class="btn-danger" onclick="logout()">Logout</button>
+
 </div>
 
 <div class="card">
-<h3>Game List</h3>
+<h2>All Games</h2>
 <div id="gameList"></div>
 </div>
 
@@ -107,16 +119,16 @@ border-radius:8px;
 
 <script>
 
-/* ===== ADMIN CREDENTIALS ===== */
+/* ================= ADMIN LOGIN ================= */
+
 const ADMIN_EMAIL = "shashwatbakshi80@outlook.com";
 const ADMIN_PASSWORD = "admin@123";
 
-/* ===== LOGIN SYSTEM ===== */
 function login(){
-let email = document.getElementById("email").value;
-let password = document.getElementById("password").value;
+let email=document.getElementById("email").value;
+let password=document.getElementById("password").value;
 
-if(email === ADMIN_EMAIL && password === ADMIN_PASSWORD){
+if(email===ADMIN_EMAIL && password===ADMIN_PASSWORD){
 localStorage.setItem("adminAuth","true");
 showDashboard();
 }else{
@@ -130,25 +142,25 @@ document.getElementById("dashboard").style.display="block";
 loadGames();
 }
 
-/* ===== PAGE LOAD CHECK ===== */
-window.onload = function(){
-if(localStorage.getItem("adminAuth") === "true"){
+window.onload=function(){
+if(localStorage.getItem("adminAuth")==="true"){
 showDashboard();
 }
 }
 
-/* ===== LOGOUT ===== */
 function logout(){
 localStorage.removeItem("adminAuth");
 location.reload();
 }
 
-/* ===== ADD GAME ===== */
+/* ================= ADD GAME ================= */
+
 function addGame(){
-const name=document.getElementById("name").value;
-const price=document.getElementById("price").value;
-const fileInput=document.getElementById("gameFile");
-const imageInput=document.getElementById("gameImage");
+
+let name=document.getElementById("gameName").value;
+let price=document.getElementById("gamePrice").value;
+let file=document.getElementById("gameFile").files[0];
+let image=document.getElementById("gameImage").files[0];
 
 if(!name || !price){
 alert("Fill all fields");
@@ -157,34 +169,35 @@ return;
 
 let reader=new FileReader();
 let imgReader=new FileReader();
+
 let games=JSON.parse(localStorage.getItem("games"))||[];
 
 let newGame={
 id:Date.now(),
 name:name,
 price:price,
-fileName:fileInput.files[0]?fileInput.files[0].name:"",
+fileName:file?file.name:"",
 fileData:"",
 imageData:""
 };
 
-if(fileInput.files[0]){
+if(file){
 reader.onload=function(e){
 newGame.fileData=e.target.result;
 saveImage();
 };
-reader.readAsDataURL(fileInput.files[0]);
+reader.readAsDataURL(file);
 }else{
 saveImage();
 }
 
 function saveImage(){
-if(imageInput.files[0]){
+if(image){
 imgReader.onload=function(e){
 newGame.imageData=e.target.result;
 saveGame();
 };
-imgReader.readAsDataURL(imageInput.files[0]);
+imgReader.readAsDataURL(image);
 }else{
 saveGame();
 }
@@ -198,30 +211,40 @@ alert("Game Added Successfully");
 }
 }
 
-/* ===== LOAD GAMES ===== */
+/* ================= LOAD GAMES ================= */
+
 function loadGames(){
 let games=JSON.parse(localStorage.getItem("games"))||[];
-const list=document.getElementById("gameList");
+let list=document.getElementById("gameList");
 list.innerHTML="";
 
 games.forEach(g=>{
 list.innerHTML+=`
 <div class="game-card">
-<b>${g.name}</b>
-Price: ₹${g.price}<br>
-File: ${g.fileName}<br>
-${g.imageData?`<img src="${g.imageData}">`:""}
+
+<div class="game-info">
+<h3>${g.name}</h3>
+<p>Price: ₹${g.price}</p>
+<p>File: ${g.fileName}</p>
+
 <button class="btn-primary" onclick="downloadGame('${g.fileData}','${g.fileName}')">Download</button>
 <button class="btn-danger" onclick="deleteGame(${g.id})">Delete</button>
+</div>
+
+<div>
+${g.imageData?`<img src="${g.imageData}">`:""}
+</div>
+
 </div>
 `;
 });
 }
 
-/* ===== DOWNLOAD ===== */
+/* ================= DOWNLOAD ================= */
+
 function downloadGame(data,fileName){
 if(!data){
-alert("No file uploaded");
+alert("No File Uploaded");
 return;
 }
 let a=document.createElement("a");
@@ -230,7 +253,8 @@ a.download=fileName;
 a.click();
 }
 
-/* ===== DELETE ===== */
+/* ================= DELETE ================= */
+
 function deleteGame(id){
 let games=JSON.parse(localStorage.getItem("games"))||[];
 games=games.filter(g=>g.id!==id);
@@ -239,5 +263,6 @@ loadGames();
 }
 
 </script>
+
 </body>
 </html>
