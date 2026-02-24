@@ -1,38 +1,35 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const Game = require("./models/Game");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static("public"));
 
-mongoose.connect("mongodb://127.0.0.1:27017/adminPanel");
-
-const SECRET = "MY_SUPER_SECRET_KEY";
-
-/* Admin Credentials */
+/* ================= CONFIG ================= */
+const SECRET = "ULTRA_SECURE_SECRET_2026";
 const adminEmail = "shashwatbakshi80@outlook.com";
 const hashedPassword = bcrypt.hashSync("admin@123", 10);
 
-/* LOGIN */
-app.post("/login", (req, res) => {
+let games = []; // In-memory storage
+
+/* ================= AUTH ================= */
+app.post("/api/login", async (req, res) => {
     const { email, password } = req.body;
 
     if (email !== adminEmail)
         return res.status(401).json({ message: "Invalid Email" });
 
-    if (!bcrypt.compareSync(password, hashedPassword))
+    const valid = await bcrypt.compare(password, hashedPassword);
+    if (!valid)
         return res.status(401).json({ message: "Wrong Password" });
 
     const token = jwt.sign({ email }, SECRET, { expiresIn: "2h" });
+
     res.json({ token });
 });
 
-/* Middleware */
 function verifyToken(req, res, next) {
     const token = req.headers.authorization;
     if (!token) return res.status(403).json({ message: "No Token" });
@@ -45,28 +42,141 @@ function verifyToken(req, res, next) {
     }
 }
 
-/* Add Game */
-app.post("/add-game", verifyToken, async (req, res) => {
+/* ================= GAME ROUTES ================= */
+
+app.post("/api/games", verifyToken, (req, res) => {
     const { name, price } = req.body;
-
-    const game = new Game({ name, price });
-    await game.save();
-
+    const game = { id: Date.now(), name, price };
+    games.push(game);
     res.json({ message: "Game Added" });
 });
 
-/* Get Games */
-app.get("/games", verifyToken, async (req, res) => {
-    const games = await Game.find();
+app.get("/api/games", verifyToken, (req, res) => {
     res.json(games);
 });
 
-/* Delete Game */
-app.delete("/delete/:id", verifyToken, async (req, res) => {
-    await Game.findByIdAndDelete(req.params.id);
+app.delete("/api/games/:id", verifyToken, (req, res) => {
+    const id = parseInt(req.params.id);
+    games = games.filter(g => g.id !== id);
     res.json({ message: "Deleted" });
 });
 
+/* ================= ADMIN PAGE ================= */
+
+app.get("/", (req, res) => {
+res.send(`
+<!DOCTYPE html>
+<html>
+<head>
+<title>Empire Admin</title>
+<style>
+body{font-family:Segoe UI;background:#0b0e11;color:white;padding:30px;}
+input,button{padding:10px;margin:5px;border:none;border-radius:6px;}
+button{background:#f0b90b;font-weight:bold;}
+.card{background:#181a20;padding:15px;margin:10px 0;border-radius:10px;}
+h1{color:#f0b90b;}
+</style>
+</head>
+<body>
+
+<h1>👑 Empire Admin</h1>
+
+<div id="loginBox">
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+
+<div id="dashboard" style="display:none;">
+<h2>Dashboard</h2>
+<input type="text" id="name" placeholder="Game Name">
+<input type="number" id="price" placeholder="Game Price">
+<button onclick="addGame()">Add Game</button>
+<button onclick="logout()">Logout</button>
+<h3>Game List</h3>
+<div id="gameList"></div>
+</div>
+
+<script>
+let token="";
+
+async function login(){
+    const email=document.getElementById("email").value;
+    const password=document.getElementById("password").value;
+
+    const res=await fetch("/api/login",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({email,password})
+    });
+
+    const data=await res.json();
+
+    if(data.token){
+        token=data.token;
+        document.getElementById("loginBox").style.display="none";
+        document.getElementById("dashboard").style.display="block";
+        loadGames();
+    }else{
+        alert("Login Failed");
+    }
+}
+
+async function addGame(){
+    const name=document.getElementById("name").value;
+    const price=document.getElementById("price").value;
+
+    await fetch("/api/games",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":token
+        },
+        body:JSON.stringify({name,price})
+    });
+
+    loadGames();
+}
+
+async function loadGames(){
+    const res=await fetch("/api/games",{
+        headers:{"Authorization":token}
+    });
+    const games=await res.json();
+
+    const list=document.getElementById("gameList");
+    list.innerHTML="";
+
+    games.forEach(g=>{
+        list.innerHTML+=\`
+        <div class="card">
+            \${g.name} - ₹\${g.price}
+            <button onclick="deleteGame(\${g.id})">Delete</button>
+        </div>\`;
+    });
+}
+
+async function deleteGame(id){
+    await fetch("/api/games/"+id,{
+        method:"DELETE",
+        headers:{"Authorization":token}
+    });
+    loadGames();
+}
+
+function logout(){
+    token="";
+    location.reload();
+}
+</script>
+
+</body>
+</html>
+`);
+});
+
+/* ================= START ================= */
+
 app.listen(5000, () => {
-    console.log("Secure Admin running on http://localhost:5000");
+    console.log("🚀 Admin running on http://localhost:5000");
 });
