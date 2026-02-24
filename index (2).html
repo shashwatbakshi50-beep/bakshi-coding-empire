@@ -1,85 +1,7 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const cors = require("cors");
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-/* ================= CONFIG ================= */
-
-const SECRET = "EMPIRE_SUPER_SECRET_2026";
-const ADMIN_EMAIL = "shashwatbakshi80@outlook.com";
-const HASHED_PASSWORD = bcrypt.hashSync("admin@123", 10);
-
-let games = [];
-
-/* ================= AUTH ================= */
-
-app.post("/api/login", async (req, res) => {
-    const { email, password } = req.body;
-
-    if (email !== ADMIN_EMAIL)
-        return res.status(401).json({ message: "Invalid Email" });
-
-    const valid = await bcrypt.compare(password, HASHED_PASSWORD);
-    if (!valid)
-        return res.status(401).json({ message: "Wrong Password" });
-
-    const token = jwt.sign({ email }, SECRET, { expiresIn: "2h" });
-
-    res.json({ token });
-});
-
-function verifyToken(req, res, next) {
-    const token = req.headers.authorization;
-
-    if (!token)
-        return res.status(403).json({ message: "Access Denied" });
-
-    try {
-        jwt.verify(token, SECRET);
-        next();
-    } catch {
-        res.status(401).json({ message: "Invalid Token" });
-    }
-}
-
-/* ================= GAME ROUTES ================= */
-
-app.post("/api/games", verifyToken, (req, res) => {
-    const { name, price } = req.body;
-
-    const game = {
-        id: Date.now(),
-        name,
-        price
-    };
-
-    games.push(game);
-
-    res.json({ message: "Game Added Successfully" });
-});
-
-app.get("/api/games", verifyToken, (req, res) => {
-    res.json(games);
-});
-
-app.delete("/api/games/:id", verifyToken, (req, res) => {
-    const id = parseInt(req.params.id);
-    games = games.filter(g => g.id !== id);
-    res.json({ message: "Game Deleted" });
-});
-
-/* ================= ADMIN PAGE ================= */
-
-app.get("/", (req, res) => {
-res.send(`
 <!DOCTYPE html>
 <html>
 <head>
-<title>Empire Admin</title>
+<title>Empire Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{
@@ -110,6 +32,7 @@ padding:12px;
 margin:10px 0;
 border:none;
 border-radius:6px;
+outline:none;
 }
 
 button{
@@ -125,6 +48,7 @@ cursor:pointer;
 .btn-success{background:#0ecb81;color:black;}
 
 h1{color:#f0b90b;text-align:center;}
+
 .game-card{
 background:#1e2329;
 padding:15px;
@@ -142,6 +66,7 @@ align-items:center;
 
 <h1>👑 Empire Admin Panel</h1>
 
+<!-- LOGIN -->
 <div class="card" id="loginBox">
 <h2>Admin Login</h2>
 <input type="email" id="email" placeholder="Enter Email">
@@ -149,6 +74,7 @@ align-items:center;
 <button class="btn-primary" onclick="login()">Login</button>
 </div>
 
+<!-- DASHBOARD -->
 <div id="dashboard" style="display:none;">
 
 <div class="card">
@@ -170,75 +96,82 @@ align-items:center;
 
 <script>
 
-let token="";
+// ====== LOGIN DETAILS ======
+const ADMIN_EMAIL = "shashwatbakshi80@outlook.com";
+const ADMIN_PASSWORD = "admin@123";
 
-async function login(){
+// ====== LOGIN FUNCTION ======
+function login(){
     const email=document.getElementById("email").value;
     const password=document.getElementById("password").value;
 
-    const res=await fetch("/api/login",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({email,password})
-    });
-
-    const data=await res.json();
-
-    if(data.token){
-        token=data.token;
+    if(email===ADMIN_EMAIL && password===ADMIN_PASSWORD){
+        localStorage.setItem("adminLoggedIn","true");
         document.getElementById("loginBox").style.display="none";
         document.getElementById("dashboard").style.display="block";
         loadGames();
     }else{
-        alert("Login Failed");
+        alert("Invalid Email or Password");
     }
 }
 
-async function addGame(){
+// ====== CHECK LOGIN ON LOAD ======
+window.onload=function(){
+    if(localStorage.getItem("adminLoggedIn")==="true"){
+        document.getElementById("loginBox").style.display="none";
+        document.getElementById("dashboard").style.display="block";
+        loadGames();
+    }
+}
+
+// ====== ADD GAME ======
+function addGame(){
     const name=document.getElementById("name").value;
     const price=document.getElementById("price").value;
 
-    await fetch("/api/games",{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json",
-            "Authorization":token
-        },
-        body:JSON.stringify({name,price})
+    if(!name || !price){
+        alert("Enter all fields");
+        return;
+    }
+
+    let games=JSON.parse(localStorage.getItem("games")) || [];
+
+    games.push({
+        id:Date.now(),
+        name:name,
+        price:price
     });
 
+    localStorage.setItem("games",JSON.stringify(games));
     loadGames();
 }
 
-async function loadGames(){
-    const res=await fetch("/api/games",{
-        headers:{"Authorization":token}
-    });
-
-    const games=await res.json();
-
+// ====== LOAD GAMES ======
+function loadGames(){
+    let games=JSON.parse(localStorage.getItem("games")) || [];
     const list=document.getElementById("gameList");
     list.innerHTML="";
 
     games.forEach(g=>{
-        list.innerHTML+=\`
+        list.innerHTML+=`
         <div class="game-card">
-            <div>\${g.name} - ₹\${g.price}</div>
-            <button class="btn-danger" onclick="deleteGame(\${g.id})">Delete</button>
-        </div>\`;
+            <div>${g.name} - ₹${g.price}</div>
+            <button class="btn-danger" onclick="deleteGame(${g.id})">Delete</button>
+        </div>`;
     });
 }
 
-async function deleteGame(id){
-    await fetch("/api/games/"+id,{
-        method:"DELETE",
-        headers:{"Authorization":token}
-    });
+// ====== DELETE GAME ======
+function deleteGame(id){
+    let games=JSON.parse(localStorage.getItem("games")) || [];
+    games=games.filter(g=>g.id!==id);
+    localStorage.setItem("games",JSON.stringify(games));
     loadGames();
 }
 
+// ====== LOGOUT ======
 function logout(){
-    token="";
+    localStorage.removeItem("adminLoggedIn");
     location.reload();
 }
 
@@ -246,11 +179,3 @@ function logout(){
 
 </body>
 </html>
-`);
-});
-
-/* ================= START ================= */
-
-app.listen(5000, () => {
-    console.log("🚀 Professional Admin running on http://localhost:5000");
-});
