@@ -1,26 +1,210 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Test Login</title>
+<title>Empire Professional Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{
+margin:0;
+font-family:Segoe UI;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
+.container{max-width:1200px;margin:auto;padding:30px;}
+.card{
+background:rgba(255,255,255,0.08);
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
+}
+h1{text-align:center;color:#f0b90b;}
+input{
+width:100%;
+padding:8px;
+margin:6px 0;
+border:none;
+border-radius:8px;
+}
+button{
+padding:6px 12px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+margin-top:5px;
+}
+.btn-yellow{background:#f0b90b;color:black;}
+.btn-green{background:#00c853;color:white;}
+.btn-red{background:#ff1744;color:white;}
+.box{
+background:#1e2329;
+padding:8px;
+border-radius:8px;
+margin-top:6px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+#dashboard{display:none;}
+canvas{background:white;border-radius:10px;padding:10px;}
+</style>
 </head>
-<body style="font-family:Arial; text-align:center; margin-top:100px;">
+<body>
 
-<h2>Simple Login Test</h2>
+<div class="container">
 
-<input type="password" id="pass" placeholder="Enter Password">
-<br><br>
-<button onclick="check()">Login</button>
+<h1>👑 Empire Admin Panel</h1>
+
+<!-- LOGIN -->
+<div id="loginPage" class="card">
+<h2>Admin Login</h2>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<button class="btn-yellow" onclick="login()">Login</button>
+<p id="error" style="color:red;"></p>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+
+<div class="card">
+<h2>📊 Sales Overview</h2>
+<canvas id="salesChart"></canvas>
+<button class="btn-red" onclick="logout()">Logout</button>
+</div>
+
+<div class="card">
+<h2>Add Game</h2>
+<input id="gName" placeholder="Game Name">
+<input id="gPrice" type="number" placeholder="Price ₹">
+<button class="btn-green" onclick="addGame()">Add Game</button>
+<div id="gList"></div>
+</div>
+
+<div class="card">
+<h2>Add Customer</h2>
+<input id="cName" placeholder="Customer Name">
+<input id="cEmail" placeholder="Customer Email">
+<button class="btn-green" onclick="addCustomer()">Add Customer</button>
+<div id="cList"></div>
+</div>
+
+<div class="card">
+<h2>Add Purchase</h2>
+<input id="pName" placeholder="Buyer Name">
+<input id="pAmt" type="number" placeholder="Amount ₹">
+<button class="btn-green" onclick="addPurchase()">Add Purchase</button>
+<div id="pList"></div>
+</div>
+
+</div>
+</div>
 
 <script>
-function check(){
-var p = document.getElementById("pass").value;
 
-if(p === "1234"){
-alert("Login Success ✅");
+// LOGIN DETAILS
+const ADMIN_EMAIL="shashwatbakshi80@gmail.com";
+const ADMIN_PASSWORD="admin@123";
+
+function login(){
+let e=document.getElementById("email").value.trim();
+let p=document.getElementById("password").value.trim();
+if(e===ADMIN_EMAIL && p===ADMIN_PASSWORD){
+localStorage.setItem("adminLogin","true");
+showDashboard();
 }else{
-alert("Wrong Password ❌");
+document.getElementById("error").innerText="Wrong Email or Password";
 }
 }
+
+function showDashboard(){
+document.getElementById("loginPage").style.display="none";
+document.getElementById("dashboard").style.display="block";
+loadData();
+drawChart();
+}
+
+function logout(){
+localStorage.removeItem("adminLogin");
+location.reload();
+}
+
+window.onload=function(){
+if(localStorage.getItem("adminLogin")==="true"){
+showDashboard();
+}
+}
+
+// DATA
+
+function addGame(){
+let games=JSON.parse(localStorage.getItem("games"))||[];
+games.push({name:gName.value,price:gPrice.value});
+localStorage.setItem("games",JSON.stringify(games));
+gName.value="";gPrice.value="";
+loadData();
+}
+
+function deleteGame(index){
+let games=JSON.parse(localStorage.getItem("games"))||[];
+games.splice(index,1);
+localStorage.setItem("games",JSON.stringify(games));
+loadData();
+}
+
+function addCustomer(){
+let customers=JSON.parse(localStorage.getItem("customers"))||[];
+customers.push({name:cName.value,email:cEmail.value});
+localStorage.setItem("customers",JSON.stringify(customers));
+cName.value="";cEmail.value="";
+loadData();
+}
+
+function addPurchase(){
+let purchases=JSON.parse(localStorage.getItem("purchases"))||[];
+purchases.push({name:pName.value,amount:+pAmt.value});
+localStorage.setItem("purchases",JSON.stringify(purchases));
+pName.value="";pAmt.value="";
+loadData();
+drawChart();
+}
+
+function loadData(){
+let games=JSON.parse(localStorage.getItem("games"))||[];
+let customers=JSON.parse(localStorage.getItem("customers"))||[];
+let purchases=JSON.parse(localStorage.getItem("purchases"))||[];
+
+gList.innerHTML=games.map((g,i)=>
+`<div class="box">${g.name} - ₹${g.price}
+<button class="btn-red" onclick="deleteGame(${i})">Delete</button>
+</div>`).join("");
+
+cList.innerHTML=customers.map(c=>
+`<div class="box">${c.name} - ${c.email}</div>`).join("");
+
+pList.innerHTML=purchases.map(p=>
+`<div class="box">${p.name} - ₹${p.amount}</div>`).join("");
+}
+
+function drawChart(){
+let purchases=JSON.parse(localStorage.getItem("purchases"))||[];
+let labels=purchases.map(p=>p.name);
+let data=purchases.map(p=>p.amount);
+
+new Chart(document.getElementById("salesChart"),{
+type:"bar",
+data:{
+labels:labels,
+datasets:[{
+label:"Sales ₹",
+data:data,
+backgroundColor:"#f0b90b"
+}]
+}
+});
+}
+
 </script>
 
 </body>
