@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Empire Admin Pro</title>
+<title>Empire Full Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{
 margin:0;
 font-family:Segoe UI;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+background:linear-gradient(135deg,#141e30,#243b55);
 color:white;
 }
-.container{max-width:1100px;margin:auto;padding:40px;}
+.container{max-width:1100px;margin:auto;padding:30px;}
 .card{
 background:rgba(255,255,255,0.08);
-padding:25px;
+padding:20px;
 border-radius:15px;
 margin-bottom:20px;
 }
+h1{text-align:center;color:#f0b90b;}
 input{
 width:100%;
-padding:10px;
-margin:8px 0;
+padding:8px;
+margin:6px 0;
 border:none;
 border-radius:8px;
 }
@@ -32,90 +33,79 @@ cursor:pointer;
 font-weight:bold;
 margin-top:5px;
 }
-.btn-primary{background:#f0b90b;color:black;}
-.btn-success{background:#00c853;color:white;}
-.btn-danger{background:#ff1744;color:white;}
-h1{text-align:center;color:#f0b90b;}
-.game-card{
-background:#111c26;
-padding:15px;
-border-radius:10px;
-margin-top:10px;
+.btn-yellow{background:#f0b90b;color:black;}
+.btn-green{background:#00c853;color:white;}
+.btn-red{background:#ff1744;color:white;}
+.box{
+background:#1e2329;
+padding:8px;
+border-radius:8px;
+margin-top:6px;
 }
-.stat-box{
+.stat{
 background:#1c2a35;
-padding:15px;
-border-radius:10px;
-margin:10px 0;
+padding:8px;
+border-radius:8px;
+margin:5px 0;
 }
-img{max-width:120px;margin-top:10px;border-radius:8px;}
 </style>
 </head>
 <body>
 
 <div class="container">
-<h1>👑 Empire Admin Pro Panel</h1>
+
+<h1>👑 Empire Admin Panel</h1>
 
 <!-- LOGIN -->
 <div id="loginPage" class="card">
 <h2>Admin Login</h2>
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password">
-<button class="btn-primary" onclick="login()">Login</button>
+<input type="email" id="email" placeholder="Enter Email">
+<input type="password" id="password" placeholder="Enter Password">
+<button class="btn-yellow" onclick="login()">Login</button>
+<p id="error" style="color:red;"></p>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" style="display:none;">
 
-<!-- STATS -->
 <div class="card">
-<h2>📊 Dashboard Stats</h2>
-<div class="stat-box">Total Customers: <span id="customerCount">0</span></div>
-<div class="stat-box">Total Donations ₹: <span id="donationTotal">0</span></div>
-<div class="stat-box">Total Purchases ₹: <span id="purchaseTotal">0</span></div>
-<button class="btn-danger" onclick="logout()">Logout</button>
+<h2>📊 Stats</h2>
+<div class="stat">Customers: <span id="cCount">0</span></div>
+<div class="stat">Donations ₹: <span id="dTotal">0</span></div>
+<div class="stat">Purchases ₹: <span id="pTotal">0</span></div>
+<button class="btn-red" onclick="logout()">Logout</button>
 </div>
 
-<!-- ADD GAME -->
 <div class="card">
 <h2>Add Game</h2>
-<input type="text" id="gameName" placeholder="Game Name">
-<input type="number" id="gamePrice" placeholder="Price ₹">
-<input type="file" id="gameImage" accept="image/*">
-<button class="btn-success" onclick="addGame()">Add Game</button>
+<input id="gName" placeholder="Game Name">
+<input id="gPrice" type="number" placeholder="Price ₹">
+<button class="btn-green" onclick="addGame()">Add</button>
+<div id="gList"></div>
 </div>
 
-<!-- GAMES LIST -->
 <div class="card">
-<h2>All Games</h2>
-<div id="gameList"></div>
+<h2>Add Customer</h2>
+<input id="cName" placeholder="Customer Name">
+<button class="btn-green" onclick="addCustomer()">Add</button>
+<div id="cList"></div>
 </div>
 
-<!-- CUSTOMERS -->
 <div class="card">
-<h2>Customers</h2>
-<input type="text" id="customerName" placeholder="Customer Name">
-<button class="btn-success" onclick="addCustomer()">Add Customer</button>
-<div id="customerList"></div>
+<h2>Add Donation</h2>
+<input id="dName" placeholder="Donor Name">
+<input id="dAmt" type="number" placeholder="Amount ₹">
+<button class="btn-green" onclick="addDonation()">Add</button>
+<div id="dList"></div>
 </div>
 
-<!-- DONATIONS -->
 <div class="card">
-<h2>Donations</h2>
-<input type="text" id="donorName" placeholder="Donor Name">
-<input type="number" id="donationAmount" placeholder="Amount ₹">
-<button class="btn-success" onclick="addDonation()">Add Donation</button>
-<div id="donationList"></div>
-</div>
-
-<!-- PURCHASES -->
-<div class="card">
-<h2>Purchases</h2>
-<input type="text" id="buyerName" placeholder="Buyer Name">
-<input type="text" id="purchaseGame" placeholder="Game Name">
-<input type="number" id="purchaseAmount" placeholder="Amount ₹">
-<button class="btn-success" onclick="addPurchase()">Add Purchase</button>
-<div id="purchaseList"></div>
+<h2>Add Purchase</h2>
+<input id="pName" placeholder="Buyer Name">
+<input id="pGame" placeholder="Game Name">
+<input id="pAmt" type="number" placeholder="Amount ₹">
+<button class="btn-green" onclick="addPurchase()">Add</button>
+<div id="pList"></div>
 </div>
 
 </div>
@@ -123,164 +113,91 @@ img{max-width:120px;margin-top:10px;border-radius:8px;}
 
 <script>
 
-/* ===== LOGIN SYSTEM ===== */
+// ===== LOGIN DETAILS =====
+const ADMIN_EMAIL = "admin@gmail.com";
+const ADMIN_PASSWORD = "admin123";
 
-const ADMIN_EMAIL="shashwatbakshi80@outlook.com";
-const ADMIN_PASSWORD="admin@123";
-
+// ===== LOGIN =====
 function login(){
-let email=document.getElementById("email").value;
-let password=document.getElementById("password").value;
+let email=email.value.trim();
+let password=password.value.trim();
 
 if(email===ADMIN_EMAIL && password===ADMIN_PASSWORD){
-localStorage.setItem("adminAuth","true");
+localStorage.setItem("adminLogged","true");
 showDashboard();
 }else{
-alert("Wrong Login");
+document.getElementById("error").innerText="Invalid Email or Password!";
 }
 }
 
+// ===== SHOW DASHBOARD =====
 function showDashboard(){
 document.getElementById("loginPage").style.display="none";
 document.getElementById("dashboard").style.display="block";
-loadAll();
+loadData();
 }
 
+// ===== AUTO LOGIN CHECK =====
 window.onload=function(){
-if(localStorage.getItem("adminAuth")==="true"){
+if(localStorage.getItem("adminLogged")==="true"){
 showDashboard();
 }
 }
 
+// ===== LOGOUT =====
 function logout(){
-localStorage.removeItem("adminAuth");
+localStorage.removeItem("adminLogged");
 location.reload();
 }
 
-/* ===== GAMES ===== */
+// ===== DATA FUNCTIONS =====
 
 function addGame(){
-let name=document.getElementById("gameName").value;
-let price=document.getElementById("gamePrice").value;
-let image=document.getElementById("gameImage").files[0];
-
-if(!name || !price){alert("Fill fields");return;}
-
 let games=JSON.parse(localStorage.getItem("games"))||[];
-
-let newGame={id:Date.now(),name,price,imageData:""};
-
-if(image){
-let reader=new FileReader();
-reader.onload=function(e){
-newGame.imageData=e.target.result;
-saveGame();
-};
-reader.readAsDataURL(image);
-}else{
-saveGame();
-}
-
-function saveGame(){
-games.push(newGame);
+games.push({n:gName.value,p:gPrice.value});
 localStorage.setItem("games",JSON.stringify(games));
-loadGames();
+gName.value="";gPrice.value="";
+loadData();
 }
-}
-
-function loadGames(){
-let games=JSON.parse(localStorage.getItem("games"))||[];
-let list=document.getElementById("gameList");
-list.innerHTML="";
-
-games.forEach(g=>{
-list.innerHTML+=`
-<div class="game-card">
-<b>${g.name}</b> - ₹${g.price}
-${g.imageData?`<br><img src="${g.imageData}">`:""}
-<br>
-<button class="btn-danger" onclick="deleteGame(${g.id})">Delete</button>
-</div>
-`;
-});
-}
-
-function deleteGame(id){
-let games=JSON.parse(localStorage.getItem("games"))||[];
-games=games.filter(g=>g.id!==id);
-localStorage.setItem("games",JSON.stringify(games));
-loadGames();
-}
-
-/* ===== CUSTOMERS ===== */
 
 function addCustomer(){
-let name=document.getElementById("customerName").value;
-if(!name)return;
-
 let customers=JSON.parse(localStorage.getItem("customers"))||[];
-customers.push(name);
+customers.push(cName.value);
 localStorage.setItem("customers",JSON.stringify(customers));
-loadCustomers();
+cName.value="";
+loadData();
 }
-
-function loadCustomers(){
-let customers=JSON.parse(localStorage.getItem("customers"))||[];
-document.getElementById("customerCount").innerText=customers.length;
-let list=document.getElementById("customerList");
-list.innerHTML=customers.map(c=>"<div>"+c+"</div>").join("");
-}
-
-/* ===== DONATIONS ===== */
 
 function addDonation(){
-let name=document.getElementById("donorName").value;
-let amount=parseInt(document.getElementById("donationAmount").value);
-if(!name || !amount)return;
-
 let donations=JSON.parse(localStorage.getItem("donations"))||[];
-donations.push({name,amount});
+donations.push({n:dName.value,a:+dAmt.value});
 localStorage.setItem("donations",JSON.stringify(donations));
-loadDonations();
+dName.value="";dAmt.value="";
+loadData();
 }
-
-function loadDonations(){
-let donations=JSON.parse(localStorage.getItem("donations"))||[];
-let total=donations.reduce((a,b)=>a+b.amount,0);
-document.getElementById("donationTotal").innerText=total;
-let list=document.getElementById("donationList");
-list.innerHTML=donations.map(d=>"<div>"+d.name+" - ₹"+d.amount+"</div>").join("");
-}
-
-/* ===== PURCHASES ===== */
 
 function addPurchase(){
-let name=document.getElementById("buyerName").value;
-let game=document.getElementById("purchaseGame").value;
-let amount=parseInt(document.getElementById("purchaseAmount").value);
-if(!name || !game || !amount)return;
-
 let purchases=JSON.parse(localStorage.getItem("purchases"))||[];
-purchases.push({name,game,amount});
+purchases.push({n:pName.value,g:pGame.value,a:+pAmt.value});
 localStorage.setItem("purchases",JSON.stringify(purchases));
-loadPurchases();
+pName.value="";pGame.value="";pAmt.value="";
+loadData();
 }
 
-function loadPurchases(){
+function loadData(){
+let games=JSON.parse(localStorage.getItem("games"))||[];
+let customers=JSON.parse(localStorage.getItem("customers"))||[];
+let donations=JSON.parse(localStorage.getItem("donations"))||[];
 let purchases=JSON.parse(localStorage.getItem("purchases"))||[];
-let total=purchases.reduce((a,b)=>a+b.amount,0);
-document.getElementById("purchaseTotal").innerText=total;
-let list=document.getElementById("purchaseList");
-list.innerHTML=purchases.map(p=>"<div>"+p.name+" bought "+p.game+" - ₹"+p.amount+"</div>").join("");
-}
 
-/* ===== LOAD ALL ===== */
+gList.innerHTML=games.map(x=>`<div class="box">${x.n} - ₹${x.p}</div>`).join("");
+cList.innerHTML=customers.map(x=>`<div class="box">${x}</div>`).join("");
+dList.innerHTML=donations.map(x=>`<div class="box">${x.n} - ₹${x.a}</div>`).join("");
+pList.innerHTML=purchases.map(x=>`<div class="box">${x.n} bought ${x.g} - ₹${x.a}</div>`).join("");
 
-function loadAll(){
-loadGames();
-loadCustomers();
-loadDonations();
-loadPurchases();
+cCount.innerText=customers.length;
+dTotal.innerText=donations.reduce((s,x)=>s+x.a,0);
+pTotal.innerText=purchases.reduce((s,x)=>s+x.a,0);
 }
 
 </script>
