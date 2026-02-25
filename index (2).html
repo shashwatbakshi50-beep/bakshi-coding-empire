@@ -1,191 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Empire Admin Panel</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-body{
-margin:0;
-font-family:Segoe UI;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color:white;
-}
-
-.container{
-max-width:1100px;
-margin:auto;
-padding:40px;
-}
-
-.card{
-background:rgba(255,255,255,0.07);
-backdrop-filter:blur(12px);
-padding:30px;
-border-radius:15px;
-box-shadow:0 0 30px rgba(0,0,0,0.6);
-margin-bottom:25px;
-}
-
-h1{
-text-align:center;
-color:#f0b90b;
-}
-
-input{
-width:100%;
-padding:12px;
-margin:10px 0;
-border:none;
-border-radius:8px;
-outline:none;
-}
-
-button{
-padding:10px 15px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-margin-top:5px;
-}
-
-.btn-primary{background:#f0b90b;color:black;}
-.btn-success{background:#00c853;color:white;}
-.btn-danger{background:#ff1744;color:white;}
-
-.game-card{
-background:#111c26;
-padding:20px;
-border-radius:12px;
-margin-top:15px;
-display:flex;
-justify-content:space-between;
-flex-wrap:wrap;
-}
-
-.game-info{
-max-width:70%;
-}
-
-.game-card img{
-max-width:150px;
-border-radius:10px;
-margin-top:10px;
-}
-</style>
-</head>
-<body>
- <div class="empire-card">
-    <div class="stats-box">
-        <div>
-            <p>Total Customers</p>
-            <h2 id="cust-count">0</h2> 
-        </div>
-        <div>
-            <p>Total Earnings</p>
-            <h2 id="total-money" style="color: #00ff00;">₹0</h2>
-        </div>
-    </div>
-
-    <table class="empire-table">
-        <thead>
-            <tr>
-                <th style="color:gold;">Customer Name</th>
-                <th style="color:gold;">Payment</th>
-            </tr>
-        </thead>
-        <tbody id="payment-table"></tbody>
-    </table>
-</div>
-
-    <div style="margin-top: 20px;">
-        <button onclick="addEntry()" style="background: gold; color: black; border: none; padding: 10px; cursor: pointer; border-radius: 5px; font-weight: bold;">+ Add New Payment</button>
-    </div>
-
-    <table style="width: 100%; margin-top: 20px; border-collapse: collapse;">
-        <thead style="border-bottom: 2px solid gold;">
-            <tr>
-                <th style="text-align: left; padding: 5px;">Name</th>
-                <th style="text-align: left; padding: 5px;">Amount</th>
-            </tr>
-        </thead>
-        <tbody id="payment-table">
-            </tbody>
-    </table>
-</div>
-<div id="stats-container" class="card" style="display: flex; justify-content: space-around; text-align: center;">
-    <div>
-        <h3>Total Customers</h3>
-        <p id="totalCustomers">0</p>
-    </div>
-    <div>
-        <h3>Total Earnings</h3>
-        <p id="totalEarnings">₹0</p>
-    </div>
-</div>
-
-<div class="card">
-    <h2>Customer & Payment History</h2>
-    <div id="customerList">
-        </div>
-</div>
-<div class="container">
-
-<h1>👑 Empire Admin Panel</h1>
-
-<!-- LOGIN PAGE -->
-<div class="card" id="loginPage">
-<h2>Admin Login</h2>
-<input type="email" id="email" placeholder="Enter Email">
-<input type="password" id="password" placeholder="Enter Password">
-<button class="btn-primary" onclick="login()">Login</button>
-</div>
-
-<!-- DASHBOARD -->
-<div id="dashboard" style="display:none;">
-
-<div class="card">
-<h2>Add New Game</h2>
-
-<input type="text" id="gameName" placeholder="Game Name">
-<input type="number" id="gamePrice" placeholder="Game Price ₹">
-
-<label>Upload Game File</label>
-<input type="file" id="gameFile">
-
-<label>Upload Game Thumbnail</label>
-<input type="file" id="gameImage" accept="image/*">
-
-<button class="btn-success" onclick="addGame()">Add Game</button>
-<button class="btn-danger" onclick="logout()">Logout</button>
-
-</div>
-
-<div class="card">
-<h2>All Games</h2>
-<div id="gameList"></div>
-</div>
-
-</div>
-</div>
-
 <script>
 
-/* ================= ADMIN LOGIN ================= */
+/* ================= ADMIN SETUP ================= */
 
-const ADMIN_EMAIL = "shashwatbakshi80@outlook.com";
-const ADMIN_PASSWORD = "admin@123";
+// Auto create default admin if not exists
+if(!localStorage.getItem("adminUser")){
+    const defaultAdmin = {
+        email: "shashwatbakshi80@outlook.com",
+        password: btoa("admin@123") // simple encoded
+    };
+    localStorage.setItem("adminUser", JSON.stringify(defaultAdmin));
+}
+
+/* ================= LOGIN SYSTEM ================= */
 
 function login(){
 let email=document.getElementById("email").value;
 let password=document.getElementById("password").value;
 
-if(email===ADMIN_EMAIL && password===ADMIN_PASSWORD){
-localStorage.setItem("adminAuth","true");
-showDashboard();
+let admin = JSON.parse(localStorage.getItem("adminUser"));
+
+if(email === admin.email && btoa(password) === admin.password){
+    localStorage.setItem("adminAuth","true");
+    showDashboard();
 }else{
-alert("Invalid Email or Password");
+    alert("Invalid Email or Password");
 }
 }
 
@@ -195,6 +33,7 @@ document.getElementById("dashboard").style.display="block";
 loadGames();
 }
 
+// Prevent direct access
 window.onload=function(){
 if(localStorage.getItem("adminAuth")==="true"){
 showDashboard();
@@ -204,6 +43,18 @@ showDashboard();
 function logout(){
 localStorage.removeItem("adminAuth");
 location.reload();
+}
+
+/* ================= CHANGE PASSWORD ================= */
+
+function changePassword(){
+let newPass = prompt("Enter New Password:");
+if(!newPass) return;
+
+let admin = JSON.parse(localStorage.getItem("adminUser"));
+admin.password = btoa(newPass);
+localStorage.setItem("adminUser", JSON.stringify(admin));
+alert("Password Updated Successfully");
 }
 
 /* ================= ADD GAME ================= */
@@ -314,51 +165,5 @@ games=games.filter(g=>g.id!==id);
 localStorage.setItem("games",JSON.stringify(games));
 loadGames();
 }
-// --- EMPIRE LOGIC ---
 
-// Page load hote hi data dikhao
-window.onload = function() {
-    updateUI();
-};
-
-function addEntry() {
-    let name = prompt("kisne game khridi");
-    let amount = prompt("Kitne paise diye?");
-
-    if (name && amount) {
-        // Purana data nikalo
-        let records = JSON.parse(localStorage.getItem("empireRecords")) || [];
-        
-        // Naya data add karo
-        records.push({ name: name, amount: Number(amount) });
-        
-        // Save karo
-        localStorage.setItem("empireRecords", JSON.stringify(records));
-        
-        alert("Entry Successful, Bhai!");
-        updateUI();
-    }
-}
-
-function updateUI() {
-    let records = JSON.parse(localStorage.getItem("empireRecords")) || [];
-    let table = document.getElementById("payment-table");
-    let countDisp = document.getElementById("cust-count");
-    let moneyDisp = document.getElementById("total-money");
-
-    table.innerHTML = "";
-    let total = 0;
-
-    records.forEach(r => {
-        total += r.amount;
-        table.innerHTML += <tr style="border-bottom: 1px solid #333;"><td style="padding: 5px;">${r.name}</td><td style="padding: 5px; color: #00ff00;">₹${r.amount}</td></tr>;
-    });
-
-    countDisp.innerText = records.length;
-    moneyDisp.innerText = "₹" + total;
-}
-  updateUI();
 </script>
-
-</body>
-</html>
