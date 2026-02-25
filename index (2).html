@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Empire Admin</title>
+<title>Empire Admin Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{
@@ -10,45 +10,53 @@ font-family:Segoe UI;
 background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color:white;
 }
-.container{max-width:1000px;margin:auto;padding:40px;}
+.container{max-width:1100px;margin:auto;padding:40px;}
 .card{
 background:rgba(255,255,255,0.08);
-padding:30px;
+padding:25px;
 border-radius:15px;
 margin-bottom:20px;
 }
 input{
 width:100%;
-padding:12px;
-margin:10px 0;
+padding:10px;
+margin:8px 0;
 border:none;
 border-radius:8px;
 }
 button{
-padding:10px 15px;
+padding:8px 14px;
 border:none;
 border-radius:8px;
 cursor:pointer;
 font-weight:bold;
+margin-top:5px;
 }
 .btn-primary{background:#f0b90b;color:black;}
 .btn-success{background:#00c853;color:white;}
 .btn-danger{background:#ff1744;color:white;}
+h1{text-align:center;color:#f0b90b;}
 .game-card{
 background:#111c26;
 padding:15px;
 border-radius:10px;
 margin-top:10px;
 }
+.stat-box{
+background:#1c2a35;
+padding:15px;
+border-radius:10px;
+margin:10px 0;
+}
 img{max-width:120px;margin-top:10px;border-radius:8px;}
-h1{text-align:center;color:#f0b90b;}
 </style>
 </head>
 <body>
 
 <div class="container">
-<h1>👑 Empire Admin Panel</h1>
+<h1>👑 Empire Admin Pro Panel</h1>
 
+<!-- LOGIN -->
 <div id="loginPage" class="card">
 <h2>Admin Login</h2>
 <input type="email" id="email" placeholder="Email">
@@ -56,21 +64,58 @@ h1{text-align:center;color:#f0b90b;}
 <button class="btn-primary" onclick="login()">Login</button>
 </div>
 
+<!-- DASHBOARD -->
 <div id="dashboard" style="display:none;">
 
+<!-- STATS -->
+<div class="card">
+<h2>📊 Dashboard Stats</h2>
+<div class="stat-box">Total Customers: <span id="customerCount">0</span></div>
+<div class="stat-box">Total Donations ₹: <span id="donationTotal">0</span></div>
+<div class="stat-box">Total Purchases ₹: <span id="purchaseTotal">0</span></div>
+<button class="btn-danger" onclick="logout()">Logout</button>
+</div>
+
+<!-- ADD GAME -->
 <div class="card">
 <h2>Add Game</h2>
 <input type="text" id="gameName" placeholder="Game Name">
 <input type="number" id="gamePrice" placeholder="Price ₹">
-<input type="file" id="gameFile">
 <input type="file" id="gameImage" accept="image/*">
 <button class="btn-success" onclick="addGame()">Add Game</button>
-<button class="btn-danger" onclick="logout()">Logout</button>
 </div>
 
+<!-- GAMES LIST -->
 <div class="card">
-<h2>Game List</h2>
+<h2>All Games</h2>
 <div id="gameList"></div>
+</div>
+
+<!-- CUSTOMERS -->
+<div class="card">
+<h2>Customers</h2>
+<input type="text" id="customerName" placeholder="Customer Name">
+<button class="btn-success" onclick="addCustomer()">Add Customer</button>
+<div id="customerList"></div>
+</div>
+
+<!-- DONATIONS -->
+<div class="card">
+<h2>Donations</h2>
+<input type="text" id="donorName" placeholder="Donor Name">
+<input type="number" id="donationAmount" placeholder="Amount ₹">
+<button class="btn-success" onclick="addDonation()">Add Donation</button>
+<div id="donationList"></div>
+</div>
+
+<!-- PURCHASES -->
+<div class="card">
+<h2>Purchases</h2>
+<input type="text" id="buyerName" placeholder="Buyer Name">
+<input type="text" id="purchaseGame" placeholder="Game Name">
+<input type="number" id="purchaseAmount" placeholder="Amount ₹">
+<button class="btn-success" onclick="addPurchase()">Add Purchase</button>
+<div id="purchaseList"></div>
 </div>
 
 </div>
@@ -78,11 +123,11 @@ h1{text-align:center;color:#f0b90b;}
 
 <script>
 
-// ===== DEFAULT LOGIN =====
+/* ===== LOGIN SYSTEM ===== */
+
 const ADMIN_EMAIL="shashwatbakshi80@outlook.com";
 const ADMIN_PASSWORD="admin@123";
 
-// ===== LOGIN =====
 function login(){
 let email=document.getElementById("email").value;
 let password=document.getElementById("password").value;
@@ -91,87 +136,58 @@ if(email===ADMIN_EMAIL && password===ADMIN_PASSWORD){
 localStorage.setItem("adminAuth","true");
 showDashboard();
 }else{
-alert("Wrong Login Details");
+alert("Wrong Login");
 }
 }
 
-// ===== SHOW DASHBOARD =====
 function showDashboard(){
 document.getElementById("loginPage").style.display="none";
 document.getElementById("dashboard").style.display="block";
-loadGames();
+loadAll();
 }
 
-// ===== AUTO LOGIN CHECK =====
 window.onload=function(){
 if(localStorage.getItem("adminAuth")==="true"){
 showDashboard();
 }
 }
 
-// ===== LOGOUT =====
 function logout(){
 localStorage.removeItem("adminAuth");
 location.reload();
 }
 
-// ===== ADD GAME =====
-function addGame(){
+/* ===== GAMES ===== */
 
+function addGame(){
 let name=document.getElementById("gameName").value;
 let price=document.getElementById("gamePrice").value;
-let file=document.getElementById("gameFile").files[0];
 let image=document.getElementById("gameImage").files[0];
 
-if(!name || !price){
-alert("Fill all fields");
-return;
-}
+if(!name || !price){alert("Fill fields");return;}
 
 let games=JSON.parse(localStorage.getItem("games"))||[];
 
-let newGame={
-id:Date.now(),
-name:name,
-price:price,
-fileName:file?file.name:"",
-fileData:"",
-imageData:""
-};
+let newGame={id:Date.now(),name,price,imageData:""};
 
-if(file){
+if(image){
 let reader=new FileReader();
 reader.onload=function(e){
-newGame.fileData=e.target.result;
-saveImage();
-};
-reader.readAsDataURL(file);
-}else{
-saveImage();
-}
-
-function saveImage(){
-if(image){
-let imgReader=new FileReader();
-imgReader.onload=function(e){
 newGame.imageData=e.target.result;
 saveGame();
 };
-imgReader.readAsDataURL(image);
+reader.readAsDataURL(image);
 }else{
 saveGame();
-}
 }
 
 function saveGame(){
 games.push(newGame);
 localStorage.setItem("games",JSON.stringify(games));
 loadGames();
-alert("Game Added");
 }
 }
 
-// ===== LOAD GAMES =====
 function loadGames(){
 let games=JSON.parse(localStorage.getItem("games"))||[];
 let list=document.getElementById("gameList");
@@ -180,33 +196,91 @@ list.innerHTML="";
 games.forEach(g=>{
 list.innerHTML+=`
 <div class="game-card">
-<b>${g.name}</b><br>
-Price: ₹${g.price}<br>
-File: ${g.fileName}<br>
-${g.imageData?`<img src="${g.imageData}">`:""}
+<b>${g.name}</b> - ₹${g.price}
+${g.imageData?`<br><img src="${g.imageData}">`:""}
 <br>
-<button class="btn-primary" onclick="downloadGame('${g.fileData}','${g.fileName}')">Download</button>
 <button class="btn-danger" onclick="deleteGame(${g.id})">Delete</button>
 </div>
 `;
 });
 }
 
-// ===== DOWNLOAD =====
-function downloadGame(data,name){
-if(!data){alert("No file");return;}
-let a=document.createElement("a");
-a.href=data;
-a.download=name;
-a.click();
-}
-
-// ===== DELETE =====
 function deleteGame(id){
 let games=JSON.parse(localStorage.getItem("games"))||[];
 games=games.filter(g=>g.id!==id);
 localStorage.setItem("games",JSON.stringify(games));
 loadGames();
+}
+
+/* ===== CUSTOMERS ===== */
+
+function addCustomer(){
+let name=document.getElementById("customerName").value;
+if(!name)return;
+
+let customers=JSON.parse(localStorage.getItem("customers"))||[];
+customers.push(name);
+localStorage.setItem("customers",JSON.stringify(customers));
+loadCustomers();
+}
+
+function loadCustomers(){
+let customers=JSON.parse(localStorage.getItem("customers"))||[];
+document.getElementById("customerCount").innerText=customers.length;
+let list=document.getElementById("customerList");
+list.innerHTML=customers.map(c=>"<div>"+c+"</div>").join("");
+}
+
+/* ===== DONATIONS ===== */
+
+function addDonation(){
+let name=document.getElementById("donorName").value;
+let amount=parseInt(document.getElementById("donationAmount").value);
+if(!name || !amount)return;
+
+let donations=JSON.parse(localStorage.getItem("donations"))||[];
+donations.push({name,amount});
+localStorage.setItem("donations",JSON.stringify(donations));
+loadDonations();
+}
+
+function loadDonations(){
+let donations=JSON.parse(localStorage.getItem("donations"))||[];
+let total=donations.reduce((a,b)=>a+b.amount,0);
+document.getElementById("donationTotal").innerText=total;
+let list=document.getElementById("donationList");
+list.innerHTML=donations.map(d=>"<div>"+d.name+" - ₹"+d.amount+"</div>").join("");
+}
+
+/* ===== PURCHASES ===== */
+
+function addPurchase(){
+let name=document.getElementById("buyerName").value;
+let game=document.getElementById("purchaseGame").value;
+let amount=parseInt(document.getElementById("purchaseAmount").value);
+if(!name || !game || !amount)return;
+
+let purchases=JSON.parse(localStorage.getItem("purchases"))||[];
+purchases.push({name,game,amount});
+localStorage.setItem("purchases",JSON.stringify(purchases));
+loadPurchases();
+}
+
+function loadPurchases(){
+let purchases=JSON.parse(localStorage.getItem("purchases"))||[];
+let total=purchases.reduce((a,b)=>a+b.amount,0);
+document.getElementById("purchaseTotal").innerText=total;
+let list=document.getElementById("purchaseList");
+list.innerHTML=purchases.map(p=>"<div>"+p.name+" bought "+p.game+" - ₹"+p.amount+"</div>").join("");
+}
+
+/* ===== LOAD ALL ===== */
+
+function loadAll(){
+loadGames();
+loadCustomers();
+loadDonations();
+loadPurchases();
 }
 
 </script>
