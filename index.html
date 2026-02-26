@@ -1,296 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
+<head>
     <meta charset="UTF-8">
-    <meta name="google-site-verification" content="SYU4vTqRJnWRSPPfAShXWJZ7w9nZtvwiELUg0JIUgH0" />
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8974365316546790"
-     crossorigin="anonymous"></script>
-    <title>index.html</title>
-    
-
-  </head>
-    
- 
-<title>Royal Game Empire</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-
-body{
-margin:0;
-font-family:Segoe UI;
-background:linear-gradient(135deg,#141e30,#243b55);
-color:white;
-}
-
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px;
-background:rgba(0,0,0,0.6);
-box-shadow:0 0 20px black;
-}
-
-.logo{
-font-size:24px;
-font-weight:bold;
-color:gold;
-}
-
-nav a{
-color:white;
-margin:0 15px;
-text-decoration:none;
-}
-
-.hero{
-text-align:center;
-padding:80px 20px;
-}
-
-.hero h1{
-font-size:40px;
-margin-bottom:10px;
-}
-
-section{
-padding:50px 20px;
-}
-
-.games{
-display:flex;
-flex-wrap:wrap;
-gap:25px;
-justify-content:center;
-}
-
-.card{
-background:rgba(255,255,255,0.08);
-padding:25px;
-width:260px;
-border-radius:15px;
-backdrop-filter:blur(15px);
-box-shadow:0 0 15px rgba(0,0,0,0.5);
-transition:0.3s;
-}
-
-.card:hover{
-transform:scale(1.05);
-}
-
-button{
-padding:10px 15px;
-background:gold;
-border:none;
-cursor:pointer;
-border-radius:5px;
-font-weight:bold;
-margin-top:10px;
-}
-
-.donation-box{
-max-width:400px;
-margin:auto;
-background:rgba(0,0,0,0.5);
-padding:25px;
-border-radius:15px;
-text-align:center;
-}
-
-input{
-padding:8px;
-margin-top:10px;
-width:90%;
-border-radius:5px;
-border:none;
-}
-
-.preview{
-margin-top:15px;
-max-width:100%;
-border-radius:10px;
-}
-
-.gallery{
-display:flex;
-flex-wrap:wrap;
-gap:15px;
-justify-content:center;
-margin-top:20px;
-}
-
-.gallery img{
-width:200px;
-border-radius:10px;
-box-shadow:0 0 10px black;
-}
-
-footer{
-background:black;
-text-align:center;
-padding:20px;
-margin-top:40px;
-}
-
-</style>
+    <title>Bakshi Coding Empire | Innovation & Humanity</title>
+    <style>
+        :root { --royal-blue: #002366; --gold: #D4AF37; --white: #ffffff; --dark: #1a1a1a; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f4f4; }
+        .hero { background: linear-gradient(45deg, var(--royal-blue), #004080); color: white; padding: 80px 20px; text-align: center; border-bottom: 8px solid var(--gold); }
+        .nav-bar { background: var(--dark); padding: 15px; text-align: right; }
+        .nav-bar a { color: var(--gold); margin: 0 15px; text-decoration: none; font-weight: bold; }
+        .stats { display: flex; justify-content: center; gap: 30px; margin-top: -40px; }
+        .stat-card { background: white; padding: 20px 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-bottom: 3px solid var(--gold); text-align: center; }
+        .game-vault { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 50px; }
+        .game-card { background: white; border: 2px solid var(--gold); padding: 25px; border-radius: 15px; text-align: center; transition: 0.3s; }
+        .game-card:hover { transform: translateY(-10px); }
+        .btn-gold { background: var(--gold); color: black; padding: 12px 30px; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 1rem; }
+        .charity-sec { background: var(--dark); color: white; padding: 60px; text-align: center; }
+    </style>
 </head>
 <body>
 
-<header>
-<div class="logo">👑 Royal Game Empire</div>
-<nav>
-<a href="#games">Games</a>
-<a href="#about">About</a>
-<a href="#donation">Support</a>
-<a href="#dogs">Dog Feeding</a>
-</nav>
-</header>
+<div class="nav-bar">
+    <a href="login.html">LOGIN / SIGNUP</a>
+    <a href="#games">GAMES</a>
+    <a href="#charity">CHARITY</a>
+</div>
 
 <div class="hero">
-<h1>Next Level Trading Simulation Games</h1>
-<p>Professional • Secure • Powerful</p>
+    <h1>BAKSHI CODING EMPIRE</h1>
+    <p>"Where Code Meets Compassion"</p>
 </div>
 
-<!-- GAMES SECTION -->
-
-<section id="games">
-<h2 style="text-align:center;">🎮 Premium Games</h2>
-
-<div class="games">
-
-<div class="card">
-<h3>Forex Trading Pro</h3>
-<p>Realistic Forex Simulator</p>
-<p><b>₹199</b></p>
-<button onclick="buyGame('Forex Trading Pro')">Buy Now</button>
+<div class="stats">
+    <div class="stat-card"><h2>14</h2><p>Founder's Age</p></div>
+    <div class="stat-card"><h2>80+</h2><p>Dogs Fed 🐾</p></div>
+    <div class="stat-card"><h2>$1</h2><p>Price to Play</p></div>
 </div>
 
-<div class="card">
-<h3>Stock Market Simulator</h3>
-<p>Advanced Market Experience</p>
-<p><b>₹149</b></p>
-<button onclick="buyGame('Stock Market Simulator')">Buy Now</button>
+<div id="games" class="game-vault">
+    <div class="game-card">
+        <h3>Forex Strategist</h3>
+        <p>Master the global markets.</p>
+        <button class="btn-gold" onclick="location.href='thanks.html'">Unlock for $1</button>
+    </div>
+    <div class="game-card">
+        <h3>Stock King</h3>
+        <p>Build your empire from scratch.</p>
+        <button class="btn-gold" onclick="location.href='thanks.html'">Unlock for $1</button>
+    </div>
 </div>
 
-</div>
-</section>
-
-<!-- ABOUT SECTION -->
-
-<section id="about">
-<h2 style="text-align:center;">About Us</h2>
-<p style="max-width:800px;margin:auto;text-align:center;">
-Royal Game Empire builds professional 
-for global players.
-</p>
-
-<h3 style="text-align:center;">Vision</h3>
-<p style="text-align:center;">To build a global digital gaming brand and make my mom deam real and i am in calss 9th.</p>
-
-<h3 style="text-align:center;">Mission</h3>
-<p style="text-align:center;">To deliver powerful and educational gaming experiences.& make my moms dream a real world</p>
-</section>
-
-<!-- DOG FEEDING SECTION -->
-
-<section id="dogs">
-<h2 style="text-align:center;">🐶 Dog Feeding Gallery</h2>
-
-<div style="text-align:center;">
-<input type="file" id="dogPhotos" multiple>
-<button onclick="addDogPhotos()">Upload Photos</button>
+<div id="charity" class="charity-sec">
+    <h2>Your $1 gives Shelter & Food</h2>
+    <p>Hum Yamuna Nagar ke dogs ko rescue karte hain. Payment ke baad email check karein!</p>
+    <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?auto=format&fit=crop&w=400" style="border-radius: 50%; margin-top: 20px; border: 3px solid var(--gold);">
 </div>
 
-<div class="gallery" id="dogGallery"></div>
-
-</section>
-
-<!-- DONATION SECTION -->
-
-<section id="donation">
-<h2 style="text-align:center;">💳 Support / Donation</h2>
-
-<div class="donation-box">
-
-<p>Choose Payment Method:</p>
-
-<a href="https://paytm.me/yourname" target="_blank">
-<button>Pay via Paytm</button>
-</a>
-
-<br><br>
-
-<a href="https://phon.pe/8307077846@ybl" target="_blank">
-<button>Pay via PhonePe</button>
-</a>
-
-<br><br>
-
-<a href="https://paypal.me/https://www.paypal.com/ncp/payment/KRXCVYTW4PTC2" target="_blank">
-<button>Pay via PayPal</button>
-</a>
-
-<br><br>
-
-<h3>Upload Payment Screenshot</h3>
-<input type="file" id="paymentProof">
-<button onclick="saveScreenshot()">Submit Proof</button>
-
-<img id="previewImage" class="preview"/>
-
-</div>
-</section>
-
-<footer>
-© 2026 Royal Game Empire | All Rights Reserved
+<footer style="background: var(--royal-blue); color: white; text-align: center; padding: 20px;">
+    &copy; 2026 Bakshi Coding Empire. All Rights Reserved.
 </footer>
 
-<script>
-
-function buyGame(gameName){
-alert("Redirecting to payment for " + gameName);
-}
-
-function saveScreenshot(){
-let fileInput = document.getElementById("paymentProof");
-let preview = document.getElementById("previewImage");
-
-if(fileInput.files.length === 0){
-alert("Please select screenshot first");
-return;
-}
-
-let reader = new FileReader();
-reader.onload = function(e){
-preview.src = e.target.result;
-localStorage.setItem("paymentProof", e.target.result);
-alert("Screenshot saved successfully (Demo Mode)");
-}
-reader.readAsDataURL(fileInput.files[0]);
-}
-
-function addDogPhotos(){
-let input = document.getElementById("dogPhotos");
-let gallery = document.getElementById("dogGallery");
-
-for(let file of input.files){
-let reader = new FileReader();
-reader.onload = function(e){
-let img = document.createElement("img");
-img.src = e.target.result;
-gallery.appendChild(img);
-}
-reader.readAsDataURL(file);
-}
-}
-
-</script>
-
 </body>
-</html>
-    
-  </body>
-  
 </html>
