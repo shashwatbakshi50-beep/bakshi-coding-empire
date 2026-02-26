@@ -1,64 +1,38 @@
-<!DOCTYPE html>
+[1:48 pm, 26/2/2026] shashwatbakshi50: !DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Bakshi Coding Empire | Innovation & Humanity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCE | Admin Command Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --royal-blue: #002366; --gold: #D4AF37; --white: #ffffff; --dark: #1a1a1a; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f4f4; }
-        .hero { background: linear-gradient(45deg, var(--royal-blue), #004080); color: white; padding: 80px 20px; text-align: center; border-bottom: 8px solid var(--gold); }
-        .nav-bar { background: var(--dark); padding: 15px; text-align: right; }
-        .nav-bar a { color: var(--gold); margin: 0 15px; text-decoration: none; font-weight: bold; }
-        .stats { display: flex; justify-content: center; gap: 30px; margin-top: -40px; }
-        .stat-card { background: white; padding: 20px 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-bottom: 3px solid var(--gold); text-align: center; }
-        .game-vault { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 50px; }
-        .game-card { background: white; border: 2px solid var(--gold); padding: 25px; border-radius: 15px; text-align: center; transition: 0.3s; }
-        .game-card:hover { transform: translateY(-10px); }
-        .btn-gold { background: var(--gold); color: black; padding: 12px 30px; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 1rem; }
-        .charity-sec { background: var(--dark); color: white; padding: 60px; text-align: center; }
-    </style>
-</head>
-<body>
-
-<div class="nav-bar">
-    <a href="login.html">LOGIN / SIGNUP</a>
-    <a href="#games">GAMES</a>
-    <a href="#charity">CHARITY</a>
-</div>
-
-<div class="hero">
-    <h1>BAKSHI CODING EMPIRE</h1>
-    <p>"Where Code Meets Compassion"</p>
-</div>
-
-<div class="stats">
-    <div class="stat-card"><h2>14</h2><p>Founder's Age</p></div>
-    <div class="stat-card"><h2>80+</h2><p>Dogs Fed 🐾</p></div>
-    <div class="stat-card"><h2>$1</h2><p>Price to Play</p></div>
-</div>
-
-<div id="games" class="game-vault">
-    <div class="game-card">
-        <h3>Forex Strategist</h3>
-        <p>Master the global markets.</p>
-        <button class="btn-gold" onclick="location.href='thanks.html'">Unlock for $1</button>
+        :root { --gold: #D4AF37; --bg: #0a0a0a; --card: #161616; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; }
+        
+        /* Sidebar */
+        .sidebar { width: 250px; height: 100vh; background: #000; border-right: 1px solid #222; padding: 30px 20px; position: fixed; }
+        .sidebar h2 { color: var(--gold); font-size: 1.2rem; margin-bottom: 40px; letter-spacing: 2px; }
+    …
+[1:57 pm, 26/2/2026] shashwatbakshi50: <section style="padding: 100px 10%; background: #000; text-align: center;">
+    <h2 style="color: var(--gold); font-size: 2.5rem; margin-bottom: 20px;">OUR REAL HEROES</h2>
+    <p style="color: #888; margin-bottom: 40px;">BCE is not just about code, it's about saving lives in Yamuna Nagar.</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 50px;">
+        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=500" style="width:100%; border-radius:15px; border: 1px solid var(--gold); filter: grayscale(50%);">
+        <img src="https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=500" style="width:100%; border-radius:15px; border: 1px solid var(--gold); filter: grayscale(50%);">
+        <img src="https://images.unsplash.com/photo-1591160674255-fc34bb096029?auto=format&fit=crop&w=500" style="width:100%; border-radius:15px; border: 1px solid var(--gold); filter: grayscale(50%);">
     </div>
-    <div class="game-card">
-        <h3>Stock King</h3>
-        <p>Build your empire from scratch.</p>
-        <button class="btn-gold" onclick="location.href='thanks.html'">Unlock for $1</button>
+
+    <div style="background: linear-gradient(145deg, #111, #050505); padding: 40px; border-radius: 30px; border: 2px solid var(--gold); max-width: 600px; margin: 0 auto; box-shadow: 0 0 30px var(--gold-glow);">
+        <i class="fas fa-heart fa-3x" style="color: #ff4444; margin-bottom: 20px;"></i>
+        <h3 style="color: white; font-size: 1.8rem;">Direct Charity Fund</h3>
+        <p style="color: #aaa; margin: 15px 0;">Even ₹10 can buy a meal for a street dog. 100% of these donations go to animal welfare.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <button class="btn-pay pay-paytm" style="background: #28a745;" onclick="location.href='upi://pay?pa=APNA_NUMBER@paytm&pn=Harnaksh&am=10&cu=INR'">
+                <i class="fas fa-donate"></i> Donate via UPI (Any Amount)
+            </button>
+            <p style="font-size: 0.8rem; color: var(--gold);">Send screenshot on WhatsApp after donating!</p>
+        </div>
     </div>
-</div>
-
-<div id="charity" class="charity-sec">
-    <h2>Your $1 gives Shelter & Food</h2>
-    <p>Hum Yamuna Nagar ke dogs ko rescue karte hain. Payment ke baad email check karein!</p>
-    <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?auto=format&fit=crop&w=400" style="border-radius: 50%; margin-top: 20px; border: 3px solid var(--gold);">
-</div>
-
-<footer style="background: var(--royal-blue); color: white; text-align: center; padding: 20px;">
-    &copy; 2026 Bakshi Coding Empire. All Rights Reserved.
-</footer>
-
-</body>
-</html>
+</section>
