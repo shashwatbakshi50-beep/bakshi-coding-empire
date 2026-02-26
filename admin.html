@@ -1,257 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Empire Pro Admin Panel</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-body{
-margin:0;
-font-family:Segoe UI;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color:white;
-}
-.container{max-width:1200px;margin:auto;padding:30px;}
-.card{
-background:rgba(255,255,255,0.08);
-padding:20px;
-border-radius:15px;
-margin-bottom:20px;
-}
-h1{text-align:center;color:#f0b90b;}
-input{
-width:100%;
-padding:8px;
-margin:6px 0;
-border:none;
-border-radius:8px;
-}
-button{
-padding:6px 12px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-margin-top:5px;
-}
-.btn-yellow{background:#f0b90b;color:black;}
-.btn-green{background:#00c853;color:white;}
-.btn-red{background:#ff1744;color:white;}
-.box{
-background:#1e2329;
-padding:8px;
-border-radius:8px;
-margin-top:6px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-flex-wrap:wrap;
-}
-#dashboard{display:none;}
-canvas{background:white;border-radius:10px;padding:10px;}
-.small-btn{padding:4px 8px;font-size:12px;margin-left:5px;}
-.file-info{font-size:12px;color:#ccc;}
-</style>
+    <meta charset="UTF-8">
+    <title>Bakshi Coding Empire | Innovation & Humanity</title>
+    <style>
+        :root { --royal-blue: #002366; --gold: #D4AF37; --white: #ffffff; --dark: #1a1a1a; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f4f4; }
+        .hero { background: linear-gradient(45deg, var(--royal-blue), #004080); color: white; padding: 80px 20px; text-align: center; border-bottom: 8px solid var(--gold); }
+        .nav-bar { background: var(--dark); padding: 15px; text-align: right; }
+        .nav-bar a { color: var(--gold); margin: 0 15px; text-decoration: none; font-weight: bold; }
+        .stats { display: flex; justify-content: center; gap: 30px; margin-top: -40px; }
+        .stat-card { background: white; padding: 20px 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-bottom: 3px solid var(--gold); text-align: center; }
+        .game-vault { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 50px; }
+        .game-card { background: white; border: 2px solid var(--gold); padding: 25px; border-radius: 15px; text-align: center; transition: 0.3s; }
+        .game-card:hover { transform: translateY(-10px); }
+        .btn-gold { background: var(--gold); color: black; padding: 12px 30px; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 1rem; }
+        .charity-sec { background: var(--dark); color: white; padding: 60px; text-align: center; }
+    </style>
 </head>
 <body>
 
-<div class="container">
-<h1>👑 Empire Admin Panel</h1>
-
-<!-- SET PASSWORD -->
-<div id="setupBox" class="card" style="display:none;">
-<h2>Set Admin Password</h2>
-<input type="password" id="newPass" placeholder="Create Password">
-<button class="btn-yellow" onclick="setPassword()">Save Password</button>
+<div class="nav-bar">
+    <a href="login.html">LOGIN / SIGNUP</a>
+    <a href="#games">GAMES</a>
+    <a href="#charity">CHARITY</a>
 </div>
 
-<!-- LOGIN -->
-<div id="loginBox" class="card" style="display:none;">
-<h2>Admin Login</h2>
-<input type="password" id="loginPass" placeholder="Enter Password">
-<button class="btn-yellow" onclick="login()">Login</button>
-<p id="error" style="color:red;"></p>
+<div class="hero">
+    <h1>BAKSHI CODING EMPIRE</h1>
+    <p>"Where Code Meets Compassion"</p>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard">
-
-<div class="card">
-<h2>📊 Sales Graph</h2>
-<canvas id="salesChart"></canvas>
-<button class="btn-red" onclick="logout()">Logout</button>
-<button class="btn-yellow small-btn" onclick="changePassword()">Change Password</button>
+<div class="stats">
+    <div class="stat-card"><h2>14</h2><p>Founder's Age</p></div>
+    <div class="stat-card"><h2>80+</h2><p>Dogs Fed 🐾</p></div>
+    <div class="stat-card"><h2>$1</h2><p>Price to Play</p></div>
 </div>
 
-<div class="card">
-<h2>Upload Game</h2>
-<input id="gName" placeholder="Game Name">
-<input id="gPrice" type="number" placeholder="Price ₹">
-<input type="file" id="gFile">
-<button class="btn-green" onclick="addGame()">Upload Game</button>
-<div id="gList"></div>
+<div id="games" class="game-vault">
+    <div class="game-card">
+        <h3>Forex Strategist</h3>
+        <p>Master the global markets.</p>
+        <button class="btn-gold" onclick="location.href='thanks.html'">Unlock for $1</button>
+    </div>
+    <div class="game-card">
+        <h3>Stock King</h3>
+        <p>Build your empire from scratch.</p>
+        <button class="btn-gold" onclick="location.href='thanks.html'">Unlock for $1</button>
+    </div>
 </div>
 
-<div class="card">
-<h2>Add Customer</h2>
-<input id="cName" placeholder="Customer Name">
-<input id="cEmail" placeholder="Customer Email">
-<button class="btn-green" onclick="addCustomer()">Add Customer</button>
-<div id="cList"></div>
+<div id="charity" class="charity-sec">
+    <h2>Your $1 gives Shelter & Food</h2>
+    <p>Hum Yamuna Nagar ke dogs ko rescue karte hain. Payment ke baad email check karein!</p>
+    <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?auto=format&fit=crop&w=400" style="border-radius: 50%; margin-top: 20px; border: 3px solid var(--gold);">
 </div>
 
-<div class="card">
-<h2>Add Purchase</h2>
-<input id="pName" placeholder="Buyer Name">
-<input id="pAmt" type="number" placeholder="Amount ₹">
-<button class="btn-green" onclick="addPurchase()">Add Purchase</button>
-<div id="pList"></div>
-</div>
-
-</div>
-</div>
-
-<script>
-
-// INITIAL LOAD
-window.onload=function(){
-if(!localStorage.getItem("adminPassword")){
-document.getElementById("setupBox").style.display="block";
-}else if(localStorage.getItem("adminLogin")==="true"){
-showDashboard();
-}else{
-document.getElementById("loginBox").style.display="block";
-}
-}
-
-// PASSWORD SYSTEM
-function setPassword(){
-let pass=newPass.value.trim();
-if(pass.length<4){ alert("Minimum 4 characters"); return; }
-localStorage.setItem("adminPassword",pass);
-alert("Password Set!");
-location.reload();
-}
-
-function login(){
-let pass=loginPass.value.trim();
-if(pass===localStorage.getItem("adminPassword")){
-localStorage.setItem("adminLogin","true");
-showDashboard();
-}else{
-error.innerText="Wrong Password";
-}
-}
-
-function logout(){
-localStorage.removeItem("adminLogin");
-location.reload();
-}
-
-function changePassword(){
-let np=prompt("Enter New Password:");
-if(np && np.length>=4){
-localStorage.setItem("adminPassword",np);
-alert("Password Changed!");
-}
-}
-
-// DASHBOARD
-function showDashboard(){
-setupBox.style.display="none";
-loginBox.style.display="none";
-dashboard.style.display="block";
-loadData();
-drawChart();
-}
-
-// GAME UPLOAD
-function addGame(){
-let games=JSON.parse(localStorage.getItem("games"))||[];
-let fileInput=document.getElementById("gFile");
-let fileName=fileInput.files[0] ? fileInput.files[0].name : "No File";
-
-games.push({
-name:gName.value,
-price:gPrice.value,
-file:fileName
-});
-
-localStorage.setItem("games",JSON.stringify(games));
-gName.value="";gPrice.value="";gFile.value="";
-loadData();
-}
-
-function deleteGame(i){
-let games=JSON.parse(localStorage.getItem("games"))||[];
-games.splice(i,1);
-localStorage.setItem("games",JSON.stringify(games));
-loadData();
-}
-
-// CUSTOMER
-function addCustomer(){
-let customers=JSON.parse(localStorage.getItem("customers"))||[];
-customers.push({name:cName.value,email:cEmail.value});
-localStorage.setItem("customers",JSON.stringify(customers));
-cName.value="";cEmail.value="";
-loadData();
-}
-
-// PURCHASE
-function addPurchase(){
-let purchases=JSON.parse(localStorage.getItem("purchases"))||[];
-purchases.push({name:pName.value,amount:+pAmt.value});
-localStorage.setItem("purchases",JSON.stringify(purchases));
-pName.value="";pAmt.value="";
-loadData();
-drawChart();
-}
-
-// LOAD DATA
-function loadData(){
-let games=JSON.parse(localStorage.getItem("games"))||[];
-let customers=JSON.parse(localStorage.getItem("customers"))||[];
-let purchases=JSON.parse(localStorage.getItem("purchases"))||[];
-
-gList.innerHTML=games.map((g,i)=>
-`<div class="box">
-<div>
-<b>${g.name}</b> - ₹${g.price}
-<div class="file-info">File: ${g.file}</div>
-</div>
-<button class="btn-red small-btn" onclick="deleteGame(${i})">Delete</button>
-</div>`).join("");
-
-cList.innerHTML=customers.map(c=>
-`<div class="box">${c.name} - ${c.email}</div>`).join("");
-
-pList.innerHTML=purchases.map(p=>
-`<div class="box">${p.name} - ₹${p.amount}</div>`).join("");
-}
-
-// SALES GRAPH
-function drawChart(){
-let purchases=JSON.parse(localStorage.getItem("purchases"))||[];
-let labels=purchases.map(p=>p.name);
-let data=purchases.map(p=>p.amount);
-
-if(window.chartInstance){ window.chartInstance.destroy(); }
-
-window.chartInstance=new Chart(salesChart,{
-type:"bar",
-data:{
-labels:labels,
-datasets:[{
-label:"Sales ₹",
-data:data,
-backgroundColor:"#f0b90b"
-}]
-}
-});
-}
-
-</script>
+<footer style="background: var(--royal-blue); color: white; text-align: center; padding: 20px;">
+    &copy; 2026 Bakshi Coding Empire. All Rights Reserved.
+</footer>
 
 </body>
 </html>
