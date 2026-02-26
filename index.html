@@ -2,63 +2,164 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Bakshi Coding Empire | Innovation & Humanity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCE | Bakshi Coding Empire - Official Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --royal-blue: #002366; --gold: #D4AF37; --white: #ffffff; --dark: #1a1a1a; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f4f4; }
-        .hero { background: linear-gradient(45deg, var(--royal-blue), #004080); color: white; padding: 80px 20px; text-align: center; border-bottom: 8px solid var(--gold); }
-        .nav-bar { background: var(--dark); padding: 15px; text-align: right; }
-        .nav-bar a { color: var(--gold); margin: 0 15px; text-decoration: none; font-weight: bold; }
-        .stats { display: flex; justify-content: center; gap: 30px; margin-top: -40px; }
-        .stat-card { background: white; padding: 20px 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-bottom: 3px solid var(--gold); text-align: center; }
-        .game-vault { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 50px; }
-        .game-card { background: white; border: 2px solid var(--gold); padding: 25px; border-radius: 15px; text-align: center; transition: 0.3s; }
-        .game-card:hover { transform: translateY(-10px); }
-        .btn-gold { background: var(--gold); color: black; padding: 12px 30px; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 1rem; }
-        .charity-sec { background: var(--dark); color: white; padding: 60px; text-align: center; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        :root { --gold: #D4AF37; --gold-glow: rgba(212, 175, 55, 0.4); --bg: #050505; --card-bg: #111111; }
+        
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px);
+            padding: 20px 8%; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .logo { font-size: 1.6rem; font-weight: 900; color: var(--gold); letter-spacing: 3px; text-decoration: none; }
+        .nav-links a { color: #eee; text-decoration: none; margin-left: 30px; font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            text-align: center; position: relative;
+        }
+        .hero h1 { 
+            font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; line-height: 1.1; margin-bottom: 20px;
+            background: linear-gradient(to bottom, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero span { color: var(--gold); -webkit-text-fill-color: var(--gold); }
+        .hero p { font-size: 1.2rem; color: #888; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 30px; }
+
+        /* --- STATS SECTION --- */
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 50px 10%; margin-top: -50px; }
+        .stat-card { background: var(--card-bg); padding: 40px; border-radius: 15px; border: 1px solid #222; text-align: center; transition: 0.4s; }
+        .stat-card:hover { border-color: var(--gold); transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .stat-card i { font-size: 2.5rem; color: var(--gold); margin-bottom: 15px; }
+        .stat-card h2 { font-size: 2rem; margin-bottom: 5px; }
+
+        /* --- GAMING VAULT --- */
+        .section-title { text-align: center; padding: 100px 0 50px; }
+        .section-title h2 { font-size: 3rem; color: var(--gold); text-transform: uppercase; }
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; padding: 0 10%; }
+        .game-card { 
+            background: var(--card-bg); border-radius: 25px; overflow: hidden; border: 1px solid #222; position: relative;
+            transition: 0.5s;
+        }
+        .game-card:hover { border-color: var(--gold); }
+        .game-img { width: 100%; height: 250px; background: #222; object-fit: cover; opacity: 0.6; }
+        .game-content { padding: 30px; }
+        .game-content h3 { font-size: 1.5rem; margin-bottom: 15px; color: var(--gold); }
+
+        /* --- BUTTONS --- */
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .btn-pay { 
+            padding: 14px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; gap: 12px; transition: 0.3s;
+        }
+        .pay-paytm { background: #00BAF2; color: white; }
+        .pay-paypal { background: #003087; color: white; }
+        .btn-proof { background: #25D366; color: white; text-decoration: none; padding: 14px; border-radius: 10px; text-align: center; font-weight: bold; margin-top: 10px; display: block; }
+        .btn-pay:hover, .btn-proof:hover { opacity: 0.8; transform: scale(1.02); }
+
+        /* --- CHARITY ROADMAP --- */
+        .roadmap { padding: 100px 10%; background: #080808; }
+        .roadmap-item { border-left: 2px solid var(--gold); padding: 0 0 50px 30px; position: relative; }
+        .roadmap-item::before { content: ''; position: absolute; left: -11px; top: 0; width: 20px; height: 20px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 15px var(--gold); }
+
+        /* --- FOOTER --- */
+        footer { padding: 80px 10%; border-top: 1px solid #222; text-align: center; }
+        .footer-logo { font-size: 2rem; color: var(--gold); font-weight: 900; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-<div class="nav-bar">
-    <a href="login.html">LOGIN / SIGNUP</a>
-    <a href="#games">GAMES</a>
-    <a href="#charity">CHARITY</a>
-</div>
+    <nav>
+        <a href="#" class="logo">B.C.E</a>
+        <div class="nav-links">
+            <a href="#vault">THE VAULT</a>
+            <a href="#charity">CHARITY</a>
+            <a href="#investors">INVESTORS</a>
+            <a href="admin-portal.html" style="border: 1px solid var(--gold); padding: 8px 15px; border-radius: 5px;">ADMIN PANEL</a>
+        </div>
+    </nav>
 
-<div class="hero">
-    <h1>BAKSHI CODING EMPIRE</h1>
-    <p>"Where Code Meets Compassion"</p>
-</div>
+    <section class="hero">
+        <p>Innovation meets Humanity</p>
+        <h1>BAKSHI CODING<br><span>EMPIRE</span></h1>
+        <a href="#vault" style="color: var(--gold); text-decoration: none; border: 1px solid var(--gold); padding: 15px 40px; border-radius: 50px; font-weight: bold;">EXPLORE PROJECTS</a>
+    </section>
 
-<div class="stats">
-    <div class="stat-card"><h2>14</h2><p>Founder's Age</p></div>
-    <div class="stat-card"><h2>80+</h2><p>Dogs Fed 🐾</p></div>
-    <div class="stat-card"><h2>$1</h2><p>Price to Play</p></div>
-</div>
-
-<div id="games" class="game-vault">
-    <div class="game-card">
-        <h3>Forex Strategist</h3>
-        <p>Master the global markets.</p>
-        <button class="btn-gold" onclick="location.href='thanks.html'">Unlock for $1</button>
+    <div class="stats-container">
+        <div class="stat-card">
+            <i class="fas fa-microchip"></i>
+            <h2>12+</h2>
+            <p>Advanced Games</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-paw"></i>
+            <h2>82</h2>
+            <p>Dogs Sheltered</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <h2>500+</h2>
+            <p>Active Players</p>
+        </div>
     </div>
-    <div class="game-card">
-        <h3>Stock King</h3>
-        <p>Build your empire from scratch.</p>
-        <button class="btn-gold" onclick="location.href='thanks.html'">Unlock for $1</button>
-    </div>
-</div>
 
-<div id="charity" class="charity-sec">
-    <h2>Your $1 gives Shelter & Food</h2>
-    <p>Hum Yamuna Nagar ke dogs ko rescue karte hain. Payment ke baad email check karein!</p>
-    <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?auto=format&fit=crop&w=400" style="border-radius: 50%; margin-top: 20px; border: 3px solid var(--gold);">
-</div>
+    <section id="vault" class="section-title">
+        <h2>The Premium Vault</h2>
+        <div class="game-grid">
+            <div class="game-card">
+                <img src="https://images.unsplash.com/photo-1611974714658-058f4c3997d6?auto=format&fit=crop&w=800" class="game-img">
+                <div class="game-content">
+                    <h3>STOCK MARKET TYCOON</h3>
+                    <p style="color:#666;">High-speed trading simulation with Zomato API integration.</p>
+                    <div class="btn-group">
+                        <button class="btn-pay pay-paytm" onclick="location.href='upi://pay?pa=APNA_NUMBER@paytm&pn=Harnaksh&am=85&cu=INR'"><i class="fas fa-wallet"></i> Pay via Paytm (₹85)</button>
+                        <button class="btn-pay pay-paypal" onclick="location.href='https://www.paypal.me/YOUR_NAME/1'"><i class="fab fa-paypal"></i> Pay via PayPal ($1)</button>
+                        <a href="https://wa.me/91YOUR_NUMBER?text=Bhai%20Stock%20Game%20ki%20payment%20proof" class="btn-proof"><i class="fab fa-whatsapp"></i> Submit Proof</a>
+                    </div>
+                </div>
+            </div>
+            <div class="game-card">
+                <img src="https://images.unsplash.com/photo-1614028674026-a65e31bfd27c?auto=format&fit=crop&w=800" class="game-img">
+                <div class="game-content">
+                    <h3>FOREX SNIPER V4</h3>
+                    <p style="color:#666;">Global currency market simulation for elite traders.</p>
+                    <div class="btn-group">
+                        <button class="btn-pay pay-paytm" onclick="location.href='upi://pay?pa=APNA_NUMBER@paytm&pn=Harnaksh&am=85&cu=INR'"><i class="fas fa-wallet"></i> Pay via Paytm (₹85)</button>
+                        <button class="btn-pay pay-paypal" onclick="location.href='https://www.paypal.me/YOUR_NAME/1'"><i class="fab fa-paypal"></i> Pay via PayPal ($1)</button>
+                        <a href="https://wa.me/91YOUR_NUMBER?text=Bhai%20Forex%20Game%20ki%20payment%20proof" class="btn-proof"><i class="fab fa-whatsapp"></i> Submit Proof</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<footer style="background: var(--royal-blue); color: white; text-align: center; padding: 20px;">
-    &copy; 2026 Bakshi Coding Empire. All Rights Reserved.
-</footer>
+    <section id="charity" class="roadmap">
+        <h2 style="color:var(--gold); font-size: 2.5rem; margin-bottom: 50px;">BCE Charity Roadmap</h2>
+        <div class="roadmap-item">
+            <h3>Yamuna Nagar Street Care</h3>
+            <p style="color:#888;">Providing daily meals and medical first-aid to 80+ dogs. Your $1 donation fuels this mission.</p>
+        </div>
+        <div class="roadmap-item">
+            <h3>Future Shelter Home</h3>
+            <p style="color:#888;">Plan to build a permanent rescue center by late 2026 using BCE revenue.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">B.C.E</div>
+        <p style="color:#444;">&copy; 2026 Bakshi Coding Empire. Founded by Harnaksh. All rights reserved.</p>
+    </footer>
 
 </body>
 </html>
