@@ -117,15 +117,15 @@
     <nav>
         <a href="#home">Home</a>
         <a href="#games">Games</a>
-        <a href="#team">Team</a>
-        <a href="#faq">FAQ</a>
+        <a href="#donation for dogs">donation for dogs</a>
+        <a href="#mission and vision">mission and vision</a>
         <a herf="#user login">user login</a>
     </nav>
 </header>
 
 <section id="home" class="hero">
     <h1>Shashwat Gaming Studios</h1>
-    <p>Innovating the next generation of immersive gaming experiences with passion.</p>
+    <p>Innovating the next generation of immersive gaming experiences with passion iam a class 9th student my dream are big and i want to make my moms dream true i want to beacame a person to give work not to take job.</p>
     <button class="btn">Explore Now</button>
 </section>
 
@@ -187,7 +187,19 @@
     <input type="password" id="password" placeholder="Password daal">
     <button onclick="loginUser()">Login Kar</button>
 </div>
-
+<div id="login-container" style="background: #111; padding: 40px; border: 2px solid #d4af37; border-radius: 20px; width: 300px; margin: 50px auto; text-align: center; color: white;">
+    <h2 style="color: #d4af37; margin-bottom: 20px;">Empire Login</h2>
+    
+    <input type="email" id="user-email" placeholder="Email Address" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #444; background: #000; color: white; box-sizing: border-box;">
+    
+    <input type="password" id="user-pass" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 20px; border-radius: 5px; border: 1px solid #444; background: #000; color: white; box-sizing: border-box;">
+    
+    <button onclick="alert('Login button clicked! Backend baad mein connect karenge.')" style="width: 100%; padding: 12px; background: #d4af37; border: none; border-radius: 5px; color: black; font-weight: bold; cursor: pointer;">
+        LOGIN
+    </button>
+    
+    <p style="margin-top: 15px; font-size: 12px; color: #888;">Only for authorized Empire members.</p>
+</div>
 <script>
     // Ye code zaroor ensure kar ki tera auth aur db variable defined hai
     const auth = firebase.auth(); 
@@ -215,7 +227,38 @@
             alert("Error: " + error.message);
         }
     }
+<div id="dog-donation-section" style="max-width: 500px; margin: 30px auto; padding: 20px; border: 2px solid #d4af37; border-radius: 15px; background: #111; color: white; text-align: center;">
+    <h3>Donation for Dogs 🐾</h3>
+    <p>Upload proof of your kindness!</p>
+    
+    <div style="margin-bottom: 15px;">
+        <input type="file" id="dog-image" accept="image/*" onchange="previewImage(event)" style="color: white;">
+    </div>
 
+    <div style="margin-top: 15px;">
+        <img id="imagePreview" src="#" alt="Your Preview" style="display:none; max-width: 100%; height: auto; border-radius: 10px; border: 2px solid #d4af37;">
+    </div>
+    
+    <button class="btn" style="margin-top: 15px;" onclick="alert('Proof received! Aapke support ke liye shukriya.')">
+        Upload & Donate
+    </button>
+</div>
+
+<script>
+    // Ye function image ko turant screen pe dikha dega
+    function previewImage(event) {
+        const reader = new FileReader();
+        const preview = document.getElementById('imagePreview');
+        
+        reader.onload = function() {
+            preview.src = reader.result;
+            preview.style.display = 'block'; // Photo dikha do
+        }
+        
+        if (event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
 </script>
     <div id="payment-section" style="text-align: center; margin: 30px; padding: 20px; border: 1px solid #d4af37; border-radius: 10px;">
     <h3>Support the Empire</h3>
@@ -231,5 +274,6 @@
         Pay via PhonePe/UPI
     </button>
 </div>
+    
 </body>
 </html>
