@@ -1,4 +1,4 @@
-[3:00 pm, 26/2/2026] shashwatbakshi50: <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -184,5 +184,28 @@
         }
         render();
     </script>
+    <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDxPQIDogthqjT63RJ6CxBPk-g9lJWZ29E",
+    authDomain: "bakshi-the-ceo-web.firebaseapp.com",
+    projectId: "bakshi-the-ceo-web",
+    storageBucket: "bakshi-the-ceo-web.firebasestorage.app",
+    messagingSenderId: "984702926499",
+    appId: "1:984702926499:web:2c9ea195a5102430044916",
+    measurementId: "G-89DSG3RHTK"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 </body>
 </html>
