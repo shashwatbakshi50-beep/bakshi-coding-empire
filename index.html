@@ -5,40 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shashwat Gaming Studios</title>
     <style>
-        /* Essential Centering Logic */
+        /* Center Lock CSS */
         body { 
             margin: 0; font-family: 'Segoe UI', sans-serif; 
             background: #000000; color: #f1f5f9; 
             display: flex; flex-direction: column; align-items: center; 
-            min-height: 100vh; overflow-x: hidden; scroll-behavior: smooth; 
+            width: 100%; overflow-x: hidden;
         }
 
-        /* Sab kuch ek box mein takki center rahe */
-        .main-container { width: 90%; max-width: 900px; display: flex; flex-direction: column; align-items: center; }
+        /* Essential Container to keep everything centered */
+        .wrapper { width: 90%; max-width: 900px; display: flex; flex-direction: column; align-items: center; }
 
         header { 
             background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px); 
-            padding: 20px; width: 100%; position: fixed; top: 0; z-index: 1000; 
-            border-bottom: 1px solid #d4af37; text-align: center;
+            padding: 20px; width: 100%; border-bottom: 1px solid #d4af37; 
+            text-align: center; z-index: 1000;
         }
         nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
-        nav a:hover { color: #d4af37; }
-
-        section { padding: 120px 0; text-align: center; width: 100%; }
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .hero h1 { font-size: 60px; color: #d4af37; text-transform: uppercase; margin-bottom: 20px; }
-        .hero p { font-size: 22px; max-width: 700px; color: #cbd5e1; }
-
+        
+        section { padding: 80px 0; text-align: center; width: 100%; }
+        
+        .hero { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .hero h1 { font-size: 50px; color: #d4af37; text-transform: uppercase; }
+        
         .btn { 
             background: linear-gradient(45deg, #d4af37, #b8860b); padding: 12px 30px; 
-            border: none; color: white; border-radius: 30px; cursor: pointer; 
-            font-weight: bold; margin-top: 20px;
+            border: none; color: white; border-radius: 30px; cursor: pointer; font-weight: bold; 
         }
 
         .card-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; }
-        .card { background: #111111; padding: 25px; width: 250px; border-radius: 15px; border: 1px solid #d4af37; }
-        .value { color: #fbbf24; font-size: 2rem; font-weight: bold; }
-
+        .card { background: #111; padding: 25px; width: 250px; border-radius: 15px; border: 1px solid #d4af37; }
+        
         #donation-section, #login-section, #payment-section { 
             background: #111; padding: 40px; border: 2px solid #d4af37; 
             border-radius: 20px; width: 100%; max-width: 500px; margin: 20px 0;
@@ -48,103 +45,95 @@
 </head>
 <body>
 
-<header>
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#games">Games</a>
-        <a href="#donation-section">Donation</a>
-        <a href="#login-section">Login</a>
-    </nav>
-</header>
+    <header>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#games">Games</a>
+            <a href="#donation-section">Donation</a>
+            <a href="#login-section">Login</a>
+        </nav>
+    </header>
 
-<div class="main-container">
-    <section id="home" class="hero">
-        <h1>Shashwat Gaming Studios</h1>
-        <p>Innovating the next generation of immersive gaming experiences with passion. I am a class 9th student, my dreams are big, and I want to make my moms dream true. I want to become a person to give work, not to take a job.</p>
-        <button class="btn">Explore Now</button>
-    </section>
+    <div class="wrapper">
+        <section id="home" class="hero">
+            <h1>Shashwat Gaming Studios</h1>
+            <p>Innovating the next generation of gaming. I am a class 9th student, my dreams are big, and I want to make my mom's dream true.</p>
+            <button class="btn">Explore Now</button>
+        </section>
 
-    <section id="games">
-        <h2>🎮 Official Game Trailer</h2>
-        <video controls style="width: 100%; max-width: 800px; border: 2px solid #d4af37; border-radius: 15px;">
-            <source src="your-game-trailer.mp4" type="video/mp4">
-        </video>
-    </section>
+        <section id="games">
+            <h2>🎮 Official Game Trailer</h2>
+            <video controls style="width: 100%; max-width: 800px; border: 2px solid #d4af37; border-radius: 15px;">
+                <source src="your-game-trailer.mp4" type="video/mp4">
+            </video>
+        </section>
 
-    <section>
-        <h2>📊 Live Company Stats</h2>
-        <div class="card-container">
-            <div class="card"><h3>Players</h3><p id="players" class="value">0+</p></div>
-            <div class="card"><h3>Downloads</h3><p id="downloads" class="value">0+</p></div>
-            <div class="card"><h3>Community</h3><p id="community" class="value">0+</p></div>
-        </div>
-    </section>
+        <section>
+            <h2>📊 Live Company Stats</h2>
+            <div class="card-container">
+                <div class="card"><h3>Players</h3><p id="players" class="value">0+</p></div>
+                <div class="card"><h3>Downloads</h3><p id="downloads" class="value">0+</p></div>
+                <div class="card"><h3>Community</h3><p id="community" class="value">0+</p></div>
+            </div>
+        </section>
 
-    <section id="donation-section">
-        <h3>Donation for Dogs 🐾</h3>
-        <input type="file" id="dog-image" accept="image/*" onchange="previewImage(event)">
-        <img id="imagePreview" src="#" alt="Preview" style="display:none; max-width: 100%; border-radius: 10px; margin-top: 10px;">
-        <br>
-        <button class="btn" onclick="alert('Upload & Donate process initiated!')">Upload & Donate</button>
-    </section>
+        <section id="donation-section">
+            <h3>Donation for Dogs 🐾</h3>
+            <input type="file" id="dog-image" accept="image/*" onchange="previewImage(event)">
+            <img id="imagePreview" src="#" alt="Preview" style="display:none; max-width: 100%; border-radius: 10px; margin-top: 10px;">
+            <button class="btn" style="display:block; margin: 20px auto;" onclick="alert('Donation process initiated!')">Upload & Donate</button>
+        </section>
 
-    <section id="login-section">
-        <h2>Empire Login</h2>
-        <input type="email" id="email" placeholder="Email Address">
-        <input type="password" id="password" placeholder="Password">
-        <button class="btn" onclick="loginUser()">LOGIN</button>
-    </section>
-</div>
+        <section id="login-section">
+            <h2>Empire Login</h2>
+            <input type="email" id="email" placeholder="Email Address">
+            <input type="password" id="password" placeholder="Password">
+            <button class="btn" onclick="loginUser()">LOGIN</button>
+        </section>
+    </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
-  const firebaseConfig = {
-    apiKey: "the-ceo-web",
-    authDomain: "the-ceo-web.firebaseapp.com",
-    projectId: "the-ceo-web",
-    storageBucket: "the-ceo-web.firebasestorage.app",
-    messagingSenderId: "729264914822",
-    appId: "1:729264914822:web:c6e123edca812c50586c07",
-    measurementId: "G-ZMJJQRBS0V"
-  };
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        const firebaseConfig = {
+            apiKey: "the-ceo-web",
+            authDomain: "the-ceo-web.firebaseapp.com",
+            projectId: "the-ceo-web",
+            storageBucket: "the-ceo-web.firebasestorage.app",
+            messagingSenderId: "729264914822",
+            appId: "1:729264914822:web:c6e123edca812c50586c07"
+        };
+        initializeApp(firebaseConfig);
+    </script>
 
-<script>
-    function animateValue(id, end, duration) {
-        let obj = document.getElementById(id);
-        if(!obj) return;
-        let current = 0;
-        let stepTime = Math.abs(Math.floor(duration / end));
-        let timer = setInterval(() => {
-            current += 1;
-            obj.innerHTML = current + "+";
-            if (current == end) clearInterval(timer);
-        }, stepTime);
-    }
-    
-    window.onload = () => {
-        animateValue("players", 500, 2000);
-        animateValue("downloads", 1200, 2000);
-        animateValue("community", 800, 2000);
-    };
-
-    function previewImage(event) {
-        const reader = new FileReader();
-        const preview = document.getElementById('imagePreview');
-        reader.onload = function() {
-            preview.src = reader.result;
-            preview.style.display = 'block';
+    <script>
+        function animateValue(id, end, duration) {
+            let obj = document.getElementById(id);
+            if(!obj) return;
+            let current = 0;
+            let timer = setInterval(() => {
+                current += 1;
+                obj.innerHTML = current + "+";
+                if (current >= end) clearInterval(timer);
+            }, duration / end);
         }
-        if (event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
-    }
+        
+        window.onload = () => {
+            animateValue("players", 500, 2000);
+            animateValue("downloads", 1200, 2000);
+            animateValue("community", 800, 2000);
+        };
 
-    function loginUser() {
-        alert("Login Initiated!");
-    }
-</script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            const preview = document.getElementById('imagePreview');
+            reader.onload = function() {
+                preview.src = reader.result;
+                preview.style.display = 'block';
+            }
+            if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
+        }
 
+        function loginUser() { alert("Login Initiated!"); }
+    </script>
 </body>
 </html>
