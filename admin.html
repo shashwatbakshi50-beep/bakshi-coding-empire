@@ -1,17 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <title>Admin - BCE Infinity</title>
+    <style>
+        body { background: #0a192f; color: white; text-align: center; padding: 50px; font-family: sans-serif; }
+        input { padding: 10px; margin: 10px; border-radius: 5px; border: none; }
+        button { background: #ffcf70; padding: 10px 25px; border: none; cursor: pointer; font-weight: bold; border-radius: 5px; }
+    </style>
+</head>
 <body>
-    <h2>Admin Panel - BCE Empire</h2>
-    <input type="number" id="revIn" placeholder="Revenue">
-    <input type="number" id="goalIn" placeholder="Goal">
-    <input type="number" id="dogIn" placeholder="Dogs">
-    <button id="upBtn">Update</button>
+    <h2>Admin Control Panel</h2>
+    <input type="number" id="revIn" placeholder="Revenue Amount">
+    <input type="number" id="goalIn" placeholder="Goal Amount">
+    <input type="number" id="dogIn" placeholder="Dogs Number">
+    <br>
+    <button id="upBtn">Update Empire</button>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        // Yahan WAHI keys daalo jo index.html mein daali thi
+        // Yahan WAHI Firebase keys daalein jo index.html mein daali thi
         const firebaseConfig = {
           apiKey: "YOUR_API_KEY",
           authDomain: "bakshi-the-ceo-web.firebaseapp.com",
@@ -23,13 +32,16 @@
         const db = getFirestore(app);
 
         document.getElementById('upBtn').onclick = async () => {
+            const rev = document.getElementById('revIn').value;
+            const goal = document.getElementById('goalIn').value;
+            const dogs = document.getElementById('dogIn').value;
+
             await setDoc(doc(db, "stats", "liveStats"), {
-                revenue: document.getElementById('revIn').value,
-                goal: document.getElementById('goalIn').value,
-                dogs: document.getElementById('dogIn').value
+                revenue: rev, goal: goal, dogs: dogs
             });
-            alert("Empire Stats Updated!");
+            alert("Empire Stats Updated Successfully!");
         };
     </script>
 </body>
 </html>
+
