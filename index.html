@@ -1,197 +1,292 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCE Infinity | The Future of Wealth & Seva</title>
-    <style>
-        /* Exact Same Styling as per your photos */
-        body {
-            background-color: #0a192f; /* Dark Navy Blue from your screens */
-            color: #ffffff; /* Pure White text */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-        }
+<title>Shashwat Gaming Studios</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .container {
-            width: 90%;
-            max-width: 1200px;
-        }
+<style>
 
-        h1 {
-            color: #ffcf70; /* Premium Gold color from your screens */
-            font-size: 3rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
+body{
+margin:0;
+font-family: 'Segoe UI', sans-serif;
+background:#0f0f0f;
+color:white;
+overflow-x:hidden;
+scroll-behavior:smooth;
+}
 
-        p.subtitle {
-            font-size: 1.2rem;
-            color: #b0bec5; /* Light Grey for subtitle */
-            margin-bottom: 50px;
-        }
+/* Animated Background */
+body::before{
+content:"";
+position:fixed;
+width:200%;
+height:200%;
+background:radial-gradient(circle at 20% 30%, #00c853 0%, transparent 40%),
+radial-gradient(circle at 80% 70%, #2979ff 0%, transparent 40%);
+animation:moveBg 10s linear infinite;
+z-index:-1;
+}
 
-        /* Stats Cards Section - Exact Match */
-        .stats-container {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
-        }
+@keyframes moveBg{
+0%{transform:translate(0,0);}
+50%{transform:translate(-10%, -10%);}
+100%{transform:translate(0,0);}
+}
 
-        .card {
-            background-color: #112240; /* Slightly lighter navy for cards */
-            padding: 30px;
-            border-radius: 15px;
-            width: 250px;
-            border: 1px solid #ffcf70; /* Gold Border from your screens */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Subtle Shadow */
-        }
+header{
+background:rgba(0,0,0,0.7);
+backdrop-filter:blur(10px);
+padding:20px;
+position:fixed;
+width:100%;
+top:0;
+z-index:1000;
+}
 
-        .card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
+nav a{
+color:white;
+margin:0 15px;
+text-decoration:none;
+font-weight:bold;
+}
 
-        .card .value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #ffcf70; /* Gold Value */
-            margin-top: 10px;
-        }
+section{
+padding:120px 20px;
+text-align:center;
+}
 
-        /* Admin/Update Section - Perfect for you */
-        .admin-section {
-            margin-top: 80px;
-            background-color: #112240;
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid #ffcf70;
-            width: 100%;
-            max-width: 600px;
-        }
+.hero{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
 
-        .admin-section h2 {
-            color: #ffcf70;
-            margin-bottom: 20px;
-        }
+.hero h1{
+font-size:60px;
+margin-bottom:20px;
+background:linear-gradient(45deg,#00c853,#2979ff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
 
-        .admin-section input {
-            padding: 12px;
-            margin: 10px;
-            border-radius: 5px;
-            border: none;
-            width: 100%;
-            max-width: 200px;
-            background-color: #ffffff;
-            color: #000000;
-        }
+.hero p{
+font-size:22px;
+max-width:700px;
+}
 
-        .admin-section button {
-            background-color: #ffcf70; /* Gold Button */
-            color: #0a192f; /* Dark text on button */
-            border: none;
-            padding: 12px 30px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            border-radius: 5px;
-            margin-top: 20px;
-            transition: background 0.3s ease;
-        }
+.btn{
+background:linear-gradient(45deg,#00c853,#2979ff);
+padding:12px 30px;
+border:none;
+color:white;
+border-radius:30px;
+cursor:pointer;
+font-size:16px;
+margin-top:20px;
+}
 
-        .admin-section button:hover {
-            background-color: #ffdca0; /* Lighter Gold on hover */
-        }
-    </style>
+.card-container{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:25px;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+padding:25px;
+width:300px;
+border-radius:15px;
+backdrop-filter:blur(10px);
+box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+
+video{
+width:80%;
+max-width:800px;
+border-radius:15px;
+box-shadow:0 0 20px black;
+}
+
+/* FAQ */
+.faq-item{
+margin:15px auto;
+max-width:700px;
+text-align:left;
+background:#1a1a1a;
+padding:15px;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* Footer */
+footer{
+background:#000;
+padding:40px;
+text-align:center;
+}
+
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="hero">
-            <h1>THE FUTURE OF WEALTH & SEVA</h1>
-            <p class="subtitle">Premium trading algorithms designed for global dominance, fueled by the spirit of selfless service.</p>
-        </div>
+<header>
+<nav>
+<a href="#home">Home</a>
+<a href="#games">Games</a>
+<a href="#team">Team</a>
+<a href="#faq">FAQ</a>
+<a href="#legal">Legal</a>
+</nav>
+</header>
 
-        <div class="stats-container">
-            <div class="card">
-                <h3>Total Revenue</h3>
-                <p id="rev" class="value">₹0</p>
-            </div>
-            <div class="card">
-                <h3>Seva Goal</h3>
-                <p id="goal" class="value">₹0</p>
-            </div>
-            <div class="card">
-                <h3>Dogs Nourished</h3>
-                <p id="dogs" class="value">0</p>
-            </div>
-        </div>
+<!-- HERO -->
+<section id="home" class="hero">
+<h1>Shashwat Gaming Studios</h1>
+<p>Innovating the next generation of immersive gaming experiences with technology, passion, and creativity.</p>
+<button class="btn">Explore Now</button>
+</section>
 
-        <div class="admin-section">
-            <h2>Admin Control Panel</h2>
-            <p style="color: #b0bec5; margin-bottom: 20px;">Use this section to update the live stats on your website.</p>
-            <input type="number" id="revIn" placeholder="Revenue Amount">
-            <input type="number" id="goalIn" placeholder="Goal Amount">
-            <input type="number" id="dogIn" placeholder="Dogs Number">
-            <br>
-            <button id="upBtn">Update Empire Stats</button>
-        </div>
-    </div>
+<!-- GAME TRAILER -->
+<section id="games">
+<h2>🎮 Official Game Trailer</h2>
+<p>Watch our upcoming flagship game in action.</p>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+<video controls>
+<source src="your-game-trailer.mp4" type="video/mp4">
+Your browser does not support video.
+</video>
 
-        // YAHA APNI FIREBASE CONFIG KEYS PASTE KARO
-        // Tumhari key tumhare console mein hogi
-        const firebaseConfig = {
-          apiKey: "YOUR_API_KEY",
-          authDomain: "bakshi-the-ceo-web.firebaseapp.com",
-          projectId: "bakshi-the-ceo-web",
-          storageBucket: "bakshi-the-ceo-web.firebasestorage.app",
-          appId: "YOUR_APP_ID"
-        };
+</section>
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+<!-- LIVE STATS -->
+<section>
+<h2>📊 Live Company Stats</h2>
 
-        // Load Live Stats - automatic update for user
-        async function loadStats() {
-            try {
-                const docSnap = await getDoc(doc(db, "stats", "liveStats"));
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    document.getElementById('rev').innerText = "₹" + data.revenue;
-                    document.getElementById('goal').innerText = "₹" + data.goal;
-                    document.getElementById('dogs').innerText = data.dogs;
-                }
-            } catch (e) { console.error("Error loading stats", e); }
-        }
-        loadStats(); // Call load function on page load
+<div class="card-container">
 
-        // Admin Update Logic
-        document.getElementById('upBtn').onclick = async () => {
-            const rev = document.getElementById('revIn').value;
-            const goal = document.getElementById('goalIn').value;
-            const dogs = document.getElementById('dogIn').value;
+<div class="card">
+<h3 id="players">0</h3>
+<p>Active Players</p>
+</div>
 
-            // Update data in Firestore
-            await setDoc(doc(db, "stats", "liveStats"), {
-                revenue: rev, goal: goal, dogs: dogs
-            });
-            alert("Empire Stats Updated Successfully! Refresh the public page to see the change.");
-            loadStats(); // Refresh the stats after update
-        };
-    </script>
+<div class="card">
+<h3 id="downloads">0</h3>
+<p>Total Downloads</p>
+</div>
+
+<div class="card">
+<h3 id="community">0</h3>
+<p>Community Members</p>
+</div>
+
+</div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+<h2>👥 Our Team</h2>
+
+<div class="card-container">
+
+<div class="card">
+<h3>Shashwat Bakshi</h3>
+<p>Founder & Lead Developer</p>
+<p>Visionary game creator passionate about building world-class gaming experiences.</p>
+</div>
+
+<div class="card">
+<h3>Game Designer</h3>
+<p>Designing immersive gameplay systems and player engagement mechanics.</p>
+</div>
+
+<div class="card">
+<h3>Marketing Head</h3>
+<p>Building brand presence and expanding the global gaming community.</p>
+</div>
+
+</div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+<h2>❓ Frequently Asked Questions</h2>
+
+<div class="faq-item">
+<strong>When will the first game launch?</strong>
+<p>Our first major release is scheduled for upcoming development phase.</p>
+</div>
+
+<div class="faq-item">
+<strong>Will multiplayer be available?</strong>
+<p>Yes, multiplayer features are planned in Phase 2 roadmap.</p>
+</div>
+
+<div class="faq-item">
+<strong>How can I join the team?</strong>
+<p>Send your portfolio to our official email for opportunities.</p>
+</div>
+
+</section>
+
+<!-- LEGAL -->
+<section id="legal">
+<h2>📜 Legal & Company Registration</h2>
+
+<div class="card-container">
+
+<div class="card">
+<h3>Company Name</h3>
+<p>Shashwat Gaming Studios Pvt. Ltd.</p>
+</div>
+
+<div class="card">
+<h3>Registration Status</h3>
+<p>Registered under Indian Business Compliance Guidelines.</p>
+</div>
+
+<div class="card">
+<h3>Terms & Conditions</h3>
+<p>All games, assets, and digital properties are protected under copyright law.</p>
+</div>
+
+<div class="card">
+<h3>Privacy Policy</h3>
+<p>We ensure secure handling of user data and maintain full transparency.</p>
+</div>
+
+</div>
+</section>
+
+<footer>
+<p>© 2026 Shashwat Gaming Studios. All Rights Reserved.</p>
+<p>Built with Passion & Innovation 🚀</p>
+</footer>
+
+<!-- JS COUNTER -->
+<script>
+function animateValue(id, end, duration) {
+let start = 0;
+let range = end - start;
+let current = start;
+let increment = end > start ? 1 : -1;
+let stepTime = Math.abs(Math.floor(duration / range));
+let obj = document.getElementById(id);
+let timer = setInterval(function() {
+current += increment;
+obj.innerHTML = current + "+";
+if (current == end) {
+clearInterval(timer);
+}
+}, stepTime);
+}
+
+animateValue("players", 5000, 2000);
+animateValue("downloads", 12000, 2000);
+animateValue("community", 8000, 2000);
+</script>
+
 </body>
 </html>
