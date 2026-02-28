@@ -144,17 +144,6 @@
         <div class="card"><h3>Community</h3><p id="community" class="value">0+</p></div>
     </div>
 </section>
-
-    function animateValue(id, end, duration) {
-        let current = 0;
-        let stepTime = Math.abs(Math.floor(duration / end));
-        let obj = document.getElementById(id);
-        let timer = setInterval(() => {
-            current += 1;
-            obj.innerHTML = current + "+";
-            if (current == end) clearInterval(timer);
-        }, stepTime);
-    }
     animateValue("players", 500, 20);
     animateValue("downloads", 1200, 20);
     animateValue("community", 800, 20);
