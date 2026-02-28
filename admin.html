@@ -1,95 +1,230 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Admin Panel</title>
+<title>Shashwat Gaming Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-body{font-family:Arial;background:#000;color:white;text-align:center}
-.card{background:#222;padding:15px;margin:10px;border-radius:10px}
-button{padding:8px 15px;margin:5px;background:red;color:white;border:none;border-radius:5px;cursor:pointer}
-input{padding:8px;margin:5px;border-radius:5px;border:none}
+body{
+margin:0;
+font-family:Segoe UI;
+background:#0e0e0e;
+color:white;
+overflow-x:hidden;
+}
+
+/* Login Screen */
+#loginPage{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+background:linear-gradient(135deg,#000,#111);
+}
+
+.login-box{
+background:rgba(255,255,255,0.05);
+padding:40px;
+border-radius:15px;
+backdrop-filter:blur(15px);
+box-shadow:0 0 40px rgba(0,0,0,0.8);
+width:350px;
+text-align:center;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:8px;
+}
+
+button{
+padding:12px;
+width:100%;
+border:none;
+border-radius:8px;
+background:linear-gradient(45deg,#00c853,#2979ff);
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* Admin Panel */
+#adminPanel{
+display:none;
+}
+
+.sidebar{
+width:220px;
+height:100vh;
+position:fixed;
+background:#111;
+padding-top:20px;
+}
+
+.sidebar h2{
+text-align:center;
+}
+
+.sidebar a{
+display:block;
+padding:15px;
+color:white;
+text-decoration:none;
+}
+
+.sidebar a:hover{
+background:#222;
+}
+
+.main{
+margin-left:220px;
+padding:30px;
+}
+
+.card{
+background:#1a1a1a;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+.flex{
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.small-card{
+flex:1;
+min-width:200px;
+background:#1f1f1f;
+padding:20px;
+border-radius:12px;
+text-align:center;
+}
+
+canvas{
+background:#1a1a1a;
+border-radius:12px;
+padding:10px;
+}
 </style>
 </head>
 <body>
 
-<h1>🔐 Admin Login</h1>
-
-<div id="loginBox">
-<input id="adminEmail" placeholder="Admin Email">
-<input id="adminPass" type="password" placeholder="Password">
-<button onclick="adminLogin()">Login</button>
+<!-- LOGIN -->
+<div id="loginPage">
+<div class="login-box">
+<h2>Admin Login</h2>
+<input type="text" id="adminEmail" placeholder="Admin Email">
+<input type="password" id="adminPass" placeholder="Password">
+<button onclick="login()">Login</button>
+<p id="loginMsg"></p>
+</div>
 </div>
 
-<div id="panel" style="display:none;">
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
 
-<h2>Admin Dashboard</h2>
+<div class="sidebar">
+<h2>Admin</h2>
+<a href="#">Dashboard</a>
+<a href="#">Games</a>
+<a href="#">Users</a>
+<a href="#">Revenue</a>
+<a href="#">Premium</a>
+<a href="#" onclick="logout()">Logout</a>
+</div>
 
-<h3>Add Game</h3>
-<input id="gname" placeholder="Game Name">
-<input id="gprice" placeholder="Price">
-<input id="gfile" placeholder="Game File URL">
-<button onclick="addGame()">Add Game</button>
+<div class="main">
 
-<h3>Games List</h3>
-<div id="games"></div>
+<h1>📊 Dashboard Overview</h1>
 
-<h3>Total Sales: ₹<span id="sales">0</span></h3>
-<h3>Total Customers: <span id="customers">0</span></h3>
+<div class="flex">
+<div class="small-card">
+<h3>Active Users</h3>
+<p>5,230</p>
+</div>
 
+<div class="small-card">
+<h3>Total Revenue</h3>
+<p>₹ 1,25,000</p>
+</div>
+
+<div class="small-card">
+<h3>Premium Users</h3>
+<p>320</p>
+</div>
+</div>
+
+<div class="card">
+<h2>📈 Sales Analytics</h2>
+<canvas id="salesChart" width="600" height="300"></canvas>
+</div>
+
+<div class="card">
+<h2>🎮 Upload New Game</h2>
+<input type="text" placeholder="Game Title">
+<input type="file">
+<button>Add Game</button>
+</div>
+
+<div class="card">
+<h2>👥 User Management</h2>
+<table width="100%" border="1" style="border-collapse:collapse;">
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Status</th>
+</tr>
+<tr>
+<td>User 1</td>
+<td>user1@email.com</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>User 2</td>
+<td>user2@email.com</td>
+<td>Premium</td>
+</tr>
+</table>
+</div>
+
+</div>
 </div>
 
 <script>
+function login(){
+let email=document.getElementById("adminEmail").value;
+let pass=document.getElementById("adminPass").value;
 
-const ADMIN_EMAIL="admin@gmail.com";
-const ADMIN_PASS="admin123";
-
-function adminLogin(){
- if(adminEmail.value===ADMIN_EMAIL && adminPass.value===ADMIN_PASS){
-   loginBox.style.display="none";
-   panel.style.display="block";
-   load();
- }else{
-   alert("Wrong Admin Details");
- }
+if(email==="admin@shashwat.com" && pass==="admin123"){
+document.getElementById("loginPage").style.display="none";
+document.getElementById("adminPanel").style.display="block";
+}else{
+document.getElementById("loginMsg").innerHTML="Invalid Credentials";
+}
 }
 
-function load(){
- loadGames();
- sales.innerText=localStorage.sales||0;
- customers.innerText=JSON.parse(localStorage.users||"[]").length;
+function logout(){
+location.reload();
 }
 
-function addGame(){
- let games = JSON.parse(localStorage.games||"[]");
- games.push({
-   id:Date.now(),
-   name:gname.value,
-   price:parseInt(gprice.value),
-   file:gfile.value
- });
- localStorage.games = JSON.stringify(games);
- loadGames();
-}
+/* Simple Sales Graph */
+let canvas=document.getElementById("salesChart");
+let ctx=canvas.getContext("2d");
 
-function loadGames(){
- let games = JSON.parse(localStorage.games||"[]");
- let html="";
- games.forEach(g=>{
-   html+=`
-   <div class="card">
-   <h4>${g.name} - ₹${g.price}</h4>
-   <button onclick="deleteGame(${g.id})">Delete</button>
-   </div>`;
- });
- document.getElementById("games").innerHTML=html;
-}
+let data=[50,120,80,150,200,170,250];
+let width=50;
+let gap=30;
 
-function deleteGame(id){
- let games = JSON.parse(localStorage.games||"[]");
- games = games.filter(g=>g.id!=id);
- localStorage.games = JSON.stringify(games);
- loadGames();
+for(let i=0;i<data.length;i++){
+ctx.fillStyle="#2979ff";
+ctx.fillRect(i*(width+gap)+50,300-data[i],width,data[i]);
 }
-
 </script>
 
 </body>
