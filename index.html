@@ -2,28 +2,157 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BCE Infinity | Future of Wealth</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCE Infinity | The Future of Wealth & Seva</title>
     <style>
-        body { background: #0a192f; color: #ffffff; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; padding: 50px; }
-        h1 { color: #ffcf70; font-size: 2.5rem; }
-        .stats-container { display: flex; justify-content: center; gap: 30px; margin-top: 50px; }
-        .card { background: #112240; padding: 30px; border-radius: 15px; width: 200px; border: 1px solid #ffcf70; }
-        .value { font-size: 1.5rem; font-weight: bold; color: #ffcf70; margin-top: 10px; }
+        /* Exact Same Styling as per your photos */
+        body {
+            background-color: #0a192f; /* Dark Navy Blue from your screens */
+            color: #ffffff; /* Pure White text */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        h1 {
+            color: #ffcf70; /* Premium Gold color from your screens */
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: #b0bec5; /* Light Grey for subtitle */
+            margin-bottom: 50px;
+        }
+
+        /* Stats Cards Section - Exact Match */
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background-color: #112240; /* Slightly lighter navy for cards */
+            padding: 30px;
+            border-radius: 15px;
+            width: 250px;
+            border: 1px solid #ffcf70; /* Gold Border from your screens */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Subtle Shadow */
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffcf70; /* Gold Value */
+            margin-top: 10px;
+        }
+
+        /* Admin/Update Section - Perfect for you */
+        .admin-section {
+            margin-top: 80px;
+            background-color: #112240;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #ffcf70;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .admin-section h2 {
+            color: #ffcf70;
+            margin-bottom: 20px;
+        }
+
+        .admin-section input {
+            padding: 12px;
+            margin: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 100%;
+            max-width: 200px;
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .admin-section button {
+            background-color: #ffcf70; /* Gold Button */
+            color: #0a192f; /* Dark text on button */
+            border: none;
+            padding: 12px 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .admin-section button:hover {
+            background-color: #ffdca0; /* Lighter Gold on hover */
+        }
     </style>
 </head>
 <body>
-    <h1>THE FUTURE OF WEALTH & SEVA</h1>
-    <div class="stats-container">
-        <div class="card"><h3>Total Revenue</h3><p id="rev" class="value">₹0</p></div>
-        <div class="card"><h3>Seva Goal</h3><p id="goal" class="value">₹0</p></div>
-        <div class="card"><h3>Dogs Nourished</h3><p id="dogs" class="value">0</p></div>
+
+    <div class="container">
+        <div class="hero">
+            <h1>THE FUTURE OF WEALTH & SEVA</h1>
+            <p class="subtitle">Premium trading algorithms designed for global dominance, fueled by the spirit of selfless service.</p>
+        </div>
+
+        <div class="stats-container">
+            <div class="card">
+                <h3>Total Revenue</h3>
+                <p id="rev" class="value">₹0</p>
+            </div>
+            <div class="card">
+                <h3>Seva Goal</h3>
+                <p id="goal" class="value">₹0</p>
+            </div>
+            <div class="card">
+                <h3>Dogs Nourished</h3>
+                <p id="dogs" class="value">0</p>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2>Admin Control Panel</h2>
+            <p style="color: #b0bec5; margin-bottom: 20px;">Use this section to update the live stats on your website.</p>
+            <input type="number" id="revIn" placeholder="Revenue Amount">
+            <input type="number" id="goalIn" placeholder="Goal Amount">
+            <input type="number" id="dogIn" placeholder="Dogs Number">
+            <br>
+            <button id="upBtn">Update Empire Stats</button>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        // Yahan apni Firebase Config keys daalein
+        // YAHA APNI FIREBASE CONFIG KEYS PASTE KARO
+        // Tumhari key tumhare console mein hogi
         const firebaseConfig = {
           apiKey: "YOUR_API_KEY",
           authDomain: "bakshi-the-ceo-web.firebaseapp.com",
@@ -32,9 +161,11 @@
           appId: "YOUR_APP_ID"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Load Live Stats - automatic update for user
         async function loadStats() {
             try {
                 const docSnap = await getDoc(doc(db, "stats", "liveStats"));
@@ -46,7 +177,21 @@
                 }
             } catch (e) { console.error("Error loading stats", e); }
         }
-        loadStats();
+        loadStats(); // Call load function on page load
+
+        // Admin Update Logic
+        document.getElementById('upBtn').onclick = async () => {
+            const rev = document.getElementById('revIn').value;
+            const goal = document.getElementById('goalIn').value;
+            const dogs = document.getElementById('dogIn').value;
+
+            // Update data in Firestore
+            await setDoc(doc(db, "stats", "liveStats"), {
+                revenue: rev, goal: goal, dogs: dogs
+            });
+            alert("Empire Stats Updated Successfully! Refresh the public page to see the change.");
+            loadStats(); // Refresh the stats after update
+        };
     </script>
 </body>
 </html>
