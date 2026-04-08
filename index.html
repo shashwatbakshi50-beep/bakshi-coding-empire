@@ -1,280 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
-    <meta charset="UTF-8">
-    <title>index.html</title>
-    
-
-  </head>
-    
-  <body>
-  <!DOCTYPE html>
-<html>
 <head>
-<title>Forex Trading Pro</title>
-<script src="https://s3.tradingview.com/tv.js"></script>
+<meta charset="UTF-8">
+<title>Bakshi Coding Empire</title>
+
 <style>
-body{
-    margin:0;
-    background:#0b0e11;
-    font-family:Segoe UI;
-    color:white;
+body {
+  margin: 0;
+  font-family: Arial;
+  background: black;
+  color: gold;
 }
-.topbar{
-    background:#131722;
-    padding:12px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:1px solid #222;
+
+nav {
+  display: none;
+  justify-content: space-between;
+  padding: 15px;
+  border-bottom: 1px solid gold;
 }
-.logo{
-    font-weight:bold;
-    font-size:18px;
-    color:#f23645;
+
+nav a {
+  color: gold;
+  margin: 0 10px;
+  text-decoration: none;
 }
-.stats span{
-    margin-right:15px;
-    font-size:13px;
+
+#home {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-.container{
-    display:flex;
-    height:calc(100vh - 60px);
+
+#logo {
+  width: 150px;
+  transition: 0.7s;
 }
-.sidebar{
-    width:270px;
-    background:#131722;
-    padding:15px;
-    border-right:1px solid #222;
+
+.top {
+  position: absolute;
+  top: 10px;
+  width: 80px;
 }
-.main{
-    flex:1;
-    display:flex;
-    flex-direction:column;
+
+button {
+  padding: 10px 20px;
+  background: gold;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
 }
-.chart{
-    flex:3;
+
+section {
+  padding: 40px;
+  display: none;
 }
-.bottom{
-    flex:1;
-    background:#131722;
-    border-top:1px solid #222;
-    padding:10px;
-    overflow:auto;
+
+.active {
+  display: block;
 }
-input,select{
-    width:100%;
-    padding:6px;
-    margin:5px 0;
-    background:#0b0e11;
-    border:1px solid #333;
-    color:white;
+
+.card {
+  background: #111;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 10px;
 }
-button{
-    width:100%;
-    padding:8px;
-    margin-top:6px;
-    border:none;
-    font-weight:bold;
-    cursor:pointer;
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
 }
-.buy{background:#089981;}
-.sell{background:#f23645;}
-.green{color:#00ff9d;}
-.red{color:#ff4d4d;}
-.warning{
-    margin-top:8px;
-    font-size:12px;
-}
-table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:13px;
-}
-th,td{
-    padding:6px;
-    border-bottom:1px solid #222;
-}
-.loss-message{
-    font-weight:bold;
-    margin-top:5px;
+
+input {
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+  background: #222;
+  color: gold;
+  border: none;
 }
 </style>
+
 </head>
+
 <body>
 
-<div class="topbar">
-<div class="logo">🔥chapal khaega- FOREX TRADING PRO</div>
-<div class="stats">
-<span>Balance: $<span id="balance">10000</span></span>
-<span>Equity: $<span id="equity">10000</span></span>
-<span>Margin Used: $<span id="margin">0</span></span>
-</div>
+<!-- HOME -->
+<div id="home">
+  <img src="logo.png" id="logo">
+  <button onclick="explore()">Explore</button>
 </div>
 
-<div class="container">
+<!-- NAVBAR -->
+<nav id="navbar">
+  <h2>Bakshi Coding Empire</h2>
+  <div>
+    <a onclick="show('store')">Store</a>
+    <a onclick="show('books')">Books</a>
+    <a onclick="show('about')">About</a>
+    <a onclick="show('donate')">Donate</a>
+    <a onclick="show('gallery')">Gallery</a>
+    <a onclick="show('login')">Login</a>
+  </div>
+</nav>
 
-<div class="sidebar">
-<h3>Order Ticket</h3>
-Lot Size
-<input type="number" id="lot" value="1">
-Leverage
-<select id="lev">
-<option value="10">10x</option>
-<option value="50">50x</option>
-<option value="100">100x</option>
-</select>
+<!-- STORE -->
+<section id="store">
+  <h1>🎮 Game Store</h1>
 
-<button class="buy" onclick="openTrade('BUY')">BUY MARKET</button>
-<button class="sell" onclick="openTrade('SELL')">SELL MARKET</button>
+  <input type="text" placeholder="Search..." onkeyup="searchGame(this.value)">
 
-<div class="warning">
-⚠ High Risk Leveraged Product
-</div>
+  <div class="grid" id="games"></div>
+</section>
 
-<div id="lossMsg" class="loss-message red"></div>
-</div>
+<!-- BOOKS -->
+<section id="books">
+  <h1>📚 Books</h1>
+  <div class="card">Book 1</div>
+</section>
 
-<div class="main">
-<div class="chart" id="chart"></div>
+<!-- ABOUT -->
+<section id="about">
+  <h1>👤 About</h1>
+  <p>CEO of Bakshi Coding Empire 🚀</p>
+</section>
 
-<div class="bottom">
-<h3>Open Positions</h3>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Lot</th>
-<th>Entry</th>
-<th>P/L</th>
-<th>Close</th>
-</tr>
-</thead>
-<tbody id="positions"></tbody>
-</table>
-</div>
-</div>
-</div>
+<!-- DONATE -->
+<section id="donate">
+  <h1>🐾 Donate</h1>
+  <button onclick="alert('Add Razorpay')">Donate Now</button>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <h1>🖼 Gallery</h1>
+</section>
+
+<!-- LOGIN -->
+<section id="login">
+  <h1>🔐 Login</h1>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <button onclick="signup()">Sign Up</button>
+</section>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-new TradingView.widget({
-  "width": "100%",
-  "height": "100%",
-  "symbol": "FX:EURUSD",
-  "interval": "15",
-  "timezone": "Asia/Kolkata",
-  "theme": "dark",
-  "style": "1",
-  "locale": "en",
-  "container_id": "chart"
-});
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+};
 
-let balance=10000;
-let positions=[];
-let price=1.1000;
-let marginUsed=0;
+firebase.initializeApp(firebaseConfig);
 
-function simulatePrice(){
-    price += (Math.random()-0.5)/200;
-    updatePositions();
-}
-setInterval(simulatePrice,1000);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-function openTrade(type){
-    let lot=parseFloat(document.getElementById("lot").value);
-    let lev=parseInt(document.getElementById("lev").value);
+/* HOME */
+function explore() {
+  document.getElementById("logo").classList.add("top");
 
-    let margin=lot*1000/lev;
-
-    if(balance < margin){
-        alert("Insufficient margin!");
-        return;
-    }
-
-    marginUsed += margin;
-    balance -= margin;
-
-    let trade={
-        type:type,
-        lot:lot,
-        entry:price,
-        lev:lev,
-        pl:0,
-        margin:margin
-    };
-
-    positions.push(trade);
-    renderPositions();
-    updateStats();
+  setTimeout(() => {
+    document.getElementById("home").style.display = "none";
+    document.getElementById("navbar").style.display = "flex";
+    show('store');
+    loadGames();
+  }, 800);
 }
 
-function updatePositions(){
-    let totalPL=0;
+/* NAVIGATION */
+function show(id) {
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
 
-    positions.forEach(p=>{
-        let diff=price - p.entry;
-        if(p.type==="SELL") diff*=-1;
+/* LOGIN */
+function login() {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
 
-        p.pl = diff*10000*p.lot*p.lev;
-        totalPL += p.pl;
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => alert("Login Success 🔥"))
+    .catch(e => alert(e.message));
+}
+
+/* SIGNUP */
+function signup() {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(() => alert("Account Created 🚀"))
+    .catch(e => alert(e.message));
+}
+
+/* LOAD GAMES FROM FIREBASE */
+function loadGames() {
+  db.collection("games").get().then(snapshot => {
+    let container = document.getElementById("games");
+    container.innerHTML = "";
+
+    snapshot.forEach(doc => {
+      let game = doc.data();
+
+      container.innerHTML += `
+        <div class="card">
+          ${game.name}<br>
+          <button onclick="buy()">Buy</button>
+          <button onclick="download('${game.link}')">Download</button>
+        </div>
+      `;
     });
-
-    let equity = balance + marginUsed + totalPL;
-
-    document.getElementById("equity").innerText=equity.toFixed(2);
-
-    if(totalPL < 0){
-
-        document.getElementById("lossMsg").innerHTML=`
-        Loss ho raha hai… chappal khayega kya?<br>
-        Garh bik jayega tera!<br>
-        Mummy se pitega kya?<br>
-        Garh ja aur chupne ki jagah dhoondh, flying chappal aa rahi hai!<br>
-        Bete trading sikh raha hai ya garh bikvane ki tayari kar raha hai?<br>
-        Tere aisi ki taisi bete, aaj ghar aa tu!
-        `;
-
-    }else{
-        document.getElementById("lossMsg").innerHTML="";
-    }
-
-    renderPositions();
+  });
 }
 
-function renderPositions(){
-    let html="";
-    positions.forEach((p,i)=>{
-        html+=`
-        <tr>
-        <td>${p.type}</td>
-        <td>${p.lot}</td>
-        <td>${p.entry.toFixed(4)}</td>
-        <td class="${p.pl>=0?'green':'red'}">${p.pl.toFixed(2)}</td>
-        <td><button onclick="closeTrade(${i})">X</button></td>
-        </tr>
-        `;
-    });
-    document.getElementById("positions").innerHTML=html;
+/* SEARCH */
+function searchGame(val) {
+  document.querySelectorAll("#games .card").forEach(card => {
+    card.style.display = card.innerText.toLowerCase().includes(val.toLowerCase())
+      ? "block" : "none";
+  });
 }
 
-function closeTrade(i){
-    balance += positions[i].margin + positions[i].pl;
-    marginUsed -= positions[i].margin;
-    positions.splice(i,1);
-    updateStats();
-    renderPositions();
+/* BUY */
+function buy() {
+  alert("Connect Razorpay 💳");
 }
 
-function updateStats(){
-    document.getElementById("balance").innerText=balance.toFixed(2);
-    document.getElementById("margin").innerText=marginUsed.toFixed(2);
+/* DOWNLOAD */
+function download(link) {
+  window.open(link, "_blank");
 }
 </script>
 
 </body>
-</html>
-    
-  </body>
-  
 </html>
