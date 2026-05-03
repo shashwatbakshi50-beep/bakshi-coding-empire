@@ -1000,6 +1000,13 @@ document.addEventListener('keydown', e => {
   chatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendMessage(chatInput.value);
   });
+  headers: {
+  "Authorization": `Bearer ${MY_KEY}`,
+  "Content-Type": "application/json",
+  "HTTP-Referer": window.location.origin, // Required: Your site's URL
+  "X-Title": "ResearchMind"
+}
+
 </script>
 
 </body>
