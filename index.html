@@ -838,9 +838,6 @@ document.addEventListener('keydown', e => {
         }
     }
 </script>
-  <!DOCTYPE html>
-<html>
-<head>
     <title>My AI Tool</title>
     <style>
         body { background: #111; color: white; font-family: sans-serif; padding: 20px; }
@@ -850,47 +847,62 @@ document.addEventListener('keydown', e => {
     </style>
 </head>
 <body>
+<!-- Aapke purane code ke niche jahan </body> khatam ho raha hai -->
 
-    <h2>ResearchMind AI</h2>
-    <div id="chat-box"></div>
-    <input type="text" id="user-input" placeholder="Bhai kuch pucho...">
-    <button onclick="askAI()">Send</button>
+<script>
+    // 1. Apni OpenRouter Key yahan paste karo
+    const MY_OPENROUTER_KEY = "sk-or-v1-xxxxxx..."; 
 
-    <script>
-        // 🔑 BAS YE EK KEY DAALNI HAI (OpenRouter.ai se le lo free wali)
-        const MY_KEY = "YOUR_OPENROUTER_KEY_HERE";
+    async function sendMessage() {
+        const inputField = document.getElementById('user-input'); // Check karo aapki input ID yahi hai na
+        const chatBox = document.getElementById('messages');      // Check karo aapki messages div ID yahi hai
+        const query = inputField.value;
 
-        async function askAI() {
-            const input = document.getElementById("user-input");
-            const box = document.getElementById("chat-box");
+        if (!query) return;
+
+        // User ka message screen par dikhao
+        chatBox.innerHTML += `<div class="msg user">${query}</div>`;
+        inputField.value = "";
+
+        try {
+            // 2. OpenRouter API Call
+            const response = await fetch("https://openrouter.ai", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${MY_OPENROUTER_KEY}`,
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": window.location.origin, 
+                    "X-Title": "ResearchMind AI"
+                },
+                body: JSON.stringify({
+                    "model": "meta-llama/llama-3.1-8b-instruct:free", 
+                    "messages": [{ "role": "user", "content": query }]
+                })
+            });
+
+            const data = await response.json();
             
-            if(!input.value) return;
-            box.innerHTML += `<p><b>You:</b> ${input.value}</p>`;
-
-            try {
-                const res = await fetch("https://openrouter.ai", {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${MY_KEY}`,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        "model": "meta-llama/llama-3.1-8b-instruct:free", // Ye free model hai
-                        "messages": [{"role": "user", "content": input.value}]
-                    })
-                });
-
-                const data = await res.json();
-                const reply = data.choices[0].message.content;
-                box.innerHTML += `<p><b>AI:</b> ${reply}</p>`;
-                input.value = ""; // Clear input
-            } catch (err) {
-                box.innerHTML += `<p style="color:red">Error: Bhai net ya key check kar!</p>`;
+            if (data.choices) {
+                const aiReply = data.choices[0].message.content;
+                chatBox.innerHTML += `<div class="msg ai">${aiReply}</div>`;
+            } else {
+                throw new Error(data.error.message || "Unknown error");
             }
+
+        } catch (error) {
+            console.error("Error:", error);
+            chatBox.innerHTML += `<div class="msg ai" style="color:red">Bhai error: ${error.message}</div>`;
         }
-    </script>
+
+        // Scroll to bottom
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+
 </body>
 </html>
+
+
 
 
 </body>
