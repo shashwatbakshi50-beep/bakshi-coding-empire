@@ -838,6 +838,60 @@ document.addEventListener('keydown', e => {
         }
     }
 </script>
+  <!DOCTYPE html>
+<html>
+<head>
+    <title>My AI Tool</title>
+    <style>
+        body { background: #111; color: white; font-family: sans-serif; padding: 20px; }
+        #chat-box { height: 300px; border: 1px solid #333; overflow-y: auto; margin-bottom: 10px; padding: 10px; }
+        input { width: 80%; padding: 10px; background: #222; color: white; border: 1px solid #444; }
+        button { padding: 10px; background: green; color: white; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>ResearchMind AI</h2>
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="Bhai kuch pucho...">
+    <button onclick="askAI()">Send</button>
+
+    <script>
+        // 🔑 BAS YE EK KEY DAALNI HAI (OpenRouter.ai se le lo free wali)
+        const MY_KEY = "YOUR_OPENROUTER_KEY_HERE";
+
+        async function askAI() {
+            const input = document.getElementById("user-input");
+            const box = document.getElementById("chat-box");
+            
+            if(!input.value) return;
+            box.innerHTML += `<p><b>You:</b> ${input.value}</p>`;
+
+            try {
+                const res = await fetch("https://openrouter.ai", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${MY_KEY}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "model": "meta-llama/llama-3.1-8b-instruct:free", // Ye free model hai
+                        "messages": [{"role": "user", "content": input.value}]
+                    })
+                });
+
+                const data = await res.json();
+                const reply = data.choices[0].message.content;
+                box.innerHTML += `<p><b>AI:</b> ${reply}</p>`;
+                input.value = ""; // Clear input
+            } catch (err) {
+                box.innerHTML += `<p style="color:red">Error: Bhai net ya key check kar!</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
+
 
 </body>
 </html>
