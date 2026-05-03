@@ -336,6 +336,14 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
         </div>
       </div>
     </div>
+    var admin = require("firebase-admin");
+
+var serviceAccount = require("path/to/serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 
     <div class="m-sec">
       <div class="m-label">API Key <span style="color:var(--red)">* required</span></div>
