@@ -898,6 +898,109 @@ document.addEventListener('keydown', e => {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 </script>
+<!-- Copy and paste this entire script block before the </body> tag -->
+<script type="module">
+  // 1. Firebase Initialization (Insert your configuration here)
+  import { initializeApp } from "https://gstatic.com";
+  import { getFirestore, doc, getDoc, collection, addDoc } from "https://gstatic.com";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_FIREBASE_API_KEY",
+    authDomain: "://firebaseapp.com",
+    projectId: "your-project-id",
+    // ... paste the rest of your config here
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 2. OpenRouter Key (You can also fetch this from Firestore)
+  const OPENROUTER_KEY = "YOUR_OPENROUTER_API_KEY";
+
+  // 3. Element Selection
+  const chatInput = document.querySelector('#search-wrap input');
+  const messagesDiv = document.querySelector('#messages');
+  const welcomeDiv = document.querySelector('#welcome');
+  const llmSelect = document.querySelector('#llm-select');
+
+  // 4. Send Message Function
+  async function sendMessage(text) {
+    if (!text.trim()) return;
+
+    // UI Updates
+    welcomeDiv.style.display = 'none';
+    messagesDiv.style.display = 'flex';
+    messagesDiv.classList.add('show');
+
+    // Add User Message
+    appendMessage(text, 'user');
+    chatInput.value = '';
+
+    try {
+      const response = await fetch("https://openrouter.ai", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${OPENROUTER_KEY}`,
+          "HTTP-Referer": window.location.origin,
+          "X-Title": "ResearchMind AI",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "model": getModelPath(llmSelect.value),
+          "messages": [{ "role": "user", "content": text }]
+        })
+      });
+
+      const data = await response.json();
+      const aiReply = data.choices[0].message.content;
+
+      // Add AI Response
+      appendMessage(aiReply, 'ai');
+
+      // 5. Save Chat in Firebase (Backend safe)
+      await addDoc(collection(db, "chats"), {
+        prompt: text,
+        response: aiReply,
+        model: llmSelect.value,
+        time: new Date()
+      });
+
+    } catch (error) {
+      appendMessage("⚠ Error: " + error.message, 'ai');
+    }
+  }
+
+  // Helper: Model selection logic
+  function getModelPath(val) {
+    const paths = {
+      'groq': 'meta-llama/llama-3.1-8b-instruct:free',
+      'gemini': 'google/gemini-flash-1.5',
+      'openai': 'openai/gpt-4o-mini',
+      'anthropic': 'anthropic/claude-3-5-sonnet'
+    };
+    return paths[val] || 'meta-llama/llama-3.1-8b-instruct:free';
+  }
+
+  // Helper: Display messages in the UI
+  function appendMessage(text, role) {
+    const msg = document.createElement('div');
+    msg.style.padding = '15px';
+    msg.style.margin = '10px 0';
+    msg.style.borderRadius = '10px';
+    msg.style.background = role === 'user' ? 'var(--bg3)' : 'var(--bg2)';
+    msg.style.border = role === 'ai' ? '0.5px solid var(--border)' : 'none';
+    msg.style.alignSelf = role === 'user' ? 'flex-end' : 'flex-start';
+    msg.style.maxWidth = '80%';
+    msg.innerText = text;
+    messagesDiv.appendChild(msg);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  // Listeners
+  chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage(chatInput.value);
+  });
+</script>
 
 </body>
 </html>
@@ -905,6 +1008,4 @@ document.addEventListener('keydown', e => {
 
 
 
-</body>
-</html>
 
