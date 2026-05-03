@@ -2,244 +2,760 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Bakshi Coding Empire</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResearchMind AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: black;
-  color: gold;
+:root {
+  --bg: #0d0f0e;
+  --bg2: #141614;
+  --bg3: #1a1d1a;
+  --bg4: #212421;
+  --border: #2a2e2a;
+  --border2: #353a35;
+  --text: #e8ede8;
+  --text2: #9aa69a;
+  --text3: #6a766a;
+  --accent: #7fc97f;
+  --accent2: #4a9a4a;
+  --accent3: #2d6e2d;
+  --red: #c97f7f;
+  --amber: #c9a87f;
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'Crimson Pro', serif;
+  --sans: 'DM Sans', sans-serif;
+  --radius: 10px;
 }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; overflow: hidden; }
 
-nav {
-  display: none;
-  justify-content: space-between;
-  padding: 15px;
-  border-bottom: 1px solid gold;
-}
-
-nav a {
-  color: gold;
-  margin: 0 10px;
-  text-decoration: none;
-}
-
-#home {
-  height: 100vh;
+/* ════════════════════════════════
+   AUTH SCREEN
+════════════════════════════════ */
+#auth-screen {
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
-
-#logo {
-  width: 150px;
-  transition: 0.7s;
-}
-
-.top {
+#auth-screen::before {
+  content: '';
   position: absolute;
-  top: 10px;
-  width: 80px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(127,201,127,0.07) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
-
-button {
-  padding: 10px 20px;
-  background: gold;
-  border: none;
-  cursor: pointer;
-  margin-top: 10px;
+.auth-box {
+  background: var(--bg2);
+  border: 0.5px solid var(--border2);
+  border-radius: 18px;
+  padding: 3rem 2.5rem;
+  width: 390px;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.4s ease;
 }
+@keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+.auth-logo { font-family: var(--serif); font-size: 30px; font-weight: 300; color: var(--accent); margin-bottom: 4px; }
+.auth-tagline { font-size: 11px; color: var(--text3); font-family: var(--mono); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 2.5rem; }
+.auth-tabs { display: flex; margin-bottom: 2rem; border-bottom: 0.5px solid var(--border); }
+.auth-tab { flex: 1; padding: 9px; text-align: center; font-size: 13px; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; user-select: none; }
+.auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.auth-field { margin-bottom: 1rem; }
+.auth-field label { display: block; font-size: 10px; color: var(--text3); font-family: var(--mono); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 6px; }
+.auth-field input { width: 100%; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 10px 14px; color: var(--text); font-family: var(--sans); font-size: 14px; outline: none; transition: border-color 0.2s; }
+.auth-field input:focus { border-color: var(--accent3); }
+.auth-btn { width: 100%; margin-top: 1.5rem; padding: 11px; background: var(--accent3); color: var(--accent); border: 0.5px solid var(--accent2); border-radius: var(--radius); font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+.auth-btn:hover { background: var(--accent2); color: #fff; }
+.auth-error { margin-top: 10px; font-size: 12px; color: var(--red); text-align: center; min-height: 18px; }
+.auth-note { margin-top: 1.5rem; font-size: 11px; color: var(--text3); text-align: center; line-height: 1.7; }
+.auth-note a { color: var(--accent); text-decoration: none; }
 
-section {
-  padding: 40px;
-  display: none;
-}
+/* ════════════════════════════════
+   APP SHELL
+════════════════════════════════ */
+#app { display: none; height: 100vh; flex-direction: column; }
+#app.visible { display: flex; }
 
-.active {
-  display: block;
-}
-
-.card {
-  background: #111;
-  padding: 15px;
-  margin: 10px;
-  border-radius: 10px;
-}
-
-.grid {
+/* TOPBAR */
+#topbar {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 0 18px;
+  height: 52px;
+  background: var(--bg2);
+  border-bottom: 0.5px solid var(--border);
+  flex-shrink: 0;
 }
+.topbar-logo { font-family: var(--serif); font-size: 20px; font-weight: 300; color: var(--accent); flex-shrink: 0; margin-right: 4px; }
+#search-wrap { flex: 1; max-width: 480px; position: relative; }
+#search-wrap::before { content: '⌕'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text3); pointer-events: none; }
+#search-wrap input { width: 100%; background: var(--bg3); border: 0.5px solid var(--border); border-radius: 22px; padding: 7px 14px 7px 36px; color: var(--text); font-size: 13px; font-family: var(--sans); outline: none; transition: border-color 0.2s; }
+#search-wrap input:focus { border-color: var(--border2); }
+.tb-space { flex: 1; }
+#llm-select { background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 6px 10px; color: var(--text2); font-size: 11px; font-family: var(--mono); cursor: pointer; outline: none; transition: border-color 0.2s; }
+#llm-select:hover { border-color: var(--border2); }
+.tb-btn { width: 32px; height: 32px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; color: var(--text3); transition: all 0.2s; user-select: none; flex-shrink: 0; }
+.tb-btn:hover { border-color: var(--border2); color: var(--text); }
 
-input {
-  padding: 10px;
+/* MAIN */
+#main { display: flex; flex: 1; overflow: hidden; }
+
+/* SIDEBAR */
+#sidebar { width: 236px; background: var(--bg2); border-right: 0.5px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+#new-chat-btn { margin: 10px 10px 4px; padding: 8px 12px; background: var(--accent3); color: var(--accent); border: 0.5px solid var(--accent2); border-radius: var(--radius); font-size: 12px; font-family: var(--mono); cursor: pointer; text-align: center; transition: background 0.2s; user-select: none; }
+#new-chat-btn:hover { background: var(--accent2); color: #fff; }
+.sb-label { font-size: 10px; color: var(--text3); font-family: var(--mono); letter-spacing: 1px; text-transform: uppercase; padding: 10px 14px 4px; }
+#history-list { flex: 1; overflow-y: auto; padding: 4px 6px; }
+#history-list::-webkit-scrollbar { width: 3px; }
+#history-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.h-item { padding: 7px 10px; border-radius: 8px; font-size: 12px; color: var(--text2); cursor: pointer; transition: background 0.15s; display: flex; align-items: center; gap: 6px; overflow: hidden; }
+.h-item:hover { background: var(--bg3); color: var(--text); }
+.h-item.active { background: var(--bg4); color: var(--accent); }
+.h-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.h-del { opacity: 0; font-size: 11px; color: var(--red); cursor: pointer; flex-shrink: 0; }
+.h-item:hover .h-del { opacity: 1; }
+.sb-foot { padding: 10px 12px; border-top: 0.5px solid var(--border); font-size: 11px; color: var(--text3); font-family: var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* CHAT AREA */
+#chat-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* WELCOME */
+#welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center; }
+.w-logo { font-family: var(--serif); font-size: 54px; font-weight: 300; color: var(--accent); margin-bottom: 8px; }
+.w-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2.5rem; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 580px; }
+.pill { padding: 7px 14px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: 20px; font-size: 12px; color: var(--text2); cursor: pointer; transition: all 0.2s; user-select: none; }
+.pill:hover { border-color: var(--accent3); color: var(--accent); background: var(--bg3); }
+
+/* MESSAGES */
+#messages { flex: 1; overflow-y: auto; padding: 1.5rem 0; display: none; flex-direction: column; }
+#messages.show { display: flex; }
+#messages::-webkit-scrollbar { width: 4px; }
+#messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.msg-row { display: flex; padding: 6px 1.75rem; gap: 10px; animation: fadeUp 0.22s ease; }
+.msg-row.user { justify-content: flex-end; }
+.msg-av { width: 27px; height: 27px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: var(--mono); flex-shrink: 0; margin-top: 2px; }
+.msg-av.ai { background: var(--accent3); color: var(--accent); }
+.msg-av.user { background: var(--bg3); color: var(--text2); border: 0.5px solid var(--border); }
+.msg-bubble { max-width: 700px; padding: 11px 15px; border-radius: 12px; font-size: 14px; line-height: 1.78; }
+.msg-row.user .msg-bubble { background: var(--bg3); border: 0.5px solid var(--border); border-top-right-radius: 3px; }
+.msg-row.ai .msg-bubble { background: var(--bg2); border: 0.5px solid var(--border); border-top-left-radius: 3px; }
+.msg-label { font-size: 10px; font-family: var(--mono); color: var(--text3); margin-bottom: 5px; letter-spacing: 0.8px; text-transform: uppercase; }
+.msg-text { white-space: pre-wrap; word-break: break-word; }
+.msg-text strong { color: var(--accent); font-weight: 500; }
+.msg-text em { color: var(--text2); font-style: italic; }
+.msg-text code { background: var(--bg4); border: 0.5px solid var(--border); padding: 1px 6px; border-radius: 4px; font-family: var(--mono); font-size: 12px; color: var(--amber); }
+.msg-text pre { background: var(--bg4); border: 0.5px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 10px 0; }
+.msg-text pre code { background: none; border: none; padding: 0; color: var(--text2); }
+.msg-text h1 { font-family: var(--serif); font-weight: 300; font-size: 22px; color: var(--accent); margin: 14px 0 5px; }
+.msg-text h2 { font-family: var(--serif); font-weight: 300; font-size: 18px; color: var(--accent); margin: 12px 0 4px; }
+.msg-text h3 { font-family: var(--serif); font-weight: 400; font-size: 15px; color: var(--accent); margin: 10px 0 3px; }
+.msg-text ul, .msg-text ol { margin: 6px 0 6px 20px; }
+.msg-text li { margin-bottom: 3px; }
+.msg-text blockquote { border-left: 2px solid var(--accent3); padding-left: 12px; color: var(--text2); margin: 8px 0; }
+.msg-text hr { border: none; border-top: 0.5px solid var(--border); margin: 12px 0; }
+.thinking span { animation: blink 1.2s infinite; display: inline-block; }
+.thinking span:nth-child(2) { animation-delay: .2s; }
+.thinking span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%,80%,100%{opacity:.15} 40%{opacity:1} }
+
+/* INPUT */
+#input-wrap { padding: 10px 1.75rem 14px; background: var(--bg); border-top: 0.5px solid var(--border); flex-shrink: 0; }
+#input-box { display: flex; gap: 8px; align-items: flex-end; background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 14px; padding: 9px 12px; transition: border-color 0.2s; }
+#input-box:focus-within { border-color: var(--accent3); }
+#msg-input { flex: 1; background: none; border: none; outline: none; color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.6; resize: none; max-height: 130px; min-height: 22px; }
+#msg-input::placeholder { color: var(--text3); }
+#send-btn { width: 34px; height: 34px; background: var(--accent3); border: 0.5px solid var(--accent2); border-radius: 8px; color: var(--accent); font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; user-select: none; }
+#send-btn:hover { background: var(--accent2); color: #fff; }
+#send-btn:disabled { background: var(--bg4); border-color: var(--border); color: var(--text3); cursor: not-allowed; }
+.input-foot { margin-top: 5px; display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); font-family: var(--mono); }
+
+/* ════════════════════════════════
+   SETTINGS MODAL
+════════════════════════════════ */
+#modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 200; align-items: center; justify-content: center; }
+#modal-bg.show { display: flex; }
+.modal { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 16px; padding: 2rem; width: 500px; max-height: 85vh; overflow-y: auto; animation: fadeUp 0.2s ease; }
+.modal::-webkit-scrollbar { width: 4px; }
+.modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.modal-title { font-family: var(--serif); font-size: 22px; font-weight: 300; color: var(--accent); }
+.modal-close { background: none; border: none; color: var(--text3); font-size: 18px; cursor: pointer; padding: 4px; }
+.modal-close:hover { color: var(--text); }
+.m-sec { margin-bottom: 1.5rem; }
+.m-label { font-size: 10px; color: var(--text3); font-family: var(--mono); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 7px; }
+.modal input, .modal select, .modal textarea {
   width: 100%;
-  margin-bottom: 20px;
-  background: #222;
-  color: gold;
-  border: none;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
 }
+.modal textarea { min-height: 90px; resize: vertical; line-height: 1.65; }
+.modal input:focus, .modal select:focus, .modal textarea:focus { border-color: var(--accent3); }
+.llm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.llm-card { padding: 10px 13px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all 0.15s; }
+.llm-card:hover { background: var(--bg4); border-color: var(--border2); }
+.llm-card.active { border-color: var(--accent2); background: var(--bg4); }
+.llm-name { font-size: 13px; color: var(--text); margin-bottom: 2px; }
+.llm-desc { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+.llm-free { font-size: 10px; color: var(--accent); font-family: var(--mono); margin-top: 3px; }
+.modal-save { padding: 9px 22px; background: var(--accent3); color: var(--accent); border: 0.5px solid var(--accent2); border-radius: var(--radius); font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+.modal-save:hover { background: var(--accent2); color: #fff; }
+.api-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.api-link { font-size: 11px; color: var(--accent); font-family: var(--mono); text-decoration: none; background: var(--bg3); border: 0.5px solid var(--border); padding: 4px 10px; border-radius: 6px; transition: background 0.15s; }
+.api-link:hover { background: var(--bg4); }
 </style>
-
 </head>
-
 <body>
 
-<!-- HOME -->
-<div id="home">
-  <img src="logo.png" id="logo">
-  <button onclick="explore()">Explore</button>
+<!-- ═══════ AUTH ═══════ -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">ResearchMind</div>
+    <div class="auth-tagline">Neutral · Balanced · Unbiased AI</div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="switchTab('login')">Sign In</div>
+      <div class="auth-tab" onclick="switchTab('signup')">Create Account</div>
+    </div>
+    <!-- Login -->
+    <div id="login-form">
+      <div class="auth-field"><label>Username</label><input type="text" id="login-user" placeholder="your username" autocomplete="username"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••"></div>
+      <button class="auth-btn" onclick="doLogin()">Sign In →</button>
+    </div>
+    <!-- Signup -->
+    <div id="signup-form" style="display:none">
+      <div class="auth-field"><label>Username</label><input type="text" id="su-user" placeholder="choose a username"></div>
+      <div class="auth-field"><label>Email</label><input type="email" id="su-email" placeholder="your@email.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="su-pass" placeholder="min 6 characters"></div>
+      <button class="auth-btn" onclick="doSignup()">Create Account →</button>
+    </div>
+    <div class="auth-error" id="auth-err"></div>
+    <div class="auth-note">Your data is saved only in <strong>your browser</strong>.<br>No server. No tracking. 100% private.</div>
+  </div>
 </div>
 
-<!-- NAVBAR -->
-<nav id="navbar">
-  <h2>Bakshi Coding Empire</h2>
-  <div>
-    <a onclick="show('store')">Store</a>
-    <a onclick="show('books')">Books</a>
-    <a onclick="show('about')">About</a>
-    <a onclick="show('donate')">Donate</a>
-    <a onclick="show('gallery')">Gallery</a>
-    <a onclick="show('login')">Login</a>
+<!-- ═══════ APP ═══════ -->
+<div id="app">
+  <!-- Topbar -->
+  <div id="topbar">
+    <div class="topbar-logo">ResearchMind</div>
+    <div id="search-wrap"><input type="text" id="search-in" placeholder="Search conversations..." oninput="filterHistory(this.value)"></div>
+    <div class="tb-space"></div>
+    <select id="llm-select" onchange="setLLM(this.value)">
+      <option value="openai">GPT-4o</option>
+      <option value="gemini">Gemini 1.5 Pro</option>
+      <option value="groq">Groq · Llama 3</option>
+      <option value="anthropic">Claude 3.5</option>
+    </select>
+    <div class="tb-btn" onclick="openSettings()" title="Settings">⚙</div>
+    <div class="tb-btn" onclick="doLogout()" title="Logout">⏻</div>
   </div>
-</nav>
 
-<!-- STORE -->
-<section id="store">
-  <h1>🎮 Game Store</h1>
+  <div id="main">
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div id="new-chat-btn" onclick="newChat()">+ New Chat</div>
+      <div class="sb-label">History</div>
+      <div id="history-list"></div>
+      <div class="sb-foot" id="sb-user"></div>
+    </div>
 
-  <input type="text" placeholder="Search..." onkeyup="searchGame(this.value)">
+    <!-- Chat -->
+    <div id="chat-area">
+      <div id="welcome">
+        <div class="w-logo">ResearchMind</div>
+        <div class="w-sub">Neutral Research AI · No Bias · Both Sides Always</div>
+        <div class="pills">
+          <div class="pill" onclick="quickAsk('What is climate change? Show both the scientific consensus and the skeptics arguments side by side.')">🌍 Climate debate</div>
+          <div class="pill" onclick="quickAsk('What are the pros and cons of AI in healthcare? Present both supporter and critic perspectives.')">🏥 AI in healthcare</div>
+          <div class="pill" onclick="quickAsk('Explain cryptocurrency — both what supporters believe and what critics say about it.')">₿ Crypto debate</div>
+          <div class="pill" onclick="quickAsk('What are the arguments for and against Universal Basic Income? Show all sides.')">💰 UBI debate</div>
+          <div class="pill" onclick="quickAsk('Write a Python web scraper that collects and saves news headlines from a website.')">🐍 Write code</div>
+          <div class="pill" onclick="quickAsk('Give me a balanced summary of the Indian independence movement including perspectives from all major groups involved.')">📚 Research topic</div>
+          <div class="pill" onclick="quickAsk('What are the arguments for and against capital punishment? Include legal, ethical and statistical perspectives.')">⚖️ Death penalty</div>
+          <div class="pill" onclick="quickAsk('Explain the Israel–Palestine conflict from all sides without taking any position.')">🕊️ Conflict analysis</div>
+        </div>
+      </div>
+      <div id="messages"></div>
+      <div id="input-wrap">
+        <div id="input-box">
+          <textarea id="msg-input" placeholder="Ask anything — I'll research every angle..." rows="1"
+            onkeydown="onKey(event)" oninput="grow(this);countChars()"></textarea>
+          <div id="send-btn" onclick="send()">↑</div>
+        </div>
+        <div class="input-foot">
+          <span>Enter = send &nbsp;·&nbsp; Shift+Enter = new line</span>
+          <span id="char-count">0 chars</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <div class="grid" id="games"></div>
-</section>
+<!-- ═══════ SETTINGS MODAL ═══════ -->
+<div id="modal-bg" onclick="bgClick(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Settings</div>
+      <button class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
 
-<!-- BOOKS -->
-<section id="books">
-  <h1>📚 Books</h1>
-  <div class="card">Book 1</div>
-</section>
+    <div class="m-sec">
+      <div class="m-label">Choose AI Model</div>
+      <div class="llm-grid">
+        <div class="llm-card" data-llm="openai" onclick="pickLLM('openai')">
+          <div class="llm-name">OpenAI GPT-4o</div>
+          <div class="llm-desc">api.openai.com</div>
+        </div>
+        <div class="llm-card" data-llm="gemini" onclick="pickLLM('gemini')">
+          <div class="llm-name">Google Gemini</div>
+          <div class="llm-desc">aistudio.google.com</div>
+          <div class="llm-free">Free tier available</div>
+        </div>
+        <div class="llm-card" data-llm="groq" onclick="pickLLM('groq')">
+          <div class="llm-name">Groq · Llama 3</div>
+          <div class="llm-desc">api.groq.com</div>
+          <div class="llm-free">Free · Very fast</div>
+        </div>
+        <div class="llm-card" data-llm="anthropic" onclick="pickLLM('anthropic')">
+          <div class="llm-name">Anthropic Claude</div>
+          <div class="llm-desc">api.anthropic.com</div>
+        </div>
+      </div>
+    </div>
 
-<!-- ABOUT -->
-<section id="about">
-  <h1>👤 About</h1>
-  <p>CEO of Bakshi Coding Empire 🚀</p>
-</section>
+    <div class="m-sec">
+      <div class="m-label">API Key <span style="color:var(--red)">* required</span></div>
+      <input type="password" id="key-in" placeholder="Paste your API key here...">
+      <div class="api-links">
+        <a class="api-link" href="https://console.groq.com" target="_blank">Groq (Free)</a>
+        <a class="api-link" href="https://aistudio.google.com" target="_blank">Gemini (Free)</a>
+        <a class="api-link" href="https://platform.openai.com/api-keys" target="_blank">OpenAI</a>
+        <a class="api-link" href="https://console.anthropic.com" target="_blank">Anthropic</a>
+      </div>
+    </div>
 
-<!-- DONATE -->
-<section id="donate">
-  <h1>🐾 Donate</h1>
-  <button onclick="alert('Add Razorpay')">Donate Now</button>
-</section>
+    <div class="m-sec">
+      <div class="m-label">Bot Name</div>
+      <input type="text" id="name-in" placeholder="ResearchMind">
+    </div>
 
-<!-- GALLERY -->
-<section id="gallery">
-  <h1>🖼 Gallery</h1>
-</section>
+    <div class="m-sec">
+      <div class="m-label">System Prompt (Personality)</div>
+      <textarea id="prompt-in" placeholder="Describe how the AI should behave..."></textarea>
+    </div>
 
-<!-- LOGIN -->
-<section id="login">
-  <h1>🔐 Login</h1>
-  <input id="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <button onclick="signup()">Sign Up</button>
-</section>
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <button class="modal-save" onclick="saveSettings()">Save Settings</button>
+  </div>
+</div>
 
 <script>
-const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT",
+// ════════════════════════════════════════════
+//  GLOBAL STATE
+// ════════════════════════════════════════════
+let currentUser = null;
+let currentChatId = null;
+let allChats = {};
+let busy = false;
+let cfg = {
+  llm: 'openai',
+  apiKey: '',
+  botName: 'ResearchMind',
+  systemPrompt: ''
 };
 
-firebase.initializeApp(firebaseConfig);
+// Default neutral research prompt
+const DEFAULT_PROMPT = `You are ResearchMind — a neutral, unbiased research assistant. Follow these rules strictly:
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+1. NEVER take sides on any debate, political topic, religion, or controversy.
+2. ALWAYS present ALL perspectives: supporters, critics, neutral experts.
+3. Use clear section headers like "## Supporters Argue:", "## Critics Say:", "## Neutral Analysis:".
+4. For every factual claim, mention if it is disputed or contested.
+5. For science topics: state the consensus AND any credible minority views.
+6. For code/technical tasks: write complete, working, well-commented code.
+7. For creative writing: produce high-quality, original content.
+8. You can discuss ANY topic — approach everything like an academic researcher.
+9. Format answers with headers, bullet points, and structure for clarity.
+10. End complex research answers with a "## Summary" section that remains balanced.`;
 
-/* HOME */
-function explore() {
-  document.getElementById("logo").classList.add("top");
+// ════════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════════
+function getDB() { return JSON.parse(localStorage.getItem('rm_db') || '{}'); }
+function saveDB(db) { localStorage.setItem('rm_db', JSON.stringify(db)); }
 
-  setTimeout(() => {
-    document.getElementById("home").style.display = "none";
-    document.getElementById("navbar").style.display = "flex";
-    show('store');
-    loadGames();
-  }, 800);
+function switchTab(tab) {
+  ['login','signup'].forEach((t,i) => {
+    document.querySelectorAll('.auth-tab')[i].classList.toggle('active', (i===0) === (tab==='login'));
+    document.getElementById(t+'-form').style.display = (t===tab) ? '' : 'none';
+  });
+  document.getElementById('auth-err').textContent = '';
 }
 
-/* NAVIGATION */
-function show(id) {
-  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+function authErr(msg) { document.getElementById('auth-err').textContent = msg; }
+
+function doLogin() {
+  const u = v('login-user'), p = v('login-pass');
+  if (!u || !p) return authErr('Please fill in all fields.');
+  const db = getDB();
+  if (!db[u] || db[u].pass !== btoa(unescape(encodeURIComponent(p)))) return authErr('Wrong username or password.');
+  startSession(u, db[u]);
 }
 
-/* LOGIN */
-function login() {
-  let email = document.getElementById("email").value;
-  let password = document.getElementById("password").value;
-
-  auth.signInWithEmailAndPassword(email, password)
-    .then(() => alert("Login Success 🔥"))
-    .catch(e => alert(e.message));
+function doSignup() {
+  const u = v('su-user'), e = v('su-email'), p = v('su-pass');
+  if (!u || !e || !p) return authErr('Please fill in all fields.');
+  if (p.length < 6) return authErr('Password must be at least 6 characters.');
+  if (!/^[a-zA-Z0-9_]+$/.test(u)) return authErr('Username: only letters, numbers, underscore.');
+  const db = getDB();
+  if (db[u]) return authErr('Username already taken.');
+  db[u] = { pass: btoa(unescape(encodeURIComponent(p))), email: e, chats: {}, cfg: {} };
+  saveDB(db);
+  startSession(u, db[u]);
 }
 
-/* SIGNUP */
-function signup() {
-  let email = document.getElementById("email").value;
-  let password = document.getElementById("password").value;
-
-  auth.createUserWithEmailAndPassword(email, password)
-    .then(() => alert("Account Created 🚀"))
-    .catch(e => alert(e.message));
+function startSession(username, data) {
+  currentUser = username;
+  allChats = data.chats || {};
+  if (data.cfg) cfg = Object.assign(cfg, data.cfg);
+  hide('auth-screen');
+  document.getElementById('app').classList.add('visible');
+  document.getElementById('sb-user').textContent = '◎ ' + username;
+  document.getElementById('llm-select').value = cfg.llm;
+  renderHistory();
+  refreshLLMCards();
 }
 
-/* LOAD GAMES FROM FIREBASE */
-function loadGames() {
-  db.collection("games").get().then(snapshot => {
-    let container = document.getElementById("games");
-    container.innerHTML = "";
+function doLogout() {
+  persist();
+  currentUser = null; currentChatId = null; allChats = {};
+  document.getElementById('app').classList.remove('visible');
+  show('auth-screen');
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('messages').classList.remove('show');
+  show('welcome');
+}
 
-    snapshot.forEach(doc => {
-      let game = doc.data();
+function persist() {
+  if (!currentUser) return;
+  const db = getDB();
+  if (!db[currentUser]) return;
+  db[currentUser].chats = allChats;
+  db[currentUser].cfg = cfg;
+  saveDB(db);
+}
 
-      container.innerHTML += `
-        <div class="card">
-          ${game.name}<br>
-          <button onclick="buy()">Buy</button>
-          <button onclick="download('${game.link}')">Download</button>
-        </div>
-      `;
+// ════════════════════════════════════════════
+//  CHAT MANAGEMENT
+// ════════════════════════════════════════════
+function newChat() {
+  currentChatId = 'c' + Date.now();
+  allChats[currentChatId] = { title: 'New Chat', msgs: [], ts: Date.now() };
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('messages').classList.remove('show');
+  show('welcome');
+  renderHistory();
+  persist();
+}
+
+function loadChat(id) {
+  currentChatId = id;
+  const chat = allChats[id];
+  const el = document.getElementById('messages');
+  el.innerHTML = '';
+  hide('welcome');
+  el.classList.add('show');
+  chat.msgs.forEach(m => addBubble(m.role, m.content, false));
+  el.scrollTop = el.scrollHeight;
+  renderHistory();
+}
+
+function deleteChat(id, e) {
+  e.stopPropagation();
+  delete allChats[id];
+  if (currentChatId === id) {
+    currentChatId = null;
+    document.getElementById('messages').innerHTML = '';
+    document.getElementById('messages').classList.remove('show');
+    show('welcome');
+  }
+  renderHistory();
+  persist();
+}
+
+function renderHistory(filter = '') {
+  const list = document.getElementById('history-list');
+  list.innerHTML = '';
+  Object.keys(allChats)
+    .sort((a,b) => allChats[b].ts - allChats[a].ts)
+    .forEach(id => {
+      const c = allChats[id];
+      if (filter && !c.title.toLowerCase().includes(filter.toLowerCase())) return;
+      const d = document.createElement('div');
+      d.className = 'h-item' + (id === currentChatId ? ' active' : '');
+      d.innerHTML = `<span>${esc(c.title)}</span><span class="h-del" onclick="deleteChat('${id}',event)">✕</span>`;
+      d.onclick = () => loadChat(id);
+      list.appendChild(d);
     });
+}
+
+function filterHistory(v) { renderHistory(v); }
+
+// ════════════════════════════════════════════
+//  SEND & RECEIVE
+// ════════════════════════════════════════════
+async function send() {
+  if (busy) return;
+  const inp = document.getElementById('msg-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  if (!cfg.apiKey) { alert('⚙ Please open Settings and add your API key first.'); openSettings(); return; }
+  if (!currentChatId) newChat();
+
+  inp.value = ''; grow(inp); countChars();
+  hide('welcome');
+  document.getElementById('messages').classList.add('show');
+
+  allChats[currentChatId].msgs.push({ role: 'user', content: text });
+  if (allChats[currentChatId].title === 'New Chat')
+    allChats[currentChatId].title = text.slice(0, 42) + (text.length > 42 ? '…' : '');
+  renderHistory();
+  addBubble('user', text);
+
+  const thinking = addThinking();
+  busy = true;
+  document.getElementById('send-btn').style.opacity = '0.4';
+  document.getElementById('send-btn').style.cursor = 'not-allowed';
+
+  try {
+    const reply = await callLLM([...allChats[currentChatId].msgs]);
+    thinking.remove();
+    allChats[currentChatId].msgs.push({ role: 'assistant', content: reply });
+    addBubble('assistant', reply);
+    persist();
+  } catch (err) {
+    thinking.remove();
+    addBubble('assistant', `⚠ **Error:** ${err.message}\n\nCheck your API key in ⚙ Settings. Make sure you selected the correct LLM provider.`);
+  }
+
+  busy = false;
+  document.getElementById('send-btn').style.opacity = '';
+  document.getElementById('send-btn').style.cursor = '';
+}
+
+function quickAsk(text) {
+  document.getElementById('msg-input').value = text;
+  send();
+}
+
+// ════════════════════════════════════════════
+//  LLM API CALLS
+// ════════════════════════════════════════════
+async function callLLM(messages) {
+  const sysprompt = cfg.systemPrompt || DEFAULT_PROMPT;
+  const msgs = messages.map(m => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: m.content }));
+
+  switch (cfg.llm) {
+    case 'openai':    return callOpenAI(sysprompt, msgs);
+    case 'gemini':    return callGemini(sysprompt, msgs);
+    case 'groq':      return callGroq(sysprompt, msgs);
+    case 'anthropic': return callAnthropic(sysprompt, msgs);
+    default: throw new Error('No LLM selected.');
+  }
+}
+
+async function callOpenAI(sys, msgs) {
+  const r = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.apiKey },
+    body: JSON.stringify({ model: 'gpt-4o', messages: [{ role: 'system', content: sys }, ...msgs], max_tokens: 2500 })
   });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message);
+  return d.choices[0].message.content;
 }
 
-/* SEARCH */
-function searchGame(val) {
-  document.querySelectorAll("#games .card").forEach(card => {
-    card.style.display = card.innerText.toLowerCase().includes(val.toLowerCase())
-      ? "block" : "none";
+async function callGemini(sys, msgs) {
+  const contents = msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }));
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${cfg.apiKey}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ system_instruction: { parts: [{ text: sys }] }, contents, generationConfig: { maxOutputTokens: 2500 } })
   });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message);
+  return d.candidates[0].content.parts[0].text;
 }
 
-/* BUY */
-function buy() {
-  alert("Connect Razorpay 💳");
+async function callGroq(sys, msgs) {
+  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.apiKey },
+    body: JSON.stringify({ model: 'llama3-70b-8192', messages: [{ role: 'system', content: sys }, ...msgs], max_tokens: 2500 })
+  });
+  const d = await r.json();
+  if (d.error) throw new Error(typeof d.error === 'string' ? d.error : d.error.message || JSON.stringify(d.error));
+  return d.choices[0].message.content;
 }
 
-/* DOWNLOAD */
-function download(link) {
-  window.open(link, "_blank");
+async function callAnthropic(sys, msgs) {
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': cfg.apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({ model: 'claude-3-5-sonnet-20241022', system: sys, messages: msgs, max_tokens: 2500 })
+  });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message);
+  return d.content[0].text;
 }
+
+// ════════════════════════════════════════════
+//  UI — MESSAGE RENDERING
+// ════════════════════════════════════════════
+function addBubble(role, content, anim = true) {
+  const msgs = document.getElementById('messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + (role === 'user' ? 'user' : 'ai');
+  if (!anim) row.style.animation = 'none';
+
+  const av = document.createElement('div');
+  av.className = 'msg-av ' + (role === 'user' ? 'user' : 'ai');
+  av.textContent = role === 'user' ? 'You' : 'AI';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+
+  const lbl = document.createElement('div');
+  lbl.className = 'msg-label';
+  lbl.textContent = role === 'user' ? 'You' : (cfg.botName || 'ResearchMind');
+
+  const txt = document.createElement('div');
+  txt.className = 'msg-text';
+  txt.innerHTML = md(content);
+
+  bubble.appendChild(lbl);
+  bubble.appendChild(txt);
+  if (role === 'user') { row.appendChild(bubble); row.appendChild(av); }
+  else { row.appendChild(av); row.appendChild(bubble); }
+
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+  return row;
+}
+
+function addThinking() {
+  const msgs = document.getElementById('messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row ai';
+  const bot = esc(cfg.botName || 'ResearchMind');
+  row.innerHTML = `<div class="msg-av ai">AI</div>
+    <div class="msg-bubble">
+      <div class="msg-label">${bot}</div>
+      <div class="msg-text thinking">Researching<span>.</span><span>.</span><span>.</span></div>
+    </div>`;
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+  return row;
+}
+
+// Markdown renderer
+function md(raw) {
+  let t = esc(raw);
+  // Code blocks
+  t = t.replace(/```[\w]*\n?([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+  // Inline code
+  t = t.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+  // Bold
+  t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Italic
+  t = t.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  // Headers
+  t = t.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  t = t.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  t = t.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+  // HR
+  t = t.replace(/^---$/gm, '<hr>');
+  // Blockquote
+  t = t.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+  // Bullet lists
+  t = t.replace(/^\* (.+)$/gm, '<li>$1</li>');
+  t = t.replace(/^- (.+)$/gm, '<li>$1</li>');
+  t = t.replace(/(<li>[\s\S]+?<\/li>)/g, '<ul>$1</ul>');
+  // Ordered list
+  t = t.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+  // Newlines (skip inside pre)
+  t = t.replace(/\n/g, '<br>');
+  return t;
+}
+
+// ════════════════════════════════════════════
+//  SETTINGS
+// ════════════════════════════════════════════
+function openSettings() {
+  document.getElementById('key-in').value = cfg.apiKey;
+  document.getElementById('name-in').value = cfg.botName;
+  document.getElementById('prompt-in').value = cfg.systemPrompt || DEFAULT_PROMPT;
+  refreshLLMCards();
+  document.getElementById('modal-bg').classList.add('show');
+}
+function closeSettings() { document.getElementById('modal-bg').classList.remove('show'); }
+function bgClick(e) { if (e.target.id === 'modal-bg') closeSettings(); }
+
+function saveSettings() {
+  cfg.apiKey = document.getElementById('key-in').value.trim();
+  cfg.botName = document.getElementById('name-in').value.trim() || 'ResearchMind';
+  cfg.systemPrompt = document.getElementById('prompt-in').value.trim();
+  document.getElementById('llm-select').value = cfg.llm;
+  persist();
+  closeSettings();
+}
+
+function setLLM(v) { cfg.llm = v; refreshLLMCards(); persist(); }
+function pickLLM(v) { cfg.llm = v; document.getElementById('llm-select').value = v; refreshLLMCards(); }
+function refreshLLMCards() {
+  document.querySelectorAll('.llm-card').forEach(c =>
+    c.classList.toggle('active', c.dataset.llm === cfg.llm));
+}
+
+// ════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════
+function v(id) { return document.getElementById(id).value.trim(); }
+function show(id) { document.getElementById(id).style.display = ''; }
+function hide(id) { document.getElementById(id).style.display = 'none'; }
+function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function onKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
+function grow(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 130) + 'px'; }
+function countChars() { document.getElementById('char-count').textContent = document.getElementById('msg-input').value.length + ' chars'; }
+
+// Enter on auth forms
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const authVisible = document.getElementById('auth-screen').style.display !== 'none';
+  if (!authVisible) return;
+  const loginVisible = document.getElementById('login-form').style.display !== 'none';
+  if (loginVisible) doLogin(); else doSignup();
+});
 </script>
-
 </body>
 </html>
+
