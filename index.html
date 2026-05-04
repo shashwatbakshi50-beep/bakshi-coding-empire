@@ -2,780 +2,379 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ResearchMind AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0d0f0e;
-  --bg2: #141614;
-  --bg3: #1a1d1a;
-  --bg4: #212421;
-  --border: #2a2e2a;
-  --border2: #353a35;
-  --text: #e8ede8;
-  --text2: #9aa69a;
-  --text3: #6a766a;
-  --accent: #7fc97f;
-  --accent2: #4a9a4a;
-  --accent3: #2d6e2d;
-  --red: #c97f7f;
-  --amber: #c9a87f;
-  --mono: 'JetBrains Mono', monospace;
-  --serif: 'Crimson Pro', serif;
-  --sans: 'DM Sans', sans-serif;
-  --radius: 10px;
+  --bg:#0d0f0e;--bg2:#141614;--bg3:#1a1d1a;--bg4:#212421;
+  --border:#2a2e2a;--border2:#353a35;
+  --text:#e8ede8;--text2:#9aa69a;--text3:#6a766a;
+  --g1:#7fc97f;--g2:#4a9a4a;--g3:#2d6e2d;
+  --red:#c97f7f;--amber:#c9a87f;
+  --mono:'JetBrains Mono',monospace;
+  --serif:'Crimson Pro',serif;
+  --sans:'DM Sans',sans-serif;
+  --r:10px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; overflow: hidden; }
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 
-/* ════════════════════════════════
-   AUTH SCREEN
-════════════════════════════════ */
-#auth-screen {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-#auth-screen::before {
-  content: '';
-  position: absolute;
-  width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(127,201,127,0.07) 0%, transparent 70%);
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-.auth-box {
-  background: var(--bg2);
-  border: 0.5px solid var(--border2);
-  border-radius: 18px;
-  padding: 3rem 2.5rem;
-  width: 390px;
-  position: relative;
-  z-index: 1;
-  animation: fadeUp 0.4s ease;
-}
-@keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
-.auth-logo { font-family: var(--serif); font-size: 30px; font-weight: 300; color: var(--accent); margin-bottom: 4px; }
-.auth-tagline { font-size: 11px; color: var(--text3); font-family: var(--mono); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 2.5rem; }
-.auth-tabs { display: flex; margin-bottom: 2rem; border-bottom: 0.5px solid var(--border); }
-.auth-tab { flex: 1; padding: 9px; text-align: center; font-size: 13px; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; user-select: none; }
-.auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-.auth-field { margin-bottom: 1rem; }
-.auth-field label { display: block; font-size: 10px; color: var(--text3); font-family: var(--mono); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 6px; }
-.auth-field input { width: 100%; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 10px 14px; color: var(--text); font-family: var(--sans); font-size: 14px; outline: none; transition: border-color 0.2s; }
-.auth-field input:focus { border-color: var(--accent3); }
-.auth-btn { width: 100%; margin-top: 1.5rem; padding: 11px; background: var(--accent3); color: var(--accent); border: 0.5px solid var(--accent2); border-radius: var(--radius); font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
-.auth-btn:hover { background: var(--accent2); color: #fff; }
-.auth-error { margin-top: 10px; font-size: 12px; color: var(--red); text-align: center; min-height: 18px; }
-.auth-note { margin-top: 1.5rem; font-size: 11px; color: var(--text3); text-align: center; line-height: 1.7; }
-.auth-note a { color: var(--accent); text-decoration: none; }
+/* ── LOADING SCREEN ── */
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px;}
+.ld-logo{font-family:var(--serif);font-size:36px;font-weight:300;color:var(--g1);}
+.ld-dots{display:flex;gap:8px;}
+.ld-dot{width:8px;height:8px;border-radius:50%;background:var(--g3);animation:ldpulse 1.2s infinite;}
+.ld-dot:nth-child(2){animation-delay:.2s;}
+.ld-dot:nth-child(3){animation-delay:.4s;}
+@keyframes ldpulse{0%,80%,100%{transform:scale(.7);opacity:.4}40%{transform:scale(1);opacity:1}}
 
-/* ════════════════════════════════
-   APP SHELL
-════════════════════════════════ */
-#app { display: none; height: 100vh; flex-direction: column; }
-#app.visible { display: flex; }
+/* ── AUTH ── */
+#auth{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+#auth::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(127,201,127,0.07) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.abox{background:var(--bg2);border:.5px solid var(--border2);border-radius:18px;padding:2.5rem 2rem;width:min(390px,95vw);position:relative;z-index:1;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.alogo{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--g1);margin-bottom:4px;}
+.atag{font-size:11px;color:var(--text3);font-family:var(--mono);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:2rem;}
+.atabs{display:flex;margin-bottom:1.5rem;border-bottom:.5px solid var(--border);}
+.atab{flex:1;padding:8px;text-align:center;font-size:13px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;user-select:none;}
+.atab.on{color:var(--g1);border-bottom-color:var(--g1);}
+.af{margin-bottom:.9rem;}
+.af label{display:block;font-size:10px;color:var(--text3);font-family:var(--mono);letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px;}
+.af input{width:100%;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);padding:10px 14px;color:var(--text);font-family:var(--sans);font-size:14px;outline:none;transition:border-color .2s;}
+.af input:focus{border-color:var(--g3);}
+.abtn{width:100%;margin-top:1.2rem;padding:11px;background:var(--g3);color:var(--g1);border:.5px solid var(--g2);border-radius:var(--r);font-family:var(--mono);font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.abtn:hover,.abtn:active{background:var(--g2);color:#fff;}
+.aerr{margin-top:8px;font-size:12px;color:var(--red);text-align:center;min-height:16px;}
+.anote{margin-top:1.2rem;font-size:11px;color:var(--text3);text-align:center;line-height:1.7;}
+
+/* ── FIRST TIME API SETUP ── */
+#setup-screen{min-height:100vh;display:none;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+#setup-screen::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(127,201,127,0.06) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.setup-box{background:var(--bg2);border:.5px solid var(--border2);border-radius:18px;padding:2.5rem 2rem;width:min(480px,95vw);position:relative;z-index:1;animation:fadeUp .4s ease;}
+.setup-title{font-family:var(--serif);font-size:26px;font-weight:300;color:var(--g1);margin-bottom:6px;}
+.setup-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem;line-height:1.6;}
+.setup-step{background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);padding:1rem 1.2rem;margin-bottom:1rem;}
+.step-num{font-family:var(--mono);font-size:10px;color:var(--g3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.step-title{font-size:14px;color:var(--text);margin-bottom:6px;font-weight:500;}
+.step-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px;}
+.setup-label{font-size:10px;color:var(--text3);font-family:var(--mono);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;display:block;}
+.setup-input{width:100%;background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:10px 14px;color:var(--text);font-family:var(--sans);font-size:14px;outline:none;transition:border-color .2s;margin-bottom:6px;}
+.setup-input:focus{border-color:var(--g3);}
+.setup-sel{width:100%;background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;margin-bottom:6px;}
+.free-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.free-link{font-size:11px;color:var(--g1);font-family:var(--mono);text-decoration:none;background:var(--bg3);border:.5px solid var(--border);padding:4px 10px;border-radius:6px;transition:background .15s;}
+.free-link:hover{background:var(--bg4);}
+.setup-save{width:100%;margin-top:1rem;padding:12px;background:var(--g3);color:var(--g1);border:.5px solid var(--g2);border-radius:var(--r);font-family:var(--mono);font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.setup-save:hover,.setup-save:active{background:var(--g2);color:#fff;}
+.setup-err{margin-top:8px;font-size:12px;color:var(--red);text-align:center;min-height:16px;}
+
+/* ── APP ── */
+#app{display:none;height:100vh;height:100dvh;flex-direction:column;}
+#app.on{display:flex;}
 
 /* TOPBAR */
-#topbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 18px;
-  height: 52px;
-  background: var(--bg2);
-  border-bottom: 0.5px solid var(--border);
-  flex-shrink: 0;
-}
-.topbar-logo { font-family: var(--serif); font-size: 20px; font-weight: 300; color: var(--accent); flex-shrink: 0; margin-right: 4px; }
-#search-wrap { flex: 1; max-width: 480px; position: relative; }
-#search-wrap::before { content: '⌕'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text3); pointer-events: none; }
-#search-wrap input { width: 100%; background: var(--bg3); border: 0.5px solid var(--border); border-radius: 22px; padding: 7px 14px 7px 36px; color: var(--text); font-size: 13px; font-family: var(--sans); outline: none; transition: border-color 0.2s; }
-#search-wrap input:focus { border-color: var(--border2); }
-.tb-space { flex: 1; }
-#llm-select { background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 6px 10px; color: var(--text2); font-size: 11px; font-family: var(--mono); cursor: pointer; outline: none; transition: border-color 0.2s; }
-#llm-select:hover { border-color: var(--border2); }
-.tb-btn { width: 32px; height: 32px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; color: var(--text3); transition: all 0.2s; user-select: none; flex-shrink: 0; }
-.tb-btn:hover { border-color: var(--border2); color: var(--text); }
+#tb{display:flex;align-items:center;gap:8px;padding:0 14px;height:52px;background:var(--bg2);border-bottom:.5px solid var(--border);flex-shrink:0;}
+.tblogo{font-family:var(--serif);font-size:19px;font-weight:300;color:var(--g1);flex-shrink:0;}
+#sw{flex:1;max-width:400px;position:relative;display:none;}
+@media(min-width:600px){#sw{display:block;}}
+#sw::before{content:'⌕';position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--text3);pointer-events:none;}
+#sw input{width:100%;background:var(--bg3);border:.5px solid var(--border);border-radius:20px;padding:6px 12px 6px 32px;color:var(--text);font-size:13px;outline:none;}
+.tbsp{flex:1;}
+#lsel{background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);padding:5px 8px;color:var(--text2);font-size:10px;font-family:var(--mono);cursor:pointer;outline:none;max-width:100px;}
+.tbb{width:32px;height:32px;background:var(--bg3);border:.5px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--text3);transition:all .2s;user-select:none;flex-shrink:0;}
+.tbb:hover,.tbb:active{border-color:var(--border2);color:var(--text);}
+/* hamburger for mobile */
+#menu-btn{display:flex;}
+@media(min-width:700px){#menu-btn{display:none;}}
 
 /* MAIN */
-#main { display: flex; flex: 1; overflow: hidden; }
+#main{display:flex;flex:1;overflow:hidden;}
 
 /* SIDEBAR */
-#sidebar { width: 236px; background: var(--bg2); border-right: 0.5px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
-#new-chat-btn { margin: 10px 10px 4px; padding: 8px 12px; background: var(--accent3); color: var(--accent); border: 0.5px solid var(--accent2); border-radius: var(--radius); font-size: 12px; font-family: var(--mono); cursor: pointer; text-align: center; transition: background 0.2s; user-select: none; }
-#new-chat-btn:hover { background: var(--accent2); color: #fff; }
-.sb-label { font-size: 10px; color: var(--text3); font-family: var(--mono); letter-spacing: 1px; text-transform: uppercase; padding: 10px 14px 4px; }
-#history-list { flex: 1; overflow-y: auto; padding: 4px 6px; }
-#history-list::-webkit-scrollbar { width: 3px; }
-#history-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-.h-item { padding: 7px 10px; border-radius: 8px; font-size: 12px; color: var(--text2); cursor: pointer; transition: background 0.15s; display: flex; align-items: center; gap: 6px; overflow: hidden; }
-.h-item:hover { background: var(--bg3); color: var(--text); }
-.h-item.active { background: var(--bg4); color: var(--accent); }
-.h-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
-.h-del { opacity: 0; font-size: 11px; color: var(--red); cursor: pointer; flex-shrink: 0; }
-.h-item:hover .h-del { opacity: 1; }
-.sb-foot { padding: 10px 12px; border-top: 0.5px solid var(--border); font-size: 11px; color: var(--text3); font-family: var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#sidebar{width:220px;background:var(--bg2);border-right:.5px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:transform .25s;z-index:50;}
+@media(max-width:699px){
+  #sidebar{position:fixed;top:52px;left:0;bottom:0;transform:translateX(-100%);}
+  #sidebar.open{transform:translateX(0);}
+  #overlay{display:block;}
+}
+#overlay{display:none;position:fixed;inset:0;top:52px;background:rgba(0,0,0,.5);z-index:49;}
+#ncb{margin:10px 10px 4px;padding:8px 12px;background:var(--g3);color:var(--g1);border:.5px solid var(--g2);border-radius:var(--r);font-size:12px;font-family:var(--mono);cursor:pointer;text-align:center;transition:background .2s;}
+#ncb:hover,.active-btn{background:var(--g2);color:#fff;}
+.sbl{font-size:10px;color:var(--text3);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;padding:10px 14px 4px;}
+#hl{flex:1;overflow-y:auto;padding:4px 6px;}
+.hi{padding:7px 10px;border-radius:8px;font-size:12px;color:var(--text2);cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:6px;overflow:hidden;}
+.hi:hover,.hi:active{background:var(--bg3);color:var(--text);}
+.hi.on{background:var(--bg4);color:var(--g1);}
+.hi span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.hd{opacity:0;font-size:11px;color:var(--red);cursor:pointer;flex-shrink:0;padding:2px 4px;}
+.hi:hover .hd{opacity:1;}
+.sbf{padding:10px 12px;border-top:.5px solid var(--border);font-size:11px;color:var(--text3);font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.key-status{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--g3);font-family:var(--mono);padding:4px 12px 8px;}
+.key-dot{width:6px;height:6px;border-radius:50%;background:var(--g1);flex-shrink:0;}
 
-/* CHAT AREA */
-#chat-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
-/* WELCOME */
-#welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center; }
-.w-logo { font-family: var(--serif); font-size: 54px; font-weight: 300; color: var(--accent); margin-bottom: 8px; }
-.w-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2.5rem; }
-.pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 580px; }
-.pill { padding: 7px 14px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: 20px; font-size: 12px; color: var(--text2); cursor: pointer; transition: all 0.2s; user-select: none; }
-.pill:hover { border-color: var(--accent3); color: var(--accent); background: var(--bg3); }
+/* CHAT */
+#ca{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+#wl{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;text-align:center;overflow-y:auto;}
+.wlogo{font-family:var(--serif);font-size:clamp(36px,8vw,54px);font-weight:300;color:var(--g1);margin-bottom:6px;}
+.wsub{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2rem;}
+.pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:560px;}
+.pill{padding:7px 13px;background:var(--bg2);border:.5px solid var(--border);border-radius:20px;font-size:12px;color:var(--text2);cursor:pointer;transition:all .2s;user-select:none;}
+.pill:hover,.pill:active{border-color:var(--g3);color:var(--g1);background:var(--bg3);}
 
 /* MESSAGES */
-#messages { flex: 1; overflow-y: auto; padding: 1.5rem 0; display: none; flex-direction: column; }
-#messages.show { display: flex; }
-#messages::-webkit-scrollbar { width: 4px; }
-#messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-.msg-row { display: flex; padding: 6px 1.75rem; gap: 10px; animation: fadeUp 0.22s ease; }
-.msg-row.user { justify-content: flex-end; }
-.msg-av { width: 27px; height: 27px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: var(--mono); flex-shrink: 0; margin-top: 2px; }
-.msg-av.ai { background: var(--accent3); color: var(--accent); }
-.msg-av.user { background: var(--bg3); color: var(--text2); border: 0.5px solid var(--border); }
-.msg-bubble { max-width: 700px; padding: 11px 15px; border-radius: 12px; font-size: 14px; line-height: 1.78; }
-.msg-row.user .msg-bubble { background: var(--bg3); border: 0.5px solid var(--border); border-top-right-radius: 3px; }
-.msg-row.ai .msg-bubble { background: var(--bg2); border: 0.5px solid var(--border); border-top-left-radius: 3px; }
-.msg-label { font-size: 10px; font-family: var(--mono); color: var(--text3); margin-bottom: 5px; letter-spacing: 0.8px; text-transform: uppercase; }
-.msg-text { white-space: pre-wrap; word-break: break-word; }
-.msg-text strong { color: var(--accent); font-weight: 500; }
-.msg-text em { color: var(--text2); font-style: italic; }
-.msg-text code { background: var(--bg4); border: 0.5px solid var(--border); padding: 1px 6px; border-radius: 4px; font-family: var(--mono); font-size: 12px; color: var(--amber); }
-.msg-text pre { background: var(--bg4); border: 0.5px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 10px 0; }
-.msg-text pre code { background: none; border: none; padding: 0; color: var(--text2); }
-.msg-text h1 { font-family: var(--serif); font-weight: 300; font-size: 22px; color: var(--accent); margin: 14px 0 5px; }
-.msg-text h2 { font-family: var(--serif); font-weight: 300; font-size: 18px; color: var(--accent); margin: 12px 0 4px; }
-.msg-text h3 { font-family: var(--serif); font-weight: 400; font-size: 15px; color: var(--accent); margin: 10px 0 3px; }
-.msg-text ul, .msg-text ol { margin: 6px 0 6px 20px; }
-.msg-text li { margin-bottom: 3px; }
-.msg-text blockquote { border-left: 2px solid var(--accent3); padding-left: 12px; color: var(--text2); margin: 8px 0; }
-.msg-text hr { border: none; border-top: 0.5px solid var(--border); margin: 12px 0; }
-.thinking span { animation: blink 1.2s infinite; display: inline-block; }
-.thinking span:nth-child(2) { animation-delay: .2s; }
-.thinking span:nth-child(3) { animation-delay: .4s; }
-@keyframes blink { 0%,80%,100%{opacity:.15} 40%{opacity:1} }
+#msgs{flex:1;overflow-y:auto;padding:1rem 0;display:none;flex-direction:column;}
+#msgs.on{display:flex;}
+.mr{display:flex;padding:5px clamp(12px,4vw,28px);gap:8px;animation:fadeUp .22s ease;}
+.mr.u{justify-content:flex-end;}
+.mav{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--mono);flex-shrink:0;margin-top:2px;}
+.mav.ai{background:var(--g3);color:var(--g1);}
+.mav.u{background:var(--bg3);color:var(--text2);border:.5px solid var(--border);}
+.mb{max-width:min(700px,85vw);padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.75;}
+.mr.u .mb{background:var(--bg3);border:.5px solid var(--border);border-top-right-radius:3px;}
+.mr.ai .mb{background:var(--bg2);border:.5px solid var(--border);border-top-left-radius:3px;}
+.ml{font-size:10px;font-family:var(--mono);color:var(--text3);margin-bottom:4px;letter-spacing:.8px;text-transform:uppercase;}
+.mt{white-space:pre-wrap;word-break:break-word;}
+.mt strong{color:var(--g1);font-weight:500;}
+.mt em{color:var(--text2);}
+.mt code{background:var(--bg4);border:.5px solid var(--border);padding:1px 6px;border-radius:4px;font-family:var(--mono);font-size:12px;color:var(--amber);}
+.mt pre{background:var(--bg4);border:.5px solid var(--border);border-radius:8px;padding:10px;overflow-x:auto;margin:8px 0;}
+.mt pre code{background:none;border:none;padding:0;color:var(--text2);}
+.mt h1{font-family:var(--serif);font-weight:300;font-size:20px;color:var(--g1);margin:12px 0 4px;}
+.mt h2{font-family:var(--serif);font-weight:300;font-size:17px;color:var(--g1);margin:10px 0 3px;}
+.mt h3{font-family:var(--serif);font-weight:400;font-size:15px;color:var(--g1);margin:8px 0 2px;}
+.mt ul,.mt ol{margin:5px 0 5px 18px;}
+.mt li{margin-bottom:2px;}
+.mt blockquote{border-left:2px solid var(--g3);padding-left:10px;color:var(--text2);margin:6px 0;}
+.mt hr{border:none;border-top:.5px solid var(--border);margin:10px 0;}
+.tk span{animation:blink 1.2s infinite;display:inline-block;}
+.tk span:nth-child(2){animation-delay:.2s;}
+.tk span:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,80%,100%{opacity:.15}40%{opacity:1}}
 
 /* INPUT */
-#input-wrap { padding: 10px 1.75rem 14px; background: var(--bg); border-top: 0.5px solid var(--border); flex-shrink: 0; }
-#input-box { display: flex; gap: 8px; align-items: flex-end; background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 14px; padding: 9px 12px; transition: border-color 0.2s; }
-#input-box:focus-within { border-color: var(--accent3); }
-#msg-input { flex: 1; background: none; border: none; outline: none; color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.6; resize: none; max-height: 130px; min-height: 22px; }
-#msg-input::placeholder { color: var(--text3); }
-#send-btn { width: 34px; height: 34px; background: var(--accent3); border: 0.5px solid var(--accent2); border-radius: 8px; color: var(--accent); font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; user-select: none; }
-#send-btn:hover { background: var(--accent2); color: #fff; }
-#send-btn:disabled { background: var(--bg4); border-color: var(--border); color: var(--text3); cursor: not-allowed; }
-.input-foot { margin-top: 5px; display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); font-family: var(--mono); }
+#iw{padding:8px clamp(12px,4vw,28px) 12px;background:var(--bg);border-top:.5px solid var(--border);flex-shrink:0;}
+#ib{display:flex;gap:8px;align-items:flex-end;background:var(--bg2);border:.5px solid var(--border2);border-radius:14px;padding:8px 10px;transition:border-color .2s;}
+#ib:focus-within{border-color:var(--g3);}
+#mi{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.55;resize:none;max-height:120px;min-height:22px;}
+#mi::placeholder{color:var(--text3);}
+#sndbtn{width:34px;height:34px;background:var(--g3);border:.5px solid var(--g2);border-radius:8px;color:var(--g1);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0;user-select:none;}
+#sndbtn:hover,#sndbtn:active{background:var(--g2);color:#fff;}
+#sndbtn.off{background:var(--bg4);border-color:var(--border);color:var(--text3);cursor:not-allowed;}
+.ifoot{margin-top:4px;display:flex;justify-content:space-between;font-size:10px;color:var(--text3);font-family:var(--mono);}
 
-/* ════════════════════════════════
-   SETTINGS MODAL
-════════════════════════════════ */
-#modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 200; align-items: center; justify-content: center; }
-#modal-bg.show { display: flex; }
-.modal { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 16px; padding: 2rem; width: 500px; max-height: 85vh; overflow-y: auto; animation: fadeUp 0.2s ease; }
-.modal::-webkit-scrollbar { width: 4px; }
-.modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-.modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-.modal-title { font-family: var(--serif); font-size: 22px; font-weight: 300; color: var(--accent); }
-.modal-close { background: none; border: none; color: var(--text3); font-size: 18px; cursor: pointer; padding: 4px; }
-.modal-close:hover { color: var(--text); }
-.m-sec { margin-bottom: 1.5rem; }
-.m-label { font-size: 10px; color: var(--text3); font-family: var(--mono); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 7px; }
-.modal input, .modal select, .modal textarea {
-  width: 100%;
-  background: var(--bg3);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 9px 12px;
-  color: var(--text);
-  font-family: var(--sans);
-  font-size: 13px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.modal textarea { min-height: 90px; resize: vertical; line-height: 1.65; }
-.modal input:focus, .modal select:focus, .modal textarea:focus { border-color: var(--accent3); }
-.llm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.llm-card { padding: 10px 13px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all 0.15s; }
-.llm-card:hover { background: var(--bg4); border-color: var(--border2); }
-.llm-card.active { border-color: var(--accent2); background: var(--bg4); }
-.llm-name { font-size: 13px; color: var(--text); margin-bottom: 2px; }
-.llm-desc { font-size: 11px; color: var(--text3); font-family: var(--mono); }
-.llm-free { font-size: 10px; color: var(--accent); font-family: var(--mono); margin-top: 3px; }
-.modal-save { padding: 9px 22px; background: var(--accent3); color: var(--accent); border: 0.5px solid var(--accent2); border-radius: var(--radius); font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
-.modal-save:hover { background: var(--accent2); color: #fff; }
-.api-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.api-link { font-size: 11px; color: var(--accent); font-family: var(--mono); text-decoration: none; background: var(--bg3); border: 0.5px solid var(--border); padding: 4px 10px; border-radius: 6px; transition: background 0.15s; }
-.api-link:hover { background: var(--bg4); }
+/* SETTINGS MODAL */
+#mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;padding:1rem;}
+#mbg.on{display:flex;}
+.modal{background:var(--bg2);border:.5px solid var(--border2);border-radius:16px;padding:1.5rem;width:min(500px,95vw);max-height:85vh;overflow-y:auto;animation:fadeUp .2s ease;}
+.mhd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+.mtitle{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--g1);}
+.mclose{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px;}
+.mclose:hover{color:var(--text);}
+.msec{margin-bottom:1.2rem;}
+.mlabel{font-size:10px;color:var(--text3);font-family:var(--mono);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.modal input,.modal select,.modal textarea{width:100%;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);font-family:var(--sans);font-size:13px;outline:none;transition:border-color .2s;}
+.modal textarea{min-height:80px;resize:vertical;line-height:1.6;}
+.modal input:focus,.modal select:focus,.modal textarea:focus{border-color:var(--g3);}
+.saved-badge{font-size:10px;color:var(--g1);font-family:var(--mono);background:rgba(127,201,127,.1);border:.5px solid var(--g3);padding:2px 8px;border-radius:4px;}
+.lgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lcard{padding:10px 12px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .15s;}
+.lcard:hover,.lcard:active{background:var(--bg4);border-color:var(--border2);}
+.lcard.on{border-color:var(--g2);background:var(--bg4);}
+.lname{font-size:13px;color:var(--text);margin-bottom:2px;}
+.ldesc{font-size:11px;color:var(--text3);font-family:var(--mono);}
+.lfree{font-size:10px;color:var(--g1);font-family:var(--mono);margin-top:2px;}
+.msave{width:100%;padding:10px;background:var(--g3);color:var(--g1);border:.5px solid var(--g2);border-radius:var(--r);font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background .2s;margin-top:4px;}
+.msave:hover,.msave:active{background:var(--g2);color:#fff;}
+.alinks{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.alink{font-size:11px;color:var(--g1);font-family:var(--mono);text-decoration:none;background:var(--bg3);border:.5px solid var(--border);padding:4px 9px;border-radius:6px;transition:background .15s;}
+.alink:hover,.alink:active{background:var(--bg4);}
+.key-saved-info{background:rgba(127,201,127,.08);border:.5px solid var(--g3);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--g1);font-family:var(--mono);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
 </style>
 </head>
 <body>
 
-<!-- ═══════ AUTH ═══════ -->
-<div id="auth-screen">
-  <div class="auth-box">
-    <div class="auth-logo">ResearchMind</div>
-    <div class="auth-tagline">Neutral · Balanced · Unbiased AI</div>
-    <div class="auth-tabs">
-      <div class="auth-tab active" onclick="switchTab('login')">Sign In</div>
-      <div class="auth-tab" onclick="switchTab('signup')">Create Account</div>
+<!-- LOADING -->
+<div id="loading">
+  <div class="ld-logo">ResearchMind</div>
+  <div class="ld-dots"><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div></div>
+</div>
+
+<!-- AUTH -->
+<div id="auth" style="display:none">
+  <div class="abox">
+    <div class="alogo">ResearchMind</div>
+    <div class="atag">Neutral · Balanced · Unbiased AI</div>
+    <div class="atabs">
+      <div class="atab on" onclick="tab('login')">Sign In</div>
+      <div class="atab" onclick="tab('signup')">Create Account</div>
     </div>
-    <!-- Login -->
-    <div id="login-form">
-      <div class="auth-field"><label>Username</label><input type="text" id="login-user" placeholder="your username" autocomplete="username"></div>
-      <div class="auth-field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••"></div>
-      <button class="auth-btn" onclick="doLogin()">Sign In →</button>
+    <div id="lf">
+      <div class="af"><label>Username</label><input id="lu" type="text" placeholder="username" autocomplete="username" inputmode="text"></div>
+      <div class="af"><label>Password</label><input id="lp" type="password" placeholder="••••••••"></div>
+      <button class="abtn" onclick="doLogin()">Sign In →</button>
     </div>
-    <!-- Signup -->
-    <div id="signup-form" style="display:none">
-      <div class="auth-field"><label>Username</label><input type="text" id="su-user" placeholder="choose a username"></div>
-      <div class="auth-field"><label>Email</label><input type="email" id="su-email" placeholder="your@email.com"></div>
-      <div class="auth-field"><label>Password</label><input type="password" id="su-pass" placeholder="min 6 characters"></div>
-      <button class="auth-btn" onclick="doSignup()">Create Account →</button>
+    <div id="sf" style="display:none">
+      <div class="af"><label>Username</label><input id="su" type="text" placeholder="choose username"></div>
+      <div class="af"><label>Email</label><input id="se" type="email" placeholder="your@email.com" inputmode="email"></div>
+      <div class="af"><label>Password</label><input id="sp" type="password" placeholder="min 6 chars"></div>
+      <button class="abtn" onclick="doSignup()">Create Account →</button>
     </div>
-    <div class="auth-error" id="auth-err"></div>
-    <div class="auth-note">Your data is saved only in <strong>your browser</strong>.<br>No server. No tracking. 100% private.</div>
+    <div class="aerr" id="ae"></div>
+    <div class="anote">Aapka data sirf aapke browser mein save hota hai.<br>Koi server nahi. Poori privacy.</div>
   </div>
 </div>
 
-<!-- ═══════ APP ═══════ -->
+<!-- FIRST TIME SETUP -->
+<div id="setup-screen">
+  <div class="setup-box">
+    <div class="setup-title">API Key Setup</div>
+    <div class="setup-sub">Ek baar API key daalo — phir kabhi nahi daalni padegi! Aapka key secure localStorage mein save ho jayega.</div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 1 — Free API Key Lo</div>
+      <div class="step-title">Recommended: Groq (100% Free)</div>
+      <div class="step-desc">Groq pe signup karo, API key banao, wapas aao aur paste karo. Bilkul free hai, bahut fast hai.</div>
+      <div class="free-links">
+        <a class="free-link" href="https://console.groq.com" target="_blank">🚀 Groq (Free)</a>
+        <a class="free-link" href="https://aistudio.google.com" target="_blank">🔷 Gemini (Free)</a>
+        <a class="free-link" href="https://openrouter.ai/keys" target="_blank">🌐 OpenRouter (Free)</a>
+        <a class="free-link" href="https://platform.openai.com/api-keys" target="_blank">OpenAI</a>
+        <a class="free-link" href="https://console.anthropic.com" target="_blank">Anthropic</a>
+      </div>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 2 — Provider Chuno</div>
+      <label class="setup-label">AI Provider</label>
+      <select class="setup-sel" id="setup-llm">
+        <option value="groq">Groq · Llama 3 (FREE — Recommended)</option>
+        <option value="openrouter">OpenRouter (FREE — Many Models)</option>
+        <option value="gemini">Google Gemini (FREE tier)</option>
+        <option value="openai">OpenAI GPT-4o</option>
+        <option value="anthropic">Anthropic Claude 3.5</option>
+      </select>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 3 — Key Paste Karo</div>
+      <label class="setup-label">API Key</label>
+      <input class="setup-input" type="password" id="setup-key" placeholder="sk-... ya gsk-... ya aisa kuch">
+      <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px;">🔒 Yeh key sirf aapke device pe save hogi. Koi server pe nahi jayegi.</div>
+    </div>
+
+    <button class="setup-save" onclick="saveSetup()">✓ Save Key & Start Using</button>
+    <div class="setup-err" id="setup-err"></div>
+  </div>
+</div>
+
+<!-- APP -->
 <div id="app">
-  <!-- Topbar -->
-  <div id="topbar">
-    <div class="topbar-logo">ResearchMind</div>
-    <div id="search-wrap"><input type="text" id="search-in" placeholder="Search conversations..." oninput="filterHistory(this.value)"></div>
-    <div class="tb-space"></div>
-    <select id="llm-select" onchange="setLLM(this.value)">
+  <div id="tb">
+    <div id="menu-btn" class="tbb" onclick="toggleSidebar()">☰</div>
+    <div class="tblogo">ResearchMind</div>
+    <div id="sw"><input type="text" placeholder="Search conversations..." oninput="filterH(this.value)"></div>
+    <div class="tbsp"></div>
+    <select id="lsel" onchange="setLLM(this.value)">
+      <option value="groq">Groq</option>
+      <option value="openrouter">OpenRouter</option>
+      <option value="gemini">Gemini</option>
       <option value="openai">GPT-4o</option>
-      <option value="gemini">Gemini 1.5 Pro</option>
-      <option value="groq">Groq · Llama 3</option>
-      <option value="anthropic">Claude 3.5</option>
+      <option value="anthropic">Claude</option>
     </select>
-    <div class="tb-btn" onclick="openSettings()" title="Settings">⚙</div>
-    <div class="tb-btn" onclick="doLogout()" title="Logout">⏻</div>
+    <div class="tbb" onclick="openS()" title="Settings">⚙</div>
+    <div class="tbb" onclick="logout()" title="Logout">⏻</div>
   </div>
-
+  <div id="overlay" onclick="closeSidebar()"></div>
   <div id="main">
-    <!-- Sidebar -->
     <div id="sidebar">
-      <div id="new-chat-btn" onclick="newChat()">+ New Chat</div>
-      <div class="sb-label">History</div>
-      <div id="history-list"></div>
-      <div class="sb-foot" id="sb-user"></div>
+      <div id="ncb" onclick="newChat()">+ New Chat</div>
+      <div class="key-status" id="key-status-bar">
+        <span class="key-dot"></span><span id="key-status-txt">Key Saved ✓</span>
+      </div>
+      <div class="sbl">History</div>
+      <div id="hl"></div>
+      <div class="sbf" id="sbu"></div>
     </div>
-
-    <!-- Chat -->
-    <div id="chat-area">
-      <div id="welcome">
-        <div class="w-logo">ResearchMind</div>
-        <div class="w-sub">Neutral Research AI · No Bias · Both Sides Always</div>
+    <div id="ca">
+      <div id="wl">
+        <div class="wlogo">ResearchMind</div>
+        <div class="wsub">Neutral AI · No Bias · Both Sides Always</div>
         <div class="pills">
-          <div class="pill" onclick="quickAsk('What is climate change? Show both the scientific consensus and the skeptics arguments side by side.')">🌍 Climate debate</div>
-          <div class="pill" onclick="quickAsk('What are the pros and cons of AI in healthcare? Present both supporter and critic perspectives.')">🏥 AI in healthcare</div>
-          <div class="pill" onclick="quickAsk('Explain cryptocurrency — both what supporters believe and what critics say about it.')">₿ Crypto debate</div>
-          <div class="pill" onclick="quickAsk('What are the arguments for and against Universal Basic Income? Show all sides.')">💰 UBI debate</div>
-          <div class="pill" onclick="quickAsk('Write a Python web scraper that collects and saves news headlines from a website.')">🐍 Write code</div>
-          <div class="pill" onclick="quickAsk('Give me a balanced summary of the Indian independence movement including perspectives from all major groups involved.')">📚 Research topic</div>
-          <div class="pill" onclick="quickAsk('What are the arguments for and against capital punishment? Include legal, ethical and statistical perspectives.')">⚖️ Death penalty</div>
-          <div class="pill" onclick="quickAsk('Explain the Israel–Palestine conflict from all sides without taking any position.')">🕊️ Conflict analysis</div>
+          <div class="pill" onclick="qa('Climate change — scientific consensus aur skeptics dono ke arguments batao.')">🌍 Climate</div>
+          <div class="pill" onclick="qa('AI in healthcare ke pros aur cons kya hain? Dono sides.')">🏥 AI Health</div>
+          <div class="pill" onclick="qa('Cryptocurrency ke supporters aur critics kya kehte hain?')">₿ Crypto</div>
+          <div class="pill" onclick="qa('Universal Basic Income ke liye aur against arguments kya hain?')">💰 UBI</div>
+          <div class="pill" onclick="qa('Python mein ek news headlines scraper likho.')">🐍 Code</div>
+          <div class="pill" onclick="qa('Indian independence movement ka neutral summary dono perspectives se.')">📚 Research</div>
+          <div class="pill" onclick="qa('Israel Palestine conflict ko neutral tarike se explain karo.')">🕊️ Conflict</div>
+          <div class="pill" onclick="qa('Stock market investing ke pros, cons, risks aur strategies kya hain?')">📈 Stocks</div>
         </div>
       </div>
-      <div id="messages"></div>
-      <div id="input-wrap">
-        <div id="input-box">
-          <textarea id="msg-input" placeholder="Ask anything — I'll research every angle..." rows="1"
-            onkeydown="onKey(event)" oninput="grow(this);countChars()"></textarea>
-          <div id="send-btn" onclick="send()">↑</div>
+      <div id="msgs"></div>
+      <div id="iw">
+        <div id="ib">
+          <textarea id="mi" placeholder="Kuch bhi pucho — har angle se research karunga..." rows="1"
+            onkeydown="onK(event)" oninput="grow(this);cc()"></textarea>
+          <div id="sndbtn" onclick="send()">↑</div>
         </div>
-        <div class="input-foot">
-          <span>Enter = send &nbsp;·&nbsp; Shift+Enter = new line</span>
-          <span id="char-count">0 chars</span>
+        <div class="ifoot">
+          <span id="hint-text">Enter = send · Shift+Enter = new line</span>
+          <span id="cc2">0</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════ SETTINGS MODAL ═══════ -->
-<div id="modal-bg" onclick="bgClick(event)">
+<!-- SETTINGS MODAL -->
+<div id="mbg" onclick="bgc(event)">
   <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title">Settings</div>
-      <button class="modal-close" onclick="closeSettings()">✕</button>
+    <div class="mhd">
+      <div class="mtitle">Settings</div>
+      <button class="mclose" onclick="closeS()">✕</button>
     </div>
 
-    <div class="m-sec">
-      <div class="m-label">Choose AI Model</div>
-      <div class="llm-grid">
-        <div class="llm-card" data-llm="openai" onclick="pickLLM('openai')">
-          <div class="llm-name">OpenAI GPT-4o</div>
-          <div class="llm-desc">api.openai.com</div>
-        </div>
-        <div class="llm-card" data-llm="gemini" onclick="pickLLM('gemini')">
-          <div class="llm-name">Google Gemini</div>
-          <div class="llm-desc">aistudio.google.com</div>
-          <div class="llm-free">Free tier available</div>
-        </div>
-        <div class="llm-card" data-llm="groq" onclick="pickLLM('groq')">
-          <div class="llm-name">Groq · Llama 3</div>
-          <div class="llm-desc">api.groq.com</div>
-          <div class="llm-free">Free · Very fast</div>
-        </div>
-        <div class="llm-card" data-llm="anthropic" onclick="pickLLM('anthropic')">
-          <div class="llm-name">Anthropic Claude</div>
-          <div class="llm-desc">api.anthropic.com</div>
-        </div>
+    <div class="msec">
+      <div class="mlabel">API Key <span class="saved-badge" id="key-badge">✓ Saved</span></div>
+      <div class="key-saved-info" id="key-info-box">
+        🔒 Key saved hai aapke device pe. Change karna ho toh neeche paste karo.
+      </div>
+      <input type="password" id="ki" placeholder="Nayi key paste karo (optional — puraani already saved hai)">
+      <div class="alinks">
+        <a class="alink" href="https://console.groq.com" target="_blank">Groq FREE</a>
+        <a class="alink" href="https://openrouter.ai/keys" target="_blank">OpenRouter FREE</a>
+        <a class="alink" href="https://aistudio.google.com" target="_blank">Gemini FREE</a>
+        <a class="alink" href="https://platform.openai.com/api-keys" target="_blank">OpenAI</a>
+        <a class="alink" href="https://console.anthropic.com" target="_blank">Anthropic</a>
       </div>
     </div>
-    var admin = require("firebase-admin");
 
-var serviceAccount = require("path/to/serviceAccountKey.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
-
-    <div class="m-sec">
-      <div class="m-label">API Key <span style="color:var(--red)">* required</span></div>
-      <input type="password" id="key-in" placeholder="Paste your API key here...">
-      <div class="api-links">
-        <a class="api-link" href="https://console.groq.com" target="_blank">Groq (Free)</a>
-        <a class="api-link" href="https://aistudio.google.com" target="_blank">Gemini (Free)</a>
-        <a class="api-link" href="https://platform.openai.com/api-keys" target="_blank">OpenAI</a>
-        <a class="api-link" href="https://console.anthropic.com" target="_blank">Anthropic</a>
-         <a class="api-link" href="" target="_blank">gpts</a>
-         <a class="api-link" href="" target="_blank">open router (Free)</a>
+    <div class="msec">
+      <div class="mlabel">AI Model</div>
+      <div class="lgrid">
+        <div class="lcard" data-llm="groq" onclick="pickL('groq')"><div class="lname">Groq · Llama 3</div><div class="ldesc">api.groq.com</div><div class="lfree">FREE · Ultra fast</div></div>
+        <div class="lcard" data-llm="openrouter" onclick="pickL('openrouter')"><div class="lname">OpenRouter</div><div class="ldesc">openrouter.ai</div><div class="lfree">FREE models available</div></div>
+        <div class="lcard" data-llm="gemini" onclick="pickL('gemini')"><div class="lname">Google Gemini</div><div class="ldesc">aistudio.google.com</div><div class="lfree">FREE tier</div></div>
+        <div class="lcard" data-llm="openai" onclick="pickL('openai')"><div class="lname">OpenAI GPT-4o</div><div class="ldesc">api.openai.com</div></div>
+        <div class="lcard" data-llm="anthropic" onclick="pickL('anthropic')"><div class="lname">Anthropic Claude</div><div class="ldesc">api.anthropic.com</div></div>
       </div>
-   </div>
     </div>
 
-    <div class="m-sec">
-      <div class="m-label">Bot Name</div>
-      <input type="text" id="name-in" placeholder="ResearchMind">
-    </div>
-
-    <div class="m-sec">
-      <div class="m-label">System Prompt (Personality)</div>
-      <textarea id="prompt-in" placeholder="Describe how the AI should behave..."></textarea>
-    </div>
-
-    <button class="modal-save" onclick="saveSettings()">Save Settings</button>
+    <div class="msec"><div class="mlabel">Bot Name</div><input type="text" id="bni" placeholder="ResearchMind"></div>
+    <div class="msec"><div class="mlabel">System Prompt</div><textarea id="spi" placeholder="AI ki personality describe karo..."></textarea></div>
+    <button class="msave" onclick="saveS()">Save Settings</button>
   </div>
 </div>
 
-<script>
-// ════════════════════════════════════════════
-//  GLOBAL STATE
-// ════════════════════════════════════════════
-let currentUser = null;
-let currentChatId = null;
-let allChats = {};
-let busy = false;
-let cfg = {
-  llm: 'openai',
-  apiKey: '',
-  botName: 'ResearchMind',
-  systemPrompt: ''
-};
-
-// Default neutral research prompt
-const DEFAULT_PROMPT = `You are ResearchMind — a neutral, unbiased research assistant. Follow these rules strictly:
-
-1. NEVER take sides on any debate, political topic, religion, or controversy.
-2. ALWAYS present ALL perspectives: supporters, critics, neutral experts.
-3. Use clear section headers like "## Supporters Argue:", "## Critics Say:", "## Neutral Analysis:".
-4. For every factual claim, mention if it is disputed or contested.
-5. For science topics: state the consensus AND any credible minority views.
-6. For code/technical tasks: write complete, working, well-commented code.
-7. For creative writing: produce high-quality, original content.
-8. You can discuss ANY topic — approach everything like an academic researcher.
-9. Format answers with headers, bullet points, and structure for clarity.
-10. End complex research answers with a "## Summary" section that remains balanced.`;
-
-// ════════════════════════════════════════════
-//  AUTH
-// ════════════════════════════════════════════
-function getDB() { return JSON.parse(localStorage.getItem('rm_db') || '{}'); }
-function saveDB(db) { localStorage.setItem('rm_db', JSON.stringify(db)); }
-
-function switchTab(tab) {
-  ['login','signup'].forEach((t,i) => {
-    document.querySelectorAll('.auth-tab')[i].classList.toggle('active', (i===0) === (tab==='login'));
-    document.getElementById(t+'-form').style.display = (t===tab) ? '' : 'none';
-  });
-  document.getElementById('auth-err').textContent = '';
-}
-
-function authErr(msg) { document.getElementById('auth-err').textContent = msg; }
-
-function doLogin() {
-  const u = v('login-user'), p = v('login-pass');
-  if (!u || !p) return authErr('Please fill in all fields.');
-  const db = getDB();
-  if (!db[u] || db[u].pass !== btoa(unescape(encodeURIComponent(p)))) return authErr('Wrong username or password.');
-  startSession(u, db[u]);
-}
-
-function doSignup() {
-  const u = v('su-user'), e = v('su-email'), p = v('su-pass');
-  if (!u || !e || !p) return authErr('Please fill in all fields.');
-  if (p.length < 6) return authErr('Password must be at least 6 characters.');
-  if (!/^[a-zA-Z0-9_]+$/.test(u)) return authErr('Username: only letters, numbers, underscore.');
-  const db = getDB();
-  if (db[u]) return authErr('Username already taken.');
-  db[u] = { pass: btoa(unescape(encodeURIComponent(p))), email: e, chats: {}, cfg: {} };
-  saveDB(db);
-  startSession(u, db[u]);
-}
-
-function startSession(username, data) {
-  currentUser = username;
-  allChats = data.chats || {};
-  if (data.cfg) cfg = Object.assign(cfg, data.cfg);
-  hide('auth-screen');
-  document.getElementById('app').classList.add('visible');
-  document.getElementById('sb-user').textContent = '◎ ' + username;
-  document.getElementById('llm-select').value = cfg.llm;
-  renderHistory();
-  refreshLLMCards();
-}
-
-function doLogout() {
-  persist();
-  currentUser = null; currentChatId = null; allChats = {};
-  document.getElementById('app').classList.remove('visible');
-  show('auth-screen');
-  document.getElementById('messages').innerHTML = '';
-  document.getElementById('messages').classList.remove('show');
-  show('welcome');
-}
-
-function persist() {
-  if (!currentUser) return;
-  const db = getDB();
-  if (!db[currentUser]) return;
-  db[currentUser].chats = allChats;
-  db[currentUser].cfg = cfg;
-  saveDB(db);
-}
-
-// ════════════════════════════════════════════
-//  CHAT MANAGEMENT
-// ════════════════════════════════════════════
-function newChat() {
-  currentChatId = 'c' + Date.now();
-  allChats[currentChatId] = { title: 'New Chat', msgs: [], ts: Date.now() };
-  document.getElementById('messages').innerHTML = '';
-  document.getElementById('messages').classList.remove('show');
-  show('welcome');
-  renderHistory();
-  persist();
-}
-
-function loadChat(id) {
-  currentChatId = id;
-  const chat = allChats[id];
-  const el = document.getElementById('messages');
-  el.innerHTML = '';
-  hide('welcome');
-  el.classList.add('show');
-  chat.msgs.forEach(m => addBubble(m.role, m.content, false));
-  el.scrollTop = el.scrollHeight;
-  renderHistory();
-}
-
-function deleteChat(id, e) {
-  e.stopPropagation();
-  delete allChats[id];
-  if (currentChatId === id) {
-    currentChatId = null;
-    document.getElementById('messages').innerHTML = '';
-    document.getElementById('messages').classList.remove('show');
-    show('welcome');
-  }
-  renderHistory();
-  persist();
-}
-
-function renderHistory(filter = '') {
-  const list = document.getElementById('history-list');
-  list.innerHTML = '';
-  Object.keys(allChats)
-    .sort((a,b) => allChats[b].ts - allChats[a].ts)
-    .forEach(id => {
-      const c = allChats[id];
-      if (filter && !c.title.toLowerCase().includes(filter.toLowerCase())) return;
-      const d = document.createElement('div');
-      d.className = 'h-item' + (id === currentChatId ? ' active' : '');
-      d.innerHTML = `<span>${esc(c.title)}</span><span class="h-del" onclick="deleteChat('${id}',event)">✕</span>`;
-      d.onclick = () => loadChat(id);
-      list.appendChild(d);
-    });
-}
-
-function filterHistory(v) { renderHistory(v); }
-
-// ════════════════════════════════════════════
-//  SEND & RECEIVE
-// ════════════════════════════════════════════
-async function send() {
-  if (busy) return;
-  const inp = document.getElementById('msg-input');
-  const text = inp.value.trim();
-  if (!text) return;
-  if (!cfg.apiKey) { alert('⚙ Please open Settings and add your API key first.'); openSettings(); return; }
-  if (!currentChatId) newChat();
-
-  inp.value = ''; grow(inp); countChars();
-  hide('welcome');
-  document.getElementById('messages').classList.add('show');
-
-  allChats[currentChatId].msgs.push({ role: 'user', content: text });
-  if (allChats[currentChatId].title === 'New Chat')
-    allChats[currentChatId].title = text.slice(0, 42) + (text.length > 42 ? '…' : '');
-  renderHistory();
-  addBubble('user', text);
-
-  const thinking = addThinking();
-  busy = true;
-  document.getElementById('send-btn').style.opacity = '0.4';
-  document.getElementById('send-btn').style.cursor = 'not-allowed';
-
-  try {
-    const reply = await callLLM([...allChats[currentChatId].msgs]);
-    thinking.remove();
-    allChats[currentChatId].msgs.push({ role: 'assistant', content: reply });
-    addBubble('assistant', reply);
-    persist();
-  } catch (err) {
-    thinking.remove();
-    addBubble('assistant', `⚠ **Error:** ${err.message}\n\nCheck your API key in ⚙ Settings. Make sure you selected the correct LLM provider.`);
-  }
-
-  busy = false;
-  document.getElementById('send-btn').style.opacity = '';
-  document.getElementById('send-btn').style.cursor = '';
-}
-
-function quickAsk(text) {
-  document.getElementById('msg-input').value = text;
-  send();
-}
-
-// ════════════════════════════════════════════
-//  LLM API CALLS
-// ════════════════════════════════════════════
-async function callLLM(messages) {
-  const sysprompt = cfg.systemPrompt || DEFAULT_PROMPT;
-  const msgs = messages.map(m => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: m.content }));
-
-  switch (cfg.llm) {
-    case 'openai':    return callOpenAI(sysprompt, msgs);
-    case 'gemini':    return callGemini(sysprompt, msgs);
-    case 'groq':      return callGroq(sysprompt, msgs);
-    case 'anthropic': return callAnthropic(sysprompt, msgs);
-    default: throw new Error('No LLM selected.');
-  }
-}
-
-async function callOpenAI(sys, msgs) {
-  const r = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.apiKey },
-    body: JSON.stringify({ model: 'gpt-4o', messages: [{ role: 'system', content: sys }, ...msgs], max_tokens: 2500 })
-  });
-  const d = await r.json();
-  if (d.error) throw new Error(d.error.message);
-  return d.choices[0].message.content;
-}
-
-async function callGemini(sys, msgs) {
-  const contents = msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }));
-  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${cfg.apiKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ system_instruction: { parts: [{ text: sys }] }, contents, generationConfig: { maxOutputTokens: 2500 } })
-  });
-  const d = await r.json();
-  if (d.error) throw new Error(d.error.message);
-  return d.candidates[0].content.parts[0].text;
-}
-
-async function callGroq(sys, msgs) {
-  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.apiKey },
-    body: JSON.stringify({ model: 'llama3-70b-8192', messages: [{ role: 'system', content: sys }, ...msgs], max_tokens: 2500 })
-  });
-  const d = await r.json();
-  if (d.error) throw new Error(typeof d.error === 'string' ? d.error : d.error.message || JSON.stringify(d.error));
-  return d.choices[0].message.content;
-}
-
-async function callAnthropic(sys, msgs) {
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': cfg.apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({ model: 'claude-3-5-sonnet-20241022', system: sys, messages: msgs, max_tokens: 2500 })
-  });
-  const d = await r.json();
-  if (d.error) throw new Error(d.error.message);
-  return d.content[0].text;
-}
-
-// ════════════════════════════════════════════
-//  UI — MESSAGE RENDERING
-// ════════════════════════════════════════════
-function addBubble(role, content, anim = true) {
-  const msgs = document.getElementById('messages');
-  const row = document.createElement('div');
-  row.className = 'msg-row ' + (role === 'user' ? 'user' : 'ai');
-  if (!anim) row.style.animation = 'none';
-
-  const av = document.createElement('div');
-  av.className = 'msg-av ' + (role === 'user' ? 'user' : 'ai');
-  av.textContent = role === 'user' ? 'You' : 'AI';
-
-  const bubble = document.createElement('div');
-  bubble.className = 'msg-bubble';
-
-  const lbl = document.createElement('div');
-  lbl.className = 'msg-label';
-  lbl.textContent = role === 'user' ? 'You' : (cfg.botName || 'ResearchMind');
-
-  const txt = document.createElement('div');
-  txt.className = 'msg-text';
-  txt.innerHTML = md(content);
-
-  bubble.appendChild(lbl);
-  bubble.appendChild(txt);
-  if (role === 'user') { row.appendChild(bubble); row.appendChild(av); }
-  else { row.appendChild(av); row.appendChild(bubble); }
-
-  msgs.appendChild(row);
-  msgs.scrollTop = msgs.scrollHeight;
-  return row;
-}
-
-function addThinking() {
-  const msgs = document.getElementById('messages');
-  const row = document.createElement('div');
-  row.className = 'msg-row ai';
-  const bot = esc(cfg.botName || 'ResearchMind');
-  row.innerHTML = `<div class="msg-av ai">AI</div>
-    <div class="msg-bubble">
-      <div class="msg-label">${bot}</div>
-      <div class="msg-text thinking">Researching<span>.</span><span>.</span><span>.</span></div>
-    </div>`;
-  msgs.appendChild(row);
-  msgs.scrollTop = msgs.scrollHeight;
-  return row;
-}
-
-// Markdown renderer
-function md(raw) {
-  let t = esc(raw);
-  // Code blocks
-  t = t.replace(/```[\w]*\n?([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-  // Inline code
-  t = t.replace(/`([^`\n]+)`/g, '<code>$1</code>');
-  // Bold
-  t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  // Italic
-  t = t.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  // Headers
-  t = t.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-  t = t.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-  t = t.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-  // HR
-  t = t.replace(/^---$/gm, '<hr>');
-  // Blockquote
-  t = t.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
-  // Bullet lists
-  t = t.replace(/^\* (.+)$/gm, '<li>$1</li>');
-  t = t.replace(/^- (.+)$/gm, '<li>$1</li>');
-  t = t.replace(/(<li>[\s\S]+?<\/li>)/g, '<ul>$1</ul>');
-  // Ordered list
-  t = t.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
-  // Newlines (skip inside pre)
-  t = t.replace(/\n/g, '<br>');
-  return t;
-}
-
-// ════════════════════════════════════════════
-//  SETTINGS
-// ════════════════════════════════════════════
-function openSettings() {
-  document.getElementById('key-in').value = cfg.apiKey;
-  document.getElementById('name-in').value = cfg.botName;
-  document.getElementById('prompt-in').value = cfg.systemPrompt || DEFAULT_PROMPT;
-  refreshLLMCards();
-  document.getElementById('modal-bg').classList.add('show');
-}
-function closeSettings() { document.getElementById('modal-bg').classList.remove('show'); }
-function bgClick(e) { if (e.target.id === 'modal-bg') closeSettings(); }
-
-function saveSettings() {
-  cfg.apiKey = document.getElementById('key-in').value.trim();
-  cfg.botName = document.getElementById('name-in').value.trim() || 'ResearchMind';
-  cfg.systemPrompt = document.getElementById('prompt-in').value.trim();
-  document.getElementById('llm-select').value = cfg.llm;
-  persist();
-  closeSettings();
-}
-
-function setLLM(v) { cfg.llm = v; refreshLLMCards(); persist(); }
-function pickLLM(v) { cfg.llm = v; document.getElementById('llm-select').value = v; refreshLLMCards(); }
-function refreshLLMCards() {
-  document.querySelectorAll('.llm-card').forEach(c =>
-    c.classList.toggle('active', c.dataset.llm === cfg.llm));
-}
-
-// ════════════════════════════════════════════
-//  HELPERS
-// ════════════════════════════════════════════
-function v(id) { return document.getElementById(id).value.trim(); }
-function show(id) { document.getElementById(id).style.display = ''; }
-function hide(id) { document.getElementById(id).style.display = 'none'; }
-function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-function onKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
-function grow(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 130) + 'px'; }
-function countChars() { document.getElementById('char-count').textContent = document.getElementById('msg-input').value.length + ' chars'; }
-
-// Enter on auth forms
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  const authVisible = document.getElementById('auth-screen').style.display !== 'none';
-  if (!authVisible) return;
-  const loginVisible = document.getElementById('login-form').style.display !== 'none';
-  if (loginVisible) doLogin(); else doSignup();
-});
-</script>
-  <script type="module">
-  // Import the functions you need from the SDKs you need
+<!-- FIREBASE -->
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
     apiKey: "AIzaSyCKPlsFjjo7QkZ7iVIbiqwAUq2bm17R3bM",
     authDomain: "maharaj-mungfali.firebaseapp.com",
@@ -786,233 +385,532 @@ document.addEventListener('keydown', e => {
     measurementId: "G-GKMBL9R0Z2"
   };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-  <script>
-    // 🔑 OpenRouter Key yahan daalein
-    const OPENROUTER_KEY = "YOUR_OPENROUTER_KEY"; 
+  const fbApp = initializeApp(firebaseConfig);
+  getAnalytics(fbApp);
+  const db = getFirestore(fbApp);
 
-    async function askAI() {
-        const inputField = document.getElementById('user-input');
-        const msgDiv = document.getElementById('messages');
-        const query = inputField.value;
-
-        if(!query) return;
-
-        // User message display
-        msgDiv.innerHTML += `<div class="msg user">${query}</div>`;
-        inputField.value = "";
-
-        try {
-            const response = await fetch("https://openrouter.ai", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${OPENROUTER_KEY}`,
-                    "HTTP-Referer": window.location.href, // OpenRouter ke liye zaroori hai
-                    "X-Title": "ResearchMind AI",        // Aapka App Name
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    "model": "meta-llama/llama-3.1-8b-instruct:free", // Yahan free model use kiya hai
-                    "messages": [{ "role": "user", "content": query }]
-                })
-            });
-
-            const data = await response.json();
-            
-            if(data.error) {
-                throw new Error(data.error.message || "API Error");
-            }
-
-            const aiResponse = data.choices[0].message.content;
-            
-            // AI Response display
-            msgDiv.innerHTML += `<div class="msg ai">${aiResponse}</div>`;
-            msgDiv.scrollTop = msgDiv.scrollHeight;
-
-        } catch (error) {
-            msgDiv.innerHTML += `<div class="msg ai" style="color:red">⚠ Error: ${error.message}</div>`;
-            console.error("Error Detail:", error);
-        }
+  // Firebase mein chat save karne ka function — global banao
+  window.saveToFirebase = async function(user, prompt, response, model) {
+    try {
+      await addDoc(collection(db, "chats"), {
+        user: user || "anonymous",
+        prompt: prompt,
+        response: response,
+        model: model,
+        timestamp: serverTimestamp()
+      });
+    } catch(e) {
+      console.log("Firebase save error:", e.message);
+      // App band nahi hogi agar Firebase fail bhi ho
     }
-</script>
-    <title>My AI Tool</title>
-    <style>
-        body { background: #111; color: white; font-family: sans-serif; padding: 20px; }
-        #chat-box { height: 300px; border: 1px solid #333; overflow-y: auto; margin-bottom: 10px; padding: 10px; }
-        input { width: 80%; padding: 10px; background: #222; color: white; border: 1px solid #444; }
-        button { padding: 10px; background: green; color: white; cursor: pointer; }
-    </style>
-</head>
-<body>
-<!-- Aapke purane code ke niche jahan </body> khatam ho raha hai -->
-
-<script>
-    // 1. Apni OpenRouter Key yahan paste karo
-    const MY_OPENROUTER_KEY = "sk-or-v1-xxxxxx..."; 
-
-    async function sendMessage() {
-        const inputField = document.getElementById('user-input'); // Check karo aapki input ID yahi hai na
-        const chatBox = document.getElementById('messages');      // Check karo aapki messages div ID yahi hai
-        const query = inputField.value;
-
-        if (!query) return;
-
-        // User ka message screen par dikhao
-        chatBox.innerHTML += `<div class="msg user">${query}</div>`;
-        inputField.value = "";
-
-        try {
-            // 2. OpenRouter API Call
-            const response = await fetch("https://openrouter.ai", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${MY_OPENROUTER_KEY}`,
-                    "Content-Type": "application/json",
-                    "HTTP-Referer": window.location.origin, 
-                    "X-Title": "ResearchMind AI"
-                },
-                body: JSON.stringify({
-                    "model": "meta-llama/llama-3.1-8b-instruct:free", 
-                    "messages": [{ "role": "user", "content": query }]
-                })
-            });
-
-            const data = await response.json();
-            
-            if (data.choices) {
-                const aiReply = data.choices[0].message.content;
-                chatBox.innerHTML += `<div class="msg ai">${aiReply}</div>`;
-            } else {
-                throw new Error(data.error.message || "Unknown error");
-            }
-
-        } catch (error) {
-            console.error("Error:", error);
-            chatBox.innerHTML += `<div class="msg ai" style="color:red">Bhai error: ${error.message}</div>`;
-        }
-
-        // Scroll to bottom
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-</script>
-<!-- Copy and paste this entire script block before the </body> tag -->
-<script type="module">
-  // 1. Firebase Initialization (Insert your configuration here)
-  import { initializeApp } from "https://gstatic.com";
-  import { getFirestore, doc, getDoc, collection, addDoc } from "https://gstatic.com";
-
-  const firebaseConfig = {
-    apiKey: "YOUR_FIREBASE_API_KEY",
-    authDomain: "://firebaseapp.com",
-    projectId: "your-project-id",
-    // ... paste the rest of your config here
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // 2. OpenRouter Key (You can also fetch this from Firestore)
-  const OPENROUTER_KEY = "YOUR_OPENROUTER_API_KEY";
-
-  // 3. Element Selection
-  const chatInput = document.querySelector('#search-wrap input');
-  const messagesDiv = document.querySelector('#messages');
-  const welcomeDiv = document.querySelector('#welcome');
-  const llmSelect = document.querySelector('#llm-select');
-
-  // 4. Send Message Function
-  async function sendMessage(text) {
-    if (!text.trim()) return;
-
-    // UI Updates
-    welcomeDiv.style.display = 'none';
-    messagesDiv.style.display = 'flex';
-    messagesDiv.classList.add('show');
-
-    // Add User Message
-    appendMessage(text, 'user');
-    chatInput.value = '';
-
-    try {
-      const response = await fetch("https://openrouter.ai", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${OPENROUTER_KEY}`,
-          "HTTP-Referer": window.location.origin,
-          "X-Title": "ResearchMind AI",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          "model": getModelPath(llmSelect.value),
-          "messages": [{ "role": "user", "content": text }]
-        })
-      });
-
-      const data = await response.json();
-      const aiReply = data.choices[0].message.content;
-
-      // Add AI Response
-      appendMessage(aiReply, 'ai');
-
-      // 5. Save Chat in Firebase (Backend safe)
-      await addDoc(collection(db, "chats"), {
-        prompt: text,
-        response: aiReply,
-        model: llmSelect.value,
-        time: new Date()
-      });
-
-    } catch (error) {
-      appendMessage("⚠ Error: " + error.message, 'ai');
-    }
-  }
-
-  // Helper: Model selection logic
-  function getModelPath(val) {
-    const paths = {
-      'groq': 'meta-llama/llama-3.1-8b-instruct:free',
-      'gemini': 'google/gemini-flash-1.5',
-      'openai': 'openai/gpt-4o-mini',
-      'anthropic': 'anthropic/claude-3-5-sonnet'
-    };
-    return paths[val] || 'meta-llama/llama-3.1-8b-instruct:free';
-  }
-
-  // Helper: Display messages in the UI
-  function appendMessage(text, role) {
-    const msg = document.createElement('div');
-    msg.style.padding = '15px';
-    msg.style.margin = '10px 0';
-    msg.style.borderRadius = '10px';
-    msg.style.background = role === 'user' ? 'var(--bg3)' : 'var(--bg2)';
-    msg.style.border = role === 'ai' ? '0.5px solid var(--border)' : 'none';
-    msg.style.alignSelf = role === 'user' ? 'flex-end' : 'flex-start';
-    msg.style.maxWidth = '80%';
-    msg.innerText = text;
-    messagesDiv.appendChild(msg);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  }
-
-  // Listeners
-  chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage(chatInput.value);
-  });
-  headers: {
-  "Authorization": `Bearer ${MY_KEY}`,
-  "Content-Type": "application/json",
-  "HTTP-Referer": window.location.origin, // Required: Your site's URL
-  "X-Title": "ResearchMind"
-}
-
+  window.firebaseReady = true;
+  console.log("Firebase connected ✓");
 </script>
 
+<script>
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let currentUser = null;
+let currentChatId = null;
+let allChats = {};
+let busy = false;
+let cfg = {
+  llm: 'groq',
+  apiKey: '',
+  botName: 'ResearchMind',
+  systemPrompt: ''
+};
+
+const SYS = `You are ResearchMind — a neutral, unbiased research AI assistant. Rules:
+1. NEVER take sides on debates, politics, religion or controversies.
+2. ALWAYS present ALL perspectives: supporters, critics, neutral analysts.
+3. Use headers: "## Supporters Argue:", "## Critics Say:", "## Neutral Analysis:", "## Summary:".
+4. For code: write complete, working, well-commented code.
+5. For creative writing: produce high-quality original content.
+6. Approach EVERY topic academically. Never refuse any topic.
+7. Format with headers, bullets, structure for clarity.`;
+
+// ════════════════════════════════════════
+// KEY MANAGEMENT — Ek baar save, hamesha kaam kare
+// ════════════════════════════════════════
+const KEY_STORE = 'rm_api_key';
+const CFG_STORE = 'rm_cfg';
+
+function saveKey(key) {
+  localStorage.setItem(KEY_STORE, key);
+}
+function getKey() {
+  return localStorage.getItem(KEY_STORE) || '';
+}
+function clearKey() {
+  localStorage.removeItem(KEY_STORE);
+}
+
+function saveCfg() {
+  const toSave = { llm: cfg.llm, botName: cfg.botName, systemPrompt: cfg.systemPrompt };
+  localStorage.setItem(CFG_STORE, JSON.stringify(toSave));
+}
+function loadCfg() {
+  try {
+    const s = localStorage.getItem(CFG_STORE);
+    if (s) Object.assign(cfg, JSON.parse(s));
+    cfg.apiKey = getKey();
+  } catch(e) {}
+}
+
+// ════════════════════════════════════════
+// DB (Users + Chats)
+// ════════════════════════════════════════
+const getDB = () => JSON.parse(localStorage.getItem('rm_db') || '{}');
+const saveDB = d => localStorage.setItem('rm_db', JSON.stringify(d));
+
+// ════════════════════════════════════════
+// INIT — App start hote hi check karo
+// ════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  loadCfg();
+  // Mobile pe Enter = send hint
+  if (/Mobi|Android/i.test(navigator.userAgent)) {
+    document.getElementById('hint-text').textContent = 'Send button dabao ↑';
+  }
+  setTimeout(initApp, 800); // loading screen dikhao thoda
+});
+
+function initApp() {
+  document.getElementById('loading').style.display = 'none';
+
+  // Check: kya key pehle se saved hai?
+  const savedKey = getKey();
+
+  if (savedKey) {
+    cfg.apiKey = savedKey;
+    // Auth screen dikhao
+    document.getElementById('auth').style.display = 'flex';
+  } else {
+    // Pehli baar — setup screen dikhao
+    document.getElementById('auth').style.display = 'flex'; // auth pehle
+  }
+}
+
+// ════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════
+function tab(t) {
+  document.querySelectorAll('.atab').forEach((el,i) => el.classList.toggle('on', (i===0)===(t==='login')));
+  document.getElementById('lf').style.display = t==='login' ? '' : 'none';
+  document.getElementById('sf').style.display = t==='signup' ? '' : 'none';
+  document.getElementById('ae').textContent = '';
+}
+function authErr(m) { document.getElementById('ae').textContent = m; }
+function gv(id) { return document.getElementById(id).value.trim(); }
+
+function doLogin() {
+  const u = gv('lu'), p = gv('lp');
+  if (!u || !p) return authErr('Sab fields bharo.');
+  const db = getDB();
+  if (!db[u] || db[u].pass !== btoa(p)) return authErr('Username ya password galat hai.');
+
+  // Check: key saved hai ya nahi
+  const savedKey = getKey();
+  if (!savedKey) {
+    // Key nahi hai — setup screen
+    document.getElementById('auth').style.display = 'none';
+    document.getElementById('setup-screen').style.display = 'flex';
+    window._pendingUser = { u, data: db[u] };
+  } else {
+    startSession(u, db[u]);
+  }
+}
+
+function doSignup() {
+  const u = gv('su'), e = gv('se'), p = gv('sp');
+  if (!u || !e || !p) return authErr('Sab fields bharo.');
+  if (p.length < 6) return authErr('Password 6+ characters hona chahiye.');
+  if (!/^[a-zA-Z0-9_]+$/.test(u)) return authErr('Username: letters, numbers, _ only.');
+  const db = getDB();
+  if (db[u]) return authErr('Username already le liya gaya.');
+  db[u] = { pass: btoa(p), email: e, chats: {}, cfg: {} };
+  saveDB(db);
+
+  // Check: key saved hai ya nahi
+  const savedKey = getKey();
+  if (!savedKey) {
+    document.getElementById('auth').style.display = 'none';
+    document.getElementById('setup-screen').style.display = 'flex';
+    window._pendingUser = { u, data: db[u] };
+  } else {
+    startSession(u, db[u]);
+  }
+}
+
+// ════════════════════════════════════════
+// SETUP — Pehli baar key save
+// ════════════════════════════════════════
+function saveSetup() {
+  const key = document.getElementById('setup-key').value.trim();
+  const llm = document.getElementById('setup-llm').value;
+  if (!key) {
+    document.getElementById('setup-err').textContent = 'API key daalna zaroori hai!';
+    return;
+  }
+  if (key.length < 10) {
+    document.getElementById('setup-err').textContent = 'Yeh valid key nahi lagti. Check karo.';
+    return;
+  }
+  // Save key permanently
+  saveKey(key);
+  cfg.apiKey = key;
+  cfg.llm = llm;
+  saveCfg();
+
+  document.getElementById('setup-screen').style.display = 'none';
+
+  if (window._pendingUser) {
+    startSession(window._pendingUser.u, window._pendingUser.data);
+    window._pendingUser = null;
+  }
+}
+
+function startSession(username, data) {
+  currentUser = username;
+  allChats = data.chats || {};
+  if (data.cfg) cfg = Object.assign(cfg, data.cfg);
+  cfg.apiKey = getKey(); // Always fresh from storage
+
+  document.getElementById('auth').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('app').classList.add('on');
+  document.getElementById('sbu').textContent = '◎ ' + username;
+  document.getElementById('lsel').value = cfg.llm;
+
+  // Key status bar
+  document.getElementById('key-status-txt').textContent = cfg.llm.toUpperCase() + ' Key ✓';
+
+  renderH();
+  refreshCards();
+}
+
+function logout() {
+  persist();
+  currentUser = null; currentChatId = null; allChats = {};
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('auth').style.display = 'flex';
+  document.getElementById('msgs').innerHTML = '';
+  document.getElementById('msgs').classList.remove('on');
+  document.getElementById('wl').style.display = '';
+  closeSidebar();
+}
+
+function persist() {
+  if (!currentUser) return;
+  const db = getDB();
+  if (!db[currentUser]) return;
+  db[currentUser].chats = allChats;
+  db[currentUser].cfg = { llm: cfg.llm, botName: cfg.botName };
+  saveDB(db);
+  saveCfg();
+}
+
+// ════════════════════════════════════════
+// SIDEBAR (Mobile)
+// ════════════════════════════════════════
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').style.display =
+    document.getElementById('sidebar').classList.contains('open') ? 'block' : 'none';
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').style.display = 'none';
+}
+
+// ════════════════════════════════════════
+// CHATS
+// ════════════════════════════════════════
+function newChat() {
+  currentChatId = 'c' + Date.now();
+  allChats[currentChatId] = { title: 'New Chat', msgs: [], ts: Date.now() };
+  document.getElementById('msgs').innerHTML = '';
+  document.getElementById('msgs').classList.remove('on');
+  document.getElementById('wl').style.display = '';
+  renderH(); persist(); closeSidebar();
+}
+
+function loadChat(id) {
+  currentChatId = id;
+  const chat = allChats[id];
+  const el = document.getElementById('msgs');
+  el.innerHTML = '';
+  document.getElementById('wl').style.display = 'none';
+  el.classList.add('on');
+  chat.msgs.forEach(m => bubble(m.role, m.content, false));
+  el.scrollTop = el.scrollHeight;
+  renderH(); closeSidebar();
+}
+
+function delChat(id, e) {
+  e.stopPropagation();
+  delete allChats[id];
+  if (currentChatId === id) {
+    currentChatId = null;
+    document.getElementById('msgs').innerHTML = '';
+    document.getElementById('msgs').classList.remove('on');
+    document.getElementById('wl').style.display = '';
+  }
+  renderH(); persist();
+}
+
+function renderH(f = '') {
+  const el = document.getElementById('hl');
+  el.innerHTML = '';
+  Object.keys(allChats).sort((a,b) => allChats[b].ts - allChats[a].ts).forEach(id => {
+    const c = allChats[id];
+    if (f && !c.title.toLowerCase().includes(f.toLowerCase())) return;
+    const d = document.createElement('div');
+    d.className = 'hi' + (id === currentChatId ? ' on' : '');
+    d.innerHTML = `<span>${esc(c.title)}</span><span class="hd" onclick="delChat('${id}',event)">✕</span>`;
+    d.onclick = () => loadChat(id);
+    el.appendChild(d);
+  });
+}
+function filterH(v) { renderH(v); }
+
+// ════════════════════════════════════════
+// SEND
+// ════════════════════════════════════════
+async function send() {
+  if (busy) return;
+  const inp = document.getElementById('mi');
+  const txt = inp.value.trim();
+  if (!txt) return;
+
+  // Key check
+  cfg.apiKey = getKey();
+  if (!cfg.apiKey) {
+    // Key nahi hai — setup dikhao
+    document.getElementById('app').classList.remove('on');
+    document.getElementById('setup-screen').style.display = 'flex';
+    window._pendingUser = null;
+    return;
+  }
+
+  if (!currentChatId) newChat();
+
+  inp.value = ''; grow(inp); cc();
+  document.getElementById('wl').style.display = 'none';
+  document.getElementById('msgs').classList.add('on');
+
+  allChats[currentChatId].msgs.push({ role: 'user', content: txt });
+  if (allChats[currentChatId].title === 'New Chat')
+    allChats[currentChatId].title = txt.slice(0, 42) + (txt.length > 42 ? '…' : '');
+
+  renderH(); bubble('user', txt);
+
+  const th = thinking();
+  busy = true;
+  document.getElementById('sndbtn').classList.add('off');
+
+  try {
+    const reply = await callLLM([...allChats[currentChatId].msgs]);
+    th.remove();
+    allChats[currentChatId].msgs.push({ role: 'assistant', content: reply });
+    bubble('assistant', reply);
+    persist();
+    // Firebase mein save karo
+    if (window.saveToFirebase) {
+      window.saveToFirebase(currentUser, txt, reply, cfg.llm);
+    }
+  } catch(e) {
+    th.remove();
+    bubble('assistant', `⚠ **Error:** ${e.message}\n\n**Solution:** Settings (⚙) mein ja aur API key check karo.`);
+  }
+
+  busy = false;
+  document.getElementById('sndbtn').classList.remove('off');
+}
+
+function qa(t) { document.getElementById('mi').value = t; send(); }
+
+// ════════════════════════════════════════
+// LLM CALLS
+// ════════════════════════════════════════
+async function callLLM(messages) {
+  const sys = cfg.systemPrompt || SYS;
+  const m = messages.map(x => ({ role: x.role === 'assistant' ? 'assistant' : 'user', content: x.content }));
+  cfg.apiKey = getKey(); // Always fresh
+  if (!cfg.apiKey) throw new Error('API key nahi mili. Settings mein ja aur key save karo.');
+
+  switch(cfg.llm) {
+    case 'openai':      return callOpenAI(sys, m);
+    case 'gemini':      return callGemini(sys, m);
+    case 'groq':        return callGroq(sys, m);
+    case 'anthropic':   return callAnthropic(sys, m);
+    case 'openrouter':  return callOpenRouter(sys, m);
+    default: throw new Error('No LLM selected');
+  }
+}
+
+async function callOpenAI(sys, m) {
+  const r = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.apiKey },
+    body: JSON.stringify({ model: 'gpt-4o', messages: [{ role: 'system', content: sys }, ...m], max_tokens: 2500 })
+  });
+  const d = await r.json(); if (d.error) throw new Error(d.error.message);
+  return d.choices[0].message.content;
+}
+
+async function callGemini(sys, m) {
+  const c = m.map(x => ({ role: x.role === 'assistant' ? 'model' : 'user', parts: [{ text: x.content }] }));
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${cfg.apiKey}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ system_instruction: { parts: [{ text: sys }] }, contents: c, generationConfig: { maxOutputTokens: 2500 } })
+  });
+  const d = await r.json(); if (d.error) throw new Error(d.error.message);
+  return d.candidates[0].content.parts[0].text;
+}
+
+async function callGroq(sys, m) {
+  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.apiKey },
+    body: JSON.stringify({ model: 'llama3-70b-8192', messages: [{ role: 'system', content: sys }, ...m], max_tokens: 2500 })
+  });
+  const d = await r.json(); if (d.error) throw new Error(typeof d.error === 'string' ? d.error : d.error.message || JSON.stringify(d.error));
+  return d.choices[0].message.content;
+}
+
+async function callAnthropic(sys, m) {
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': cfg.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({ model: 'claude-3-5-sonnet-20241022', system: sys, messages: m, max_tokens: 2500 })
+  });
+  const d = await r.json(); if (d.error) throw new Error(d.error.message);
+  return d.content[0].text;
+}
+
+async function callOpenRouter(sys, m) {
+  const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.apiKey, 'HTTP-Referer': window.location.origin, 'X-Title': 'ResearchMind AI' },
+    body: JSON.stringify({ model: 'meta-llama/llama-3.1-8b-instruct:free', messages: [{ role: 'system', content: sys }, ...m], max_tokens: 2500 })
+  });
+  const d = await r.json(); if (d.error) throw new Error(d.error.message || JSON.stringify(d.error));
+  return d.choices[0].message.content;
+}
+
+// ════════════════════════════════════════
+// UI
+// ════════════════════════════════════════
+function bubble(role, content, anim = true) {
+  const msgs = document.getElementById('msgs');
+  const row = document.createElement('div');
+  row.className = 'mr ' + (role === 'user' ? 'u' : 'ai');
+  if (!anim) row.style.animation = 'none';
+  const av = document.createElement('div');
+  av.className = 'mav ' + (role === 'user' ? 'u' : 'ai');
+  av.textContent = role === 'user' ? 'You' : 'AI';
+  const bub = document.createElement('div'); bub.className = 'mb';
+  const lbl = document.createElement('div'); lbl.className = 'ml';
+  lbl.textContent = role === 'user' ? 'You' : (cfg.botName || 'ResearchMind');
+  const txt = document.createElement('div'); txt.className = 'mt';
+  txt.innerHTML = mdRender(content);
+  bub.appendChild(lbl); bub.appendChild(txt);
+  if (role === 'user') { row.appendChild(bub); row.appendChild(av); }
+  else { row.appendChild(av); row.appendChild(bub); }
+  msgs.appendChild(row); msgs.scrollTop = msgs.scrollHeight;
+  return row;
+}
+
+function thinking() {
+  const msgs = document.getElementById('msgs');
+  const row = document.createElement('div'); row.className = 'mr ai';
+  row.innerHTML = `<div class="mav ai">AI</div><div class="mb"><div class="ml">${esc(cfg.botName||'ResearchMind')}</div><div class="mt tk">Research ho rahi hai<span>.</span><span>.</span><span>.</span></div></div>`;
+  msgs.appendChild(row); msgs.scrollTop = msgs.scrollHeight;
+  return row;
+}
+
+function mdRender(raw) {
+  let t = esc(raw);
+  t = t.replace(/```[\w]*\n?([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+  t = t.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+  t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  t = t.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  t = t.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  t = t.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  t = t.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+  t = t.replace(/^---$/gm, '<hr>');
+  t = t.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+  t = t.replace(/^\* (.+)$/gm, '<li>$1</li>');
+  t = t.replace(/^- (.+)$/gm, '<li>$1</li>');
+  t = t.replace(/(<li>[\s\S]+?<\/li>)/g, '<ul>$1</ul>');
+  t = t.replace(/\n/g, '<br>');
+  return t;
+}
+
+function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function onK(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
+function grow(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
+function cc() { document.getElementById('cc2').textContent = document.getElementById('mi').value.length; }
+
+// ════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════
+function openS() {
+  const savedKey = getKey();
+  document.getElementById('ki').value = '';
+  document.getElementById('bni').value = cfg.botName;
+  document.getElementById('spi').value = cfg.systemPrompt || SYS;
+
+  // Show key status
+  if (savedKey) {
+    document.getElementById('key-info-box').style.display = 'flex';
+    document.getElementById('key-badge').textContent = '✓ Saved';
+    document.getElementById('key-badge').style.color = 'var(--g1)';
+  } else {
+    document.getElementById('key-info-box').style.display = 'none';
+    document.getElementById('key-badge').textContent = '⚠ Missing';
+    document.getElementById('key-badge').style.color = 'var(--red)';
+  }
+
+  refreshCards();
+  document.getElementById('mbg').classList.add('on');
+}
+
+function closeS() { document.getElementById('mbg').classList.remove('on'); }
+function bgc(e) { if (e.target.id === 'mbg') closeS(); }
+
+function saveS() {
+  const newKey = document.getElementById('ki').value.trim();
+  if (newKey) {
+    saveKey(newKey);
+    cfg.apiKey = newKey;
+  }
+  cfg.botName = document.getElementById('bni').value.trim() || 'ResearchMind';
+  cfg.systemPrompt = document.getElementById('spi').value.trim();
+  document.getElementById('lsel').value = cfg.llm;
+  document.getElementById('key-status-txt').textContent = cfg.llm.toUpperCase() + ' Key ✓';
+  saveCfg();
+  persist();
+  closeS();
+  // Show success
+  const btn = document.querySelector('.msave');
+  btn.textContent = '✓ Saved!';
+  setTimeout(() => btn.textContent = 'Save Settings', 1500);
+}
+
+function setLLM(v) { cfg.llm = v; refreshCards(); saveCfg(); persist(); }
+function pickL(v) { cfg.llm = v; document.getElementById('lsel').value = v; refreshCards(); }
+function refreshCards() { document.querySelectorAll('.lcard').forEach(c => c.classList.toggle('on', c.dataset.llm === cfg.llm)); }
+
+// Auth enter key
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (document.getElementById('auth').style.display === 'none') return;
+  if (document.getElementById('lf').style.display !== 'none') doLogin(); else doSignup();
+});
+</script>
 </body>
 </html>
-
-
-
-
-
