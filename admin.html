@@ -1,313 +1,2815 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Royal Gaming Admin Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-<style>
-body{margin:0;font-family:'Poppins',sans-serif;background:#0a0f1e;color:white;}
-header{padding:20px;background:#111428;display:flex;justify-content:space-between;align-items:center;box-shadow:0 0 20px #00ffff;}
-header h1{font-family:'Orbitron',sans-serif;color:#00ffff;}
-button{padding:10px 15px;margin:5px;background:#00ffff;border:none;border-radius:8px;cursor:pointer;color:white;transition:0.3s;text-shadow:0 0 10px #00ffff;}
-button:hover{background:#ff00ff;box-shadow:0 0 15px #ff00ff,0 0 30px #00ffff;}
-.container{padding:20px;}
-input, select{padding:8px;margin:5px;border-radius:8px;border:none;background:#111428;color:white;width:100%;}
-table{width:100%;border-collapse:collapse;margin-top:20px;}
-table, th, td{border:1px solid #00ffff;}
-th, td{padding:10px;text-align:left;}
-th{background:#111428;color:#00ffff;}
-tr:hover{background:#1b1f33;}
-h2{color:#00ffff;font-family:'Orbitron',sans-serif;}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);display:none;justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(5px);}
-.modal-content{background:#1b1f33;padding:30px;border-radius:15px;width:90%;max-width:400px;text-align:center;box-shadow:0 0 20px #00ffff,0 0 40px #ff00ff;transform:scale(0);transition:0.3s;}
-.modal.show .modal-content{transform:scale(1);}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryptoX Royal — Ultimate Trading Simulator</title>
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chart.js)"></script>
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chartjs-chart-financial)"></script>
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/luxon@3.4.4)"></script>
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon)"></script>
+  <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap)" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --gold: #D4AF37;
+      --gold-light: #F4E4BA;
+      --gold-dark: #B8960C;
+      --royal-purple: #4A1C6E;
+      --royal-purple-light: #6B2D9E;
+      --bg-primary: #0A0A12;
+      --bg-secondary: #12121F;
+      --bg-tertiary: #1A1A2E;
+      --bg-card: #16162A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #A0A0B8;
+      --text-muted: #606080;
+      --green: #00D68F;
+      --green-dark: #00A86B;
+      --red: #FF3D71;
+      --red-dark: #D42F5C;
+      --blue: #3366FF;
+      --orange: #FFAA00;
+      --border: rgba(212, 175, 55, 0.2);
+      --border-strong: rgba(212, 175, 55, 0.4);
+      --shadow: 0 8px 32px rgba(0,0,0,0.4);
+      --shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.15);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Royal Background Pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(74, 28, 110, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(74, 28, 110, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold-dark);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--gold);
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: var(--shadow-gold);
+    }
+
+    .logo-text {
+      font-family: 'Cinzel', serif;
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 2px;
+    }
+
+    .logo-subtitle {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-top: -4px;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .header-stat {
+      text-align: center;
+    }
+
+    .header-stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .header-stat-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .header-stat-value.positive {
+      color: var(--green);
+    }
+
+    .header-stat-value.negative {
+      color: var(--red);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .level-badge {
+      background: linear-gradient(135deg, var(--royal-purple) 0%, var(--royal-purple-light) 100%);
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .level-badge span {
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .xp-bar {
+      width: 80px;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .xp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    /* Main Layout */
+    .main-container {
+      display: grid;
+      grid-template-columns: 280px 1fr 340px;
+      gap: 20px;
+      padding: 20px;
+      max-width: 1920px;
+      margin: 0 auto;
+      min-height: calc(100vh - 100px);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
+    }
+
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title::before {
+      content: '♦';
+      color: var(--gold);
+      font-size: 10px;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    /* Left Sidebar - Watchlist */
+    .left-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    }
+
+    .search-box::before {
+      content: '🔍';
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+    }
+
+    .watchlist {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 500px;
+    }
+
+    .coin-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      position: relative;
+    }
+
+    .coin-item:hover {
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .coin-item.active {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(74, 28, 110, 0.1) 100%);
+      border-left: 3px solid var(--gold);
+    }
+
+    .coin-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-right: 12px;
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+      border: 1px solid var(--border);
+    }
+
+    .coin-info {
+      flex: 1;
+    }
+
+    .coin-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .coin-symbol {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .coin-price-info {
+      text-align: right;
+    }
+
+    .coin-price {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .coin-change {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .coin-change.positive {
+      color: var(--green);
+      background: rgba(0, 214, 143, 0.1);
+    }
+
+    .coin-change.negative {
+      color: var(--red);
+      background: rgba(255, 61, 113, 0.1);
+    }
+
+    /* Main Content */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Chart Section */
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .selected-coin {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .selected-coin-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+      border: 2px solid var(--gold);
+      box-shadow: var(--shadow-gold);
+    }
+
+    .selected-coin-info h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .selected-coin-price {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .selected-coin-change {
+      font-size: 16px;
+      font-weight: 500;
+      margin-left: 12px;
+    }
+
+    .chart-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .timeframe-btn {
+      padding: 8px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .timeframe-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .timeframe-btn.active {
+      background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+      border-color: var(--gold);
+      color: var(--bg-primary);
+      font-weight: 600;
+    }
+
+    .chart-container {
+      height: 400px;
+      position: relative;
+    }
+
+    .chart-container canvas {
+      border-radius: 8px;
+    }
+
+    /* Market Stats */
+    .market-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Order Book */
+    .order-book-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .order-book-side h4 {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .order-book-side h4::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .order-book-side.bids h4::before {
+      background: var(--green);
+    }
+
+    .order-book-side.asks h4::before {
+      background: var(--red);
+    }
+
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 8px;
+      font-size: 12px;
+      position: relative;
+      border-radius: 4px;
+      margin-bottom: 2px;
+    }
+
+    .order-row .depth-bar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      border-radius: 4px;
+      z-index: 0;
+    }
+
+    .bids .order-row .depth-bar {
+      right: 0;
+      background: rgba(0, 214, 143, 0.15);
+    }
+
+    .asks .order-row .depth-bar {
+      left: 0;
+      background: rgba(255, 61, 113, 0.15);
+    }
+
+    .order-row span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .bids .order-row .price {
+      color: var(--green);
+    }
+
+    .asks .order-row .price {
+      color: var(--red);
+    }
+
+    /* Recent Trades */
+    .trades-list {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .trade-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .trade-row.buy .trade-price {
+      color: var(--green);
+    }
+
+    .trade-row.sell .trade-price {
+      color: var(--red);
+    }
+
+    .trade-time {
+      color: var(--text-muted);
+    }
+
+    /* Right Sidebar - Trading Panel */
+    .right-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Trading Panel */
+    .trade-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+    }
+
+    .trade-tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .trade-tab.buy.active {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 214, 143, 0.3);
+    }
+
+    .trade-tab.sell.active {
+      background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 61, 113, 0.3);
+    }
+
+    .order-type-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .order-type-btn {
+      flex: 1;
+      padding: 10px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .order-type-btn.active {
+      background: var(--bg-secondary);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    }
+
+    .input-with-suffix {
+      position: relative;
+    }
+
+    .input-suffix {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .quick-buttons {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .quick-btn {
+      flex: 1;
+      padding: 8px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .quick-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .leverage-slider {
+      margin-bottom: 16px;
+    }
+
+    .leverage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .leverage-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .leverage-warning {
+      font-size: 10px;
+      color: var(--red);
+      display: none;
+    }
+
+    .leverage-warning.show {
+      display: block;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      background: linear-gradient(to right, var(--green) 0%, var(--orange) 50%, var(--red) 100%);
+      border-radius: 3px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--gold);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .leverage-marks {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .leverage-mark {
+      font-size: 10px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .leverage-mark:hover {
+      color: var(--gold);
+    }
+
+    .risk-settings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .risk-input {
+      padding: 10px 12px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .risk-input label {
+      display: block;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .risk-input input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .risk-input input:focus {
+      outline: none;
+    }
+
+    .risk-input.stop-loss {
+      border-color: rgba(255, 61, 113, 0.3);
+    }
+
+    .risk-input.take-profit {
+      border-color: rgba(0, 214, 143, 0.3);
+    }
+
+    .order-summary {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .summary-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .summary-row .label {
+      color: var(--text-muted);
+    }
+
+    .summary-row .value {
+      font-weight: 500;
+    }
+
+    .summary-row.total {
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .summary-row.total .label,
+    .summary-row.total .value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .execute-btn {
+      width: 100%;
+      padding: 18px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .execute-btn.buy {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
+      color: white;
+      box-shadow: 0 4px 20px rgba(0, 214, 143, 0.3);
+    }
+
+    .execute-btn.sell {
+      background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 100%);
+      color: white;
+      box-shadow: 0 4px 20px rgba(255, 61, 113, 0.3);
+    }
+
+    .execute-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .execute-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Portfolio */
+    .portfolio-summary {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .portfolio-stat {
+      background: var(--bg-tertiary);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .portfolio-stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .portfolio-stat-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .holdings-list {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .holding-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      background: var(--bg-tertiary);
+      transition: all 0.3s ease;
+    }
+
+    .holding-item:hover {
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .holding-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-right: 12px;
+      background: var(--bg-secondary);
+    }
+
+    .holding-info {
+      flex: 1;
+    }
+
+    .holding-name {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .holding-amount {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .holding-value {
+      text-align: right;
+    }
+
+    .holding-total {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .holding-pnl {
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    /* News Panel */
+    .news-list {
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .news-item {
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background: var(--bg-tertiary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .news-item:hover {
+      background: rgba(212, 175, 55, 0.05);
+      border-left-color: var(--gold);
+    }
+
+    .news-item.positive {
+      border-left-color: var(--green);
+    }
+
+    .news-item.negative {
+      border-left-color: var(--red);
+    }
+
+    .news-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    .news-source {
+      font-size: 10px;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .news-time {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .news-title {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .news-impact {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .news-impact.positive {
+      background: rgba(0, 214, 143, 0.15);
+      color: var(--green);
+    }
+
+    .news-impact.negative {
+      background: rgba(255, 61, 113, 0.15);
+      color: var(--red);
+    }
+
+    /* Achievements Panel */
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .achievement {
+      padding: 14px;
+      border-radius: 10px;
+      background: var(--bg-tertiary);
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .achievement.unlocked {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+    }
+
+    .achievement.locked {
+      opacity: 0.5;
+      filter: grayscale(1);
+    }
+
+    .achievement-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .achievement-name {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .achievement-desc {
+      font-size: 9px;
+      color: var(--text-muted);
+    }
+
+    /* Mummy Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+      border: 2px solid var(--gold);
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 500px;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(212, 175, 55, 0.2);
+    }
+
+    .modal-overlay.show .modal {
+      transform: scale(1);
+    }
+
+    .modal-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: bounce 0.6s ease infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .modal-title.loss {
+      color: var(--red);
+    }
+
+    .modal-title.win {
+      color: var(--green);
+    }
+
+    .modal-message {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .modal-amount {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .modal-amount.loss {
+      color: var(--red);
+    }
+
+    .modal-amount.win {
+      color: var(--green);
+    }
+
+    .modal-btn {
+      padding: 14px 40px;
+      background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+      border: none;
+      border-radius: 12px;
+      color: var(--bg-primary);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .modal-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Toast Notifications */
+    .toast-container {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow);
+      animation: slideIn 0.3s ease;
+      min-width: 300px;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .toast.success {
+      border-left: 4px solid var(--green);
+    }
+
+    .toast.error {
+      border-left: 4px solid var(--red);
+    }
+
+    .toast.info {
+      border-left: 4px solid var(--blue);
+    }
+
+    .toast.achievement {
+      border-left: 4px solid var(--gold);
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, var(--bg-card) 100%);
+    }
+
+    .toast-icon {
+      font-size: 24px;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .toast-message {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Open Orders */
+    .open-orders {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .order-item {
+      background: var(--bg-tertiary);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .order-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .order-type-badge {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .order-type-badge.buy {
+      background: rgba(0, 214, 143, 0.15);
+      color: var(--green);
+    }
+
+    .order-type-badge.sell {
+      background: rgba(255, 61, 113, 0.15);
+      color: var(--red);
+    }
+
+    .order-cancel {
+      background: transparent;
+      border: 1px solid var(--red);
+      color: var(--red);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .order-cancel:hover {
+      background: var(--red);
+      color: white;
+    }
+
+    .order-details {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .order-details span {
+      color: var(--text-muted);
+    }
+
+    .order-details strong {
+      color: var(--text-primary);
+    }
+
+    /* Staking Section */
+    .staking-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .staking-icon {
+      font-size: 32px;
+    }
+
+    .staking-details {
+      flex: 1;
+    }
+
+    .staking-apy {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .staking-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .stake-btn {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+      border: none;
+      border-radius: 8px;
+      color: var(--bg-primary);
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .stake-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Footer Stats Bar */
+    .footer-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      z-index: 100;
+    }
+
+    .footer-stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .footer-stat-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: pulse 2s ease infinite;
+    }
+
+    .footer-stat-dot.live {
+      background: var(--green);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .footer-stat-label {
+      color: var(--text-muted);
+    }
+
+    .footer-stat-value {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .main-container {
+        grid-template-columns: 240px 1fr 300px;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .left-sidebar, .right-sidebar {
+        display: none;
+      }
+      
+      .market-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .price-flash {
+      animation: priceFlash 0.3s ease;
+    }
+
+    @keyframes priceFlash {
+      0% { background: transparent; }
+      50% { background: rgba(212, 175, 55, 0.3); }
+      100% { background: transparent; }
+    }
+  </style>
 </head>
 <body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">👑</div>
+      <div>
+        <div class="logo-text">CryptoX Royal</div>
+        <div class="logo-subtitle">Trade Like Royalty</div>
+      </div>
+    </div>
+    
+    <div class="header-stats">
+      <div class="header-stat">
+        <div class="header-stat-label">Portfolio Value</div>
+        <div class="header-stat-value" id="totalPortfolioValue">$100,000.00</div>
+      </div>
+      <div class="header-stat">
+        <div class="header-stat-label">Today's P&L</div>
+        <div class="header-stat-value positive" id="dailyPnL">+$0.00</div>
+      </div>
+      <div class="header-stat">
+        <div class="header-stat-label">All Time P&L</div>
+        <div class="header-stat-value positive" id="allTimePnL">+$0.00</div>
+      </div>
+    </div>
+    
+    <div class="user-info">
+      <div class="level-badge">
+        <span>Level <span id="userLevel">1</span></span>
+        <div class="xp-bar">
+          <div class="xp-fill" id="xpFill" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+  </header>
 
-<header>
-<h1>Royal Gaming Admin</h1>
-<button id="logoutBtn" onclick="logout()">Logout</button>
-</header>
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Left Sidebar - Watchlist -->
+    <div class="left-sidebar">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Watchlist</div>
+        </div>
+        <div class="card-body">
+          <div class="search-box">
+            <input type="text" placeholder="Search coins..." id="coinSearch">
+          </div>
+        </div>
+        <div class="watchlist" id="watchlist"></div>
+      </div>
 
-<div class="container">
-<h2>Add / Edit Game</h2>
-<input type="text" id="gameName" placeholder="Game Name">
-<input type="text" id="gameCategory" placeholder="Category">
-<input type="number" id="gamePrice" placeholder="Price (₹)">
-<input type="number" id="gameRating" placeholder="Rating (0-5)">
-<input type="file" id="gameImage">
-<input type="file" id="gameZip">
-<button onclick="addGame()">Add Game</button>
+      <!-- News Panel -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Market News</div>
+        </div>
+        <div class="card-body">
+          <div class="news-list" id="newsList"></div>
+        </div>
+      </div>
+    </div>
 
-<h2>Games List</h2>
-<table id="gamesTable">
-<thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Rating</th><th>Actions</th></tr></thead>
-<tbody></tbody>
-</table>
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Chart Card -->
+      <div class="card">
+        <div class="card-header chart-header">
+          <div class="selected-coin">
+            <div class="selected-coin-icon" id="selectedCoinIcon">₿</div>
+            <div class="selected-coin-info">
+              <h2 id="selectedCoinName">Bitcoin</h2>
+              <div>
+                <span class="selected-coin-price" id="selectedCoinPrice">$65,432.10</span>
+                <span class="selected-coin-change positive" id="selectedCoinChange">+2.45%</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-controls">
+            <button class="timeframe-btn" data-tf="1m">1m</button>
+            <button class="timeframe-btn" data-tf="5m">5m</button>
+            <button class="timeframe-btn active" data-tf="15m">15m</button>
+            <button class="timeframe-btn" data-tf="1h">1h</button>
+            <button class="timeframe-btn" data-tf="4h">4h</button>
+            <button class="timeframe-btn" data-tf="1d">1d</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+          </div>
+        </div>
+      </div>
 
-<h2>Purchases</h2>
-<table id="purchasesTable">
-<thead><tr><th>User</th><th>Game</th><th>Amount</th><th>Payment ID</th><th>Date</th></tr></thead>
-<tbody></tbody>
-</table>
+      <!-- Market Stats -->
+      <div class="market-stats">
+        <div class="stat-card">
+          <div class="stat-label">24h High</div>
+          <div class="stat-value" id="stat24hHigh">$67,890.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">24h Low</div>
+          <div class="stat-value" id="stat24hLow">$63,210.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">24h Volume</div>
+          <div class="stat-value" id="stat24hVolume">$32.5B</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Market Cap</div>
+          <div class="stat-value" id="statMarketCap">$1.28T</div>
+        </div>
+      </div>
 
-<h2>Donations</h2>
-<table id="donationsTable">
-<thead><tr><th>User</th><th>Amount</th><th>Payment ID</th><th>Date</th></tr></thead>
-<tbody></tbody>
-</table>
+      <!-- Order Book & Trades -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Order Book</div>
+        </div>
+        <div class="card-body">
+          <div class="order-book-container">
+            <div class="order-book-side bids">
+              <h4>Bids (Buy Orders)</h4>
+              <div id="bidsBook"></div>
+            </div>
+            <div class="order-book-side asks">
+              <h4>Asks (Sell Orders)</h4>
+              <div id="asksBook"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-</div>
+      <!-- Recent Trades -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Trades</div>
+        </div>
+        <div class="card-body">
+          <div class="trades-list" id="tradesList"></div>
+        </div>
+      </div>
+    </div>
 
-<script>
-// ================= FIREBASE =================
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Royal Gaming Admin Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-<style>
-body{margin:0;font-family:'Poppins',sans-serif;background:#0a0f1e;color:white;}
-header{padding:20px;background:#111428;display:flex;justify-content:space-between;align-items:center;box-shadow:0 0 20px #00ffff;}
-header h1{font-family:'Orbitron',sans-serif;color:#00ffff;}
-button{padding:10px 15px;margin:5px;background:#00ffff;border:none;border-radius:8px;cursor:pointer;color:white;transition:0.3s;text-shadow:0 0 10px #00ffff;}
-button:hover{background:#ff00ff;box-shadow:0 0 15px #ff00ff,0 0 30px #00ffff;}
-.container{padding:20px;}
-input, select{padding:8px;margin:5px;border-radius:8px;border:none;background:#111428;color:white;width:100%;}
-table{width:100%;border-collapse:collapse;margin-top:20px;}
-table, th, td{border:1px solid #00ffff;}
-th, td{padding:10px;text-align:left;}
-th{background:#111428;color:#00ffff;}
-tr:hover{background:#1b1f33;}
-h2{color:#00ffff;font-family:'Orbitron',sans-serif;}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);display:none;justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(5px);}
-.modal-content{background:#1b1f33;padding:30px;border-radius:15px;width:90%;max-width:400px;text-align:center;box-shadow:0 0 20px #00ffff,0 0 40px #ff00ff;transform:scale(0);transition:0.3s;}
-.modal.show .modal-content{transform:scale(1);}
-</style>
-</head>
-<body>
+    <!-- Right Sidebar - Trading Panel -->
+    <div class="right-sidebar">
+      <!-- Trading Panel -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Trade</div>
+        </div>
+        <div class="card-body">
+          <div class="trade-tabs">
+            <button class="trade-tab buy active" data-side="buy">Buy / Long</button>
+            <button class="trade-tab sell" data-side="sell">Sell / Short</button>
+          </div>
+          
+          <div style="margin-top: 16px;">
+            <div class="order-type-selector">
+              <button class="order-type-btn active" data-type="market">Market</button>
+              <button class="order-type-btn" data-type="limit">Limit</button>
+              <button class="order-type-btn" data-type="stop">Stop</button>
+              <button class="order-type-btn" data-type="oco">OCO</button>
+            </div>
 
-<header>
-<h1>Royal Gaming Admin</h1>
-<button id="logoutBtn" onclick="logout()">Logout</button>
-</header>
+            <div class="form-group" id="limitPriceGroup" style="display: none;">
+              <div class="form-label">
+                <span>Limit Price</span>
+              </div>
+              <div class="input-with-suffix">
+                <input type="number" class="form-input" id="limitPrice" placeholder="0.00">
+                <span class="input-suffix">USD</span>
+              </div>
+            </div>
 
-<div class="container">
-<h2>Add / Edit Game</h2>
-<input type="text" id="gameName" placeholder="Game Name">
-<input type="text" id="gameCategory" placeholder="Category">
-<input type="number" id="gamePrice" placeholder="Price (₹)">
-<input type="number" id="gameRating" placeholder="Rating (0-5)">
-<input type="file" id="gameImage">
-<input type="file" id="gameZip">
-<button onclick="addGame()">Add Game</button>
+            <div class="form-group" id="stopPriceGroup" style="display: none;">
+              <div class="form-label">
+                <span>Stop Price</span>
+              </div>
+              <div class="input-with-suffix">
+                <input type="number" class="form-input" id="stopPrice" placeholder="0.00">
+                <span class="input-suffix">USD</span>
+              </div>
+            </div>
 
-<h2>Games List</h2>
-<table id="gamesTable">
-<thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Rating</th><th>Actions</th></tr></thead>
-<tbody></tbody>
-</table>
+            <div class="form-group">
+              <div class="form-label">
+                <span>Amount</span>
+                <span id="availableBalance">Available: $100,000.00</span>
+              </div>
+              <div class="input-with-suffix">
+                <input type="number" class="form-input" id="tradeAmount" placeholder="0.00">
+                <span class="input-suffix">USD</span>
+              </div>
+            </div>
 
-<h2>Purchases</h2>
-<table id="purchasesTable">
-<thead><tr><th>User</th><th>Game</th><th>Amount</th><th>Payment ID</th><th>Date</th></tr></thead>
-<tbody></tbody>
-</table>
+            <div class="quick-buttons">
+              <button class="quick-btn" data-percent="25">25%</button>
+              <button class="quick-btn" data-percent="50">50%</button>
+              <button class="quick-btn" data-percent="75">75%</button>
+              <button class="quick-btn" data-percent="100">MAX</button>
+            </div>
 
-<h2>Donations</h2>
-<table id="donationsTable">
-<thead><tr><th>User</th><th>Amount</th><th>Payment ID</th><th>Date</th></tr></thead>
-<tbody></tbody>
-</table>
+            <div class="leverage-slider">
+              <div class="leverage-header">
+                <span class="form-label" style="margin: 0;">Leverage</span>
+                <span class="leverage-value" id="leverageValue">1x</span>
+              </div>
+              <input type="range" min="1" max="100" value="1" id="leverageSlider">
+              <div class="leverage-marks">
+                <span class="leverage-mark" data-lev="1">1x</span>
+                <span class="leverage-mark" data-lev="5">5x</span>
+                <span class="leverage-mark" data-lev="10">10x</span>
+                <span class="leverage-mark" data-lev="25">25x</span>
+                <span class="leverage-mark" data-lev="50">50x</span>
+                <span class="leverage-mark" data-lev="100">100x</span>
+              </div>
+              <div class="leverage-warning" id="leverageWarning">⚠️ High leverage increases liquidation risk!</div>
+            </div>
 
-</div>
+            <div class="risk-settings">
+              <div class="risk-input stop-loss">
+                <label>Stop Loss %</label>
+                <input type="number" id="stopLossPercent" placeholder="5" value="5">
+              </div>
+              <div class="risk-input take-profit">
+                <label>Take Profit %</label>
+                <input type="number" id="takeProfitPercent" placeholder="10" value="10">
+              </div>
+            </div>
 
-<script>
-// ================= FIREBASE =================
-const firebaseConfig = {
- apiKey: "AIzaSyC7TY1t33rqX-4_db-TRO18R3I3VTh_49k",
-    authDomain: "bakshithecoder.firebaseapp.com",
-    projectId: "bakshithecoder",
-    storageBucket: "bakshithecoder.firebasestorage.app",
-    messagingSenderId: "623883848787",
-    appId: "1:623883848787:web:85f8a49a85b74f2fa2caa6",
-    measurementId: "G-60E8F2VH45"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
+            <div class="order-summary">
+              <div class="summary-row">
+                <span class="label">Order Type</span>
+                <span class="value" id="summaryOrderType">Market Buy</span>
+              </div>
+              <div class="summary-row">
+                <span class="label">Position Size</span>
+                <span class="value" id="summaryPositionSize">0.00 BTC</span>
+              </div>
+              <div class="summary-row">
+                <span class="label">Leverage</span>
+                <span class="value" id="summaryLeverage">1x</span>
+              </div>
+              <div class="summary-row">
+                <span class="label">Liquidation Price</span>
+                <span class="value" id="summaryLiquidation">-</span>
+              </div>
+              <div class="summary-row total">
+                <span class="label">Total Value</span>
+                <span class="value" id="summaryTotal">$0.00</span>
+              </div>
+            </div>
 
-// ================= ADMIN AUTH =================
-// Replace this with your admin email
-const ADMIN_EMAIL = "admin@yourstore.com";
+            <button class="execute-btn buy" id="executeBtn">Place Buy Order</button>
+          </div>
+        </div>
+      </div>
 
-auth.onAuthStateChanged(user=>{
-    if(user){
-        if(user.email!==ADMIN_EMAIL){ alert("Not admin"); auth.signOut(); }
-    } else {
-        const email = prompt("Enter admin email:");
-        const pass = prompt("Enter admin password:");
-        auth.signInWithEmailAndPassword(email, pass)
-        .catch(err=>alert(err.message));
+      <!-- Open Orders -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Open Orders</div>
+        </div>
+        <div class="card-body">
+          <div class="open-orders" id="openOrders">
+            <p style="text-align: center; color: var(--text-muted); font-size: 13px;">No open orders</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Portfolio</div>
+        </div>
+        <div class="card-body">
+          <div class="portfolio-summary">
+            <div class="portfolio-stat">
+              <div class="portfolio-stat-label">Holdings Value</div>
+              <div class="portfolio-stat-value" id="holdingsValue">$0.00</div>
+            </div>
+            <div class="portfolio-stat">
+              <div class="portfolio-stat-label">Cash Balance</div>
+              <div class="portfolio-stat-value" id="cashBalance">$100,000.00</div>
+            </div>
+          </div>
+          <div class="holdings-list" id="holdingsList">
+            <p style="text-align: center; color: var(--text-muted); font-size: 13px;">No holdings yet</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staking -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Staking Rewards</div>
+        </div>
+        <div class="card-body">
+          <div class="staking-info">
+            <div class="staking-icon">💎</div>
+            <div class="staking-details">
+              <div class="staking-apy" id="stakingApy">5.2% APY</div>
+              <div class="staking-label">Earn passive rewards</div>
+            </div>
+            <button class="stake-btn" id="stakeBtn">Stake</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Achievements -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Achievements</div>
+        </div>
+        <div class="card-body">
+          <div class="achievements-grid" id="achievementsGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bar -->
+  <div class="footer-bar">
+    <div class="footer-stat">
+      <div class="footer-stat-dot live"></div>
+      <span class="footer-stat-label">Status:</span>
+      <span class="footer-stat-value">Live</span>
+    </div>
+    <div class="footer-stat">
+      <span class="footer-stat-label">BTC Dominance:</span>
+      <span class="footer-stat-value" id="btcDominance">52.3%</span>
+    </div>
+    <div class="footer-stat">
+      <span class="footer-stat-label">Total Trades:</span>
+      <span class="footer-stat-value" id="totalTrades">0</span>
+    </div>
+    <div class="footer-stat">
+      <span class="footer-stat-label">Win Rate:</span>
+      <span class="footer-stat-value" id="winRate">0%</span>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Mummy Modal -->
+  <div class="modal-overlay" id="mummyModal">
+    <div class="modal">
+      <div class="modal-icon" id="modalIcon">👵</div>
+      <h3 class="modal-title" id="modalTitle">Mummy Says...</h3>
+      <p class="modal-message" id="modalMessage"></p>
+      <div class="modal-amount" id="modalAmount"></div>
+      <button class="modal-btn" onclick="closeModal()">Okay Mummy 😔</button>
+    </div>
+  </div>
+
+  <script>
+    // ==================== DATA ====================
+    const COINS = [
+      { id: 'btc', name: 'Bitcoin', symbol: 'BTC', icon: '₿', price: 65432.10, change: 2.45, volume: 32500000000, marketCap: 1280000000000, apy: 4.2 },
+      { id: 'eth', name: 'Ethereum', symbol: 'ETH', icon: 'Ξ', price: 3456.78, change: 1.82, volume: 18200000000, marketCap: 415000000000, apy: 5.8 },
+      { id: 'bnb', name: 'BNB', symbol: 'BNB', icon: '🔶', price: 567.89, change: -0.94, volume: 1800000000, marketCap: 87000000000, apy: 6.5 },
+      { id: 'sol', name: 'Solana', symbol: 'SOL', icon: '◎', price: 142.35, change: 4.21, volume: 3200000000, marketCap: 62000000000, apy: 7.2 },
+      { id: 'doge', name: 'Dogecoin', symbol: 'DOGE', icon: '🐕', price: 0.1234, change: -2.15, volume: 890000000, marketCap: 17500000000, apy: 3.5 },
+      { id: 'ada', name: 'Cardano', symbol: 'ADA', icon: '₳', price: 0.4567, change: 0.78, volume: 420000000, marketCap: 16000000000, apy: 4.8 },
+      { id: 'link', name: 'Chainlink', symbol: 'LINK', icon: '⬡', price: 14.89, change: 3.45, volume: 680000000, marketCap: 8700000000, apy: 5.1 },
+      { id: 'avax', name: 'Avalanche', symbol: 'AVAX', icon: '🔺', price: 35.67, change: -1.23, volume: 520000000, marketCap: 13200000000, apy: 8.4 },
+      { id: 'dot', name: 'Polkadot', symbol: 'DOT', icon: '●', price: 7.23, change: 1.56, volume: 310000000, marketCap: 9400000000, apy: 12.0 },
+      { id: 'matic', name: 'Polygon', symbol: 'MATIC', icon: '⬣', price: 0.5678, change: 2.89, volume: 280000000, marketCap: 5200000000, apy: 4.5 }
+    ];
+
+    const MUMMY_ROASTS = [
+      "Beta, FD mein lagao kaha tha! Ab roti-sabzi khao ghar pe! 🍞",
+      "Crypto-shrypto chhodo, padhai karo! Sharma ji ka beta toh IAS ban gaya! 📚",
+      "Maine bola tha sona kharido, mujhe kya pata tha tu Bitcoin lega! 🤦‍♀️",
+      "Hamare zamane mein piggy bank hota tha, aaj kal ke bacche! 🐷",
+      "Beta, ye paise hote toh tera shaadi ka function ho jata! 💒",
+      "Tere papa ko pata chala toh chappal se marega! 🩴",
+      "Aloo 80 rupay kilo ho gaya hai, aur tu crypto mein paisa duba raha! 🥔",
+      "Beti ki shaadi ke liye bachaaye the, tune game mein uda diye! 😭",
+      "Ab chai-sutta band, nimbu paani start karo! 🍋",
+      "Sharma aunty ka beta toh real estate mein paisa double kar raha! 🏠",
+      "Main kehti thi government job kar, sun li hoti toh aaj pension milti! 👨‍💼",
+      "Raat ko mobile band karke soya kar, sapne mein Elon Musk nahi ayega! 📱",
+      "Beta, ghar wapas aa ja, dal-roti milegi free mein! 🏠",
+      "Hamare zamane mein ek rupay mein kilo tamatar aata tha! 🍅",
+      "Tu crypto trader kam, pagal zyada lag raha hai! 🤪",
+      "Mujhe bhi invest karne de, main toh sirf loss karungi - teri tarah! 💸"
+    ];
+
+    const MUMMY_WINS = [
+      "Wah beta! Maa ka ashirwad kaam kar gaya! Ab thoda ghar bhi bhej de! 🙏✨",
+      "Dekha! Meri duaon ka asar hai! Ab shaadi ke liye baccha le! 💍",
+      "Chal theek hai, aaj paneer bana dungi celebrate karne ke liye! 🧀",
+      "Beta, tera dimag tez hai - mujh par gaya hai! 🧠",
+      "Ab bas! Profit book kar aur paisa safe rakh! 🔒",
+      "Arey wah! Sharma ji ko bata doon? 😏"
+    ];
+
+    const NEWS_ITEMS = [
+      { source: 'CryptoNews', title: 'Bitcoin ETF sees record inflows as institutional interest surges', impact: 5, type: 'positive', coins: ['btc'] },
+      { source: 'Bloomberg', title: 'SEC delays decision on Ethereum spot ETF application', impact: -3, type: 'negative', coins: ['eth'] },
+      { source: 'Reuters', title: 'Major bank announces crypto custody services for clients', impact: 4, type: 'positive', coins: ['btc', 'eth'] },
+      { source: 'CoinDesk', title: 'Solana network experiences brief congestion amid meme coin frenzy', impact: -2, type: 'negative', coins: ['sol'] },
+      { source: 'TheBlock', title: 'DeFi TVL reaches new all-time high across major protocols', impact: 3, type: 'positive', coins: ['eth', 'avax', 'sol'] },
+      { source: 'Decrypt', title: 'Chainlink expands oracle services to 5 new blockchains', impact: 4, type: 'positive', coins: ['link'] },
+      { source: 'CryptoSlate', title: 'Cardano founder hints at major announcement next week', impact: 2, type: 'positive', coins: ['ada'] },
+      { source: 'WSJ', title: 'Regulatory uncertainty looms over crypto markets globally', impact: -4, type: 'negative', coins: ['btc', 'eth', 'bnb'] },
+      { source: 'Forbes', title: 'Polygon partners with major gaming studio for Web3 initiative', impact: 3, type: 'positive', coins: ['matic'] },
+      { source: 'TechCrunch', title: 'Elon Musk tweets about Dogecoin, again', impact: 6, type: 'positive', coins: ['doge'] }
+    ];
+
+    const ACHIEVEMENTS = [
+      { id: 'first_trade', name: 'First Steps', desc: 'Complete your first trade', icon: '🎯', unlocked: false },
+      { id: 'diversified', name: 'Diversified', desc: 'Hold 5 different coins', icon: '📊', unlocked: false },
+      { id: 'whale', name: 'Baby Whale', desc: 'Make a $10,000+ trade', icon: '🐋', unlocked: false },
+      { id: 'diamond_hands', name: 'Diamond Hands', desc: 'Hold through 20% drawdown', icon: '💎', unlocked: false },
+      { id: 'profit_10k', name: 'Five Figure Club', desc: 'Earn $10,000 in profits', icon: '💰', unlocked: false },
+      { id: 'leverage_master', name: 'Degen Mode', desc: 'Use 50x+ leverage', icon: '🎰', unlocked: false },
+      { id: 'win_streak', name: 'Hot Streak', desc: '5 profitable trades in a row', icon: '🔥', unlocked: false },
+      { id: 'news_trader', name: 'News Trader', desc: 'Trade on 3 news events', icon: '📰', unlocked: false }
+    ];
+
+    // ==================== STATE ====================
+    let state = {
+      selectedCoin: COINS[0],
+      cash: 100000,
+      holdings: {},
+      openOrders: [],
+      tradeHistory: [],
+      totalTrades: 0,
+      wins: 0,
+      losses: 0,
+      allTimePnL: 0,
+      dailyPnL: 0,
+      xp: 0,
+      level: 1,
+      achievements: [...ACHIEVEMENTS],
+      tradeSide: 'buy',
+      orderType: 'market',
+      leverage: 1,
+      timeframe: '15m',
+      priceHistory: {},
+      winStreak: 0,
+      newsTradeCount: 0
+    };
+
+    // ==================== CHART ====================
+    let priceChart = null;
+
+    function initChart() {
+      const ctx = document.getElementById('priceChart').getContext('2d');
+      
+      priceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Price',
+            data: [],
+            borderColor: '#D4AF37',
+            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 0,
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: '#D4AF37',
+            pointHoverBorderColor: '#fff',
+            pointHoverBorderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            intersect: false,
+            mode: 'index'
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(22, 22, 42, 0.95)',
+              titleColor: '#D4AF37',
+              bodyColor: '#fff',
+              borderColor: 'rgba(212, 175, 55, 0.3)',
+              borderWidth: 1,
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                title: (items) => {
+                  return items[0].label;
+                },
+                label: (context) => {
+                  return `Price: $${context.parsed.y.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)',
+                drawBorder: false
+              },
+              ticks: {
+                color: '#606080',
+                maxTicksLimit: 8
+              }
+            },
+            y: {
+              position: 'right',
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)',
+                drawBorder: false
+              },
+              ticks: {
+                color: '#606080',
+                callback: (value) => '$' + value.toLocaleString()
+              }
+            }
+          }
+        }
+      });
+
+      generatePriceHistory();
     }
-});
 
-function logout(){auth.signOut().then(()=>{alert("Logged out");location.reload();});}
-
-// ================= GAMES =================
-function addGame(){
-    const name = document.getElementById('gameName').value;
-    const category = document.getElementById('gameCategory').value;
-    const price = document.getElementById('gamePrice').value;
-    const rating = document.getElementById('gameRating').value;
-    const imageFile = document.getElementById('gameImage').files[0];
-    const zipFile = document.getElementById('gameZip').files[0];
-
-    if(!name || !category || !price || !rating || !imageFile || !zipFile){ alert("Fill all fields"); return; }
-
-    // Upload Image
-    const imgRef = storage.ref('gameImages/'+imageFile.name);
-    imgRef.put(imageFile).then(snapshot=>snapshot.ref.getDownloadURL().then(imgURL=>{
-        // Upload ZIP
-        const zipRef = storage.ref('gameZips/'+zipFile.name);
-        zipRef.put(zipFile).then(snap=>snap.ref.getDownloadURL().then(zipURL=>{
-            db.collection('games').add({name, category, price:parseFloat(price), rating:parseFloat(rating), image:imgURL, file:zipURL})
-            .then(()=>{ alert("Game added!"); loadGames(); });
-        }));
-    }));
-}
-
-function loadGames(){
-    db.collection('games').get().then(snap=>{
-        const tbody=document.querySelector('#gamesTable tbody'); tbody.innerHTML="";
-        snap.forEach(doc=>{
-            const data = doc.data();
-            tbody.innerHTML+=`<tr>
-            <td>${data.name}</td><td>${data.category}</td><td>${data.price}</td><td>${data.rating}</td>
-            <td><button onclick="deleteGame('${doc.id}')">Delete</button></td></tr>`;
+    function generatePriceHistory() {
+      const coin = state.selectedCoin;
+      const points = 50;
+      const now = Date.now();
+      const interval = getIntervalMs();
+      
+      if (!state.priceHistory[coin.id]) {
+        state.priceHistory[coin.id] = [];
+      }
+      
+      state.priceHistory[coin.id] = [];
+      let price = coin.price * (0.95 + Math.random() * 0.1);
+      
+      for (let i = points; i >= 0; i--) {
+        const volatility = coin.price > 1000 ? 0.002 : 0.005;
+        price = price * (1 + (Math.random() - 0.5) * volatility);
+        state.priceHistory[coin.id].push({
+          time: now - (i * interval),
+          price: price
         });
-    });
-}
-function deleteGame(id){ db.collection('games').doc(id).delete().then(()=>loadGames()); }
-loadGames();
-
-// ================= PURCHASES =================
-function loadPurchases(){
-    db.collection('purchases').get().then(snap=>{
-        const tbody=document.querySelector('#purchasesTable tbody'); tbody.innerHTML="";
-        snap.forEach(doc=>{
-            const data = doc.data();
-            tbody.innerHTML+=`<tr><td>${data.user}</td><td>${data.game}</td><td>${data.amount || 0}</td><td>${data.paymentId}</td><td>${new Date(data.date.seconds*1000).toLocaleString()}</td></tr>`;
-        });
-    });
-}
-loadPurchases();
-
-// ================= DONATIONS =================
-function loadDonations(){
-    db.collection('donations').get().then(snap=>{
-        const tbody=document.querySelector('#donationsTable tbody'); tbody.innerHTML="";
-        snap.forEach(doc=>{
-            const data = doc.data();
-            tbody.innerHTML+=`<tr><td>${data.user}</td><td>${data.amount}</td><td>${data.paymentId}</td><td>${new Date(data.date.seconds*1000).toLocaleString()}</td></tr>`;
-        });
-    });
-}
-loadDonations();
-</script>
-</body>
-</html>
-
-// ================= ADMIN AUTH =================
-// Replace this with your admin email
-const ADMIN_EMAIL = "shashwatbakshi80@outlook.com";
-
-auth.onAuthStateChanged(user=>{
-    if(user){
-        if(user.email!==shashwatbakshi80@outlook.com){ alert("Not admin"); auth.signOut(); }
-    } else {
-        const email = prompt("shashwatbakshi80@outlook.com");
-        const pass = prompt("admin@123");
-        auth.signInWithEmailAndPassword(email, pass)
-        .catch(err=>alert(err.message));
+      }
+      
+      updateChartData();
     }
-});
 
-function logout(){auth.signOut().then(()=>{alert("Logged out");location.reload();});}
+    function getIntervalMs() {
+      const intervals = {
+        '1m': 60000,
+        '5m': 300000,
+        '15m': 900000,
+        '1h': 3600000,
+        '4h': 14400000,
+        '1d': 86400000
+      };
+      return intervals[state.timeframe] || 900000;
+    }
 
-// ================= GAMES =================
-function addGame(){
-    const name = document.getElementById('gameName').value;
-    const category = document.getElementById('gameCategory').value;
-    const price = document.getElementById('gamePrice').value;
-    const rating = document.getElementById('gameRating').value;
-    const imageFile = document.getElementById('gameImage').files[0];
-    const zipFile = document.getElementById('gameZip').files[0];
+    function updateChartData() {
+      const coin = state.selectedCoin;
+      const history = state.priceHistory[coin.id] || [];
+      
+      const labels = history.map(h => {
+        const date = new Date(h.time);
+        if (state.timeframe === '1d') {
+          return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      });
+      
+      const prices = history.map(h => h.price);
+      
+      priceChart.data.labels = labels;
+      priceChart.data.datasets[0].data = prices;
+      
+      // Update line color based on trend
+      const firstPrice = prices[0] || 0;
+      const lastPrice = prices[prices.length - 1] || 0;
+      const isPositive = lastPrice >= firstPrice;
+      
+      priceChart.data.datasets[0].borderColor = isPositive ? '#00D68F' : '#FF3D71';
+      priceChart.data.datasets[0].backgroundColor = isPositive ? 'rgba(0, 214, 143, 0.1)' : 'rgba(255, 61, 113, 0.1)';
+      
+      priceChart.update('none');
+    }
 
-    if(!name || !category || !price || !rating || !imageFile || !zipFile){ alert("Fill all fields"); return; }
+    // ==================== UI UPDATES ====================
+    function renderWatchlist() {
+      const container = document.getElementById('watchlist');
+      const search = document.getElementById('coinSearch').value.toLowerCase();
+      
+      const filtered = COINS.filter(c => 
+        c.name.toLowerCase().includes(search) || 
+        c.symbol.toLowerCase().includes(search)
+      );
+      
+      container.innerHTML = filtered.map(coin => `
+        <div class="coin-item ${coin.id === state.selectedCoin.id ? 'active' : ''}" 
+             onclick="selectCoin('${coin.id}')">
+          <div class="coin-icon">${coin.icon}</div>
+          <div class="coin-info">
+            <div class="coin-name">${coin.name}</div>
+            <div class="coin-symbol">${coin.symbol}</div>
+          </div>
+          <div class="coin-price-info">
+            <div class="coin-price">$${formatPrice(coin.price)}</div>
+            <div class="coin-change ${coin.change >= 0 ? 'positive' : 'negative'}">
+              ${coin.change >= 0 ? '+' : ''}${coin.change.toFixed(2)}%
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
 
-    // Upload Image
-    const imgRef = storage.ref('gameImages/'+imageFile.name);
-    imgRef.put(imageFile).then(snapshot=>snapshot.ref.getDownloadURL().then(imgURL=>{
-        // Upload ZIP
-        const zipRef = storage.ref('gameZips/'+zipFile.name);
-        zipRef.put(zipFile).then(snap=>snap.ref.getDownloadURL().then(zipURL=>{
-            db.collection('games').add({name, category, price:parseFloat(price), rating:parseFloat(rating), image:imgURL, file:zipURL})
-            .then(()=>{ alert("Game added!"); loadGames(); });
-        }));
-    }));
-}
+    function selectCoin(coinId) {
+      state.selectedCoin = COINS.find(c => c.id === coinId);
+      renderWatchlist();
+      updateSelectedCoinDisplay();
+      generatePriceHistory();
+      updateOrderBook();
+      updateRecentTrades();
+      updateStakingApy();
+    }
 
-function loadGames(){
-    db.collection('games').get().then(snap=>{
-        const tbody=document.querySelector('#gamesTable tbody'); tbody.innerHTML="";
-        snap.forEach(doc=>{
-            const data = doc.data();
-            tbody.innerHTML+=`<tr>
-            <td>${data.name}</td><td>${data.category}</td><td>${data.price}</td><td>${data.rating}</td>
-            <td><button onclick="deleteGame('${doc.id}')">Delete</button></td></tr>`;
+    function updateSelectedCoinDisplay() {
+      const coin = state.selectedCoin;
+      document.getElementById('selectedCoinIcon').textContent = coin.icon;
+      document.getElementById('selectedCoinName').textContent = coin.name;
+      document.getElementById('selectedCoinPrice').textContent = '$' + formatPrice(coin.price);
+      
+      const changeEl = document.getElementById('selectedCoinChange');
+      changeEl.textContent = (coin.change >= 0 ? '+' : '') + coin.change.toFixed(2) + '%';
+      changeEl.className = 'selected-coin-change ' + (coin.change >= 0 ? 'positive' : 'negative');
+      
+      // Update stats
+      document.getElementById('stat24hHigh').textContent = '$' + formatPrice(coin.price * 1.035);
+      document.getElementById('stat24hLow').textContent = '$' + formatPrice(coin.price * 0.965);
+      document.getElementById('stat24hVolume').textContent = formatLargeNumber(coin.volume);
+      document.getElementById('statMarketCap').textContent = formatLargeNumber(coin.marketCap);
+    }
+
+    function updateOrderBook() {
+      const coin = state.selectedCoin;
+      const bidsContainer = document.getElementById('bidsBook');
+      const asksContainer = document.getElementById('asksBook');
+      
+      let bids = [];
+      let asks = [];
+      
+      for (let i = 0; i < 8; i++) {
+        const bidPrice = coin.price * (1 - 0.001 * (i + 1));
+        const askPrice = coin.price * (1 + 0.001 * (i + 1));
+        const bidAmount = Math.random() * 10 + 1;
+        const askAmount = Math.random() * 10 + 1;
+        
+        bids.push({ price: bidPrice, amount: bidAmount, total: bidPrice * bidAmount });
+        asks.push({ price: askPrice, amount: askAmount, total: askPrice * askAmount });
+      }
+      
+      const maxBidTotal = Math.max(...bids.map(b => b.total));
+      const maxAskTotal = Math.max(...asks.map(a => a.total));
+      
+      bidsContainer.innerHTML = bids.map(bid => `
+        <div class="order-row">
+          <div class="depth-bar" style="width: ${(bid.total / maxBidTotal * 100)}%"></div>
+          <span class="price">${formatPrice(bid.price)}</span>
+          <span>${bid.amount.toFixed(4)}</span>
+        </div>
+      `).join('');
+      
+      asksContainer.innerHTML = asks.map(ask => `
+        <div class="order-row">
+          <div class="depth-bar" style="width: ${(ask.total / maxAskTotal * 100)}%"></div>
+          <span class="price">${formatPrice(ask.price)}</span>
+          <span>${ask.amount.toFixed(4)}</span>
+        </div>
+      `).join('');
+    }
+
+    function updateRecentTrades() {
+      const coin = state.selectedCoin;
+      const container = document.getElementById('tradesList');
+      
+      let trades = [];
+      for (let i = 0; i < 15; i++) {
+        const isBuy = Math.random() > 0.5;
+        const price = coin.price * (1 + (Math.random() - 0.5) * 0.002);
+        const amount = Math.random() * 5 + 0.1;
+        const time = new Date(Date.now() - i * 30000);
+        
+        trades.push({
+          type: isBuy ? 'buy' : 'sell',
+          price: price,
+          amount: amount,
+          time: time
         });
-    });
-}
-function deleteGame(id){ db.collection('games').doc(id).delete().then(()=>loadGames()); }
-loadGames();
+      }
+      
+      container.innerHTML = trades.map(trade => `
+        <div class="trade-row ${trade.type}">
+          <span class="trade-price">${formatPrice(trade.price)}</span>
+          <span>${trade.amount.toFixed(4)}</span>
+          <span class="trade-time">${trade.time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+        </div>
+      `).join('');
+    }
 
-// ================= PURCHASES =================
-function loadPurchases(){
-    db.collection('purchases').get().then(snap=>{
-        const tbody=document.querySelector('#purchasesTable tbody'); tbody.innerHTML="";
-        snap.forEach(doc=>{
-            const data = doc.data();
-            tbody.innerHTML+=`<tr><td>${data.user}</td><td>${data.game}</td><td>${data.amount || 0}</td><td>${data.paymentId}</td><td>${new Date(data.date.seconds*1000).toLocaleString()}</td></tr>`;
-        });
-    });
-}
-loadPurchases();
+    function renderNews() {
+      const container = document.getElementById('newsList');
+      
+      container.innerHTML = NEWS_ITEMS.map((news, index) => `
+        <div class="news-item ${news.type}" onclick="applyNewsImpact(${index})">
+          <div class="news-header">
+            <span class="news-source">${news.source}</span>
+            <span class="news-time">${Math.floor(Math.random() * 60)}m ago</span>
+          </div>
+          <div class="news-title">${news.title}</div>
+          <span class="news-impact ${news.type}">${news.type === 'positive' ? '📈 Bullish' : '📉 Bearish'}</span>
+        </div>
+      `).join('');
+    }
 
-// ================= DONATIONS =================
-function loadDonations(){
-    db.collection('donations').get().then(snap=>{
-        const tbody=document.querySelector('#donationsTable tbody'); tbody.innerHTML="";
-        snap.forEach(doc=>{
-            const data = doc.data();
-            tbody.innerHTML+=`<tr><td>${data.user}</td><td>${data.amount}</td><td>${data.paymentId}</td><td>${new Date(data.date.seconds*1000).toLocaleString()}</td></tr>`;
+    function applyNewsImpact(index) {
+      const news = NEWS_ITEMS[index];
+      const impactPercent = news.impact / 100;
+      
+      news.coins.forEach(coinId => {
+        const coin = COINS.find(c => c.id === coinId);
+        if (coin) {
+          coin.price *= (1 + impactPercent);
+          coin.change += news.impact * 0.5;
+        }
+      });
+      
+      state.newsTradeCount++;
+      checkAchievement('news_trader');
+      
+      showToast(
+        news.type === 'positive' ? 'success' : 'error',
+        'Market Impact',
+        `${news.coins.map(c => c.toUpperCase()).join(', ')} moved ${news.impact > 0 ? '+' : ''}${news.impact}%`
+      );
+      
+      renderWatchlist();
+      updateSelectedCoinDisplay();
+      generatePriceHistory();
+    }
+
+    function renderAchievements() {
+      const container = document.getElementById('achievementsGrid');
+      
+      container.innerHTML = state.achievements.map(ach => `
+        <div class="achievement ${ach.unlocked ? 'unlocked' : 'locked'}">
+          <div class="achievement-icon">${ach.icon}</div>
+          <div class="achievement-name">${ach.name}</div>
+          <div class="achievement-desc">${ach.desc}</div>
+        </div>
+      `).join('');
+    }
+
+    function updatePortfolio() {
+      const holdingsValue = Object.entries(state.holdings).reduce((total, [coinId, holding]) => {
+        const coin = COINS.find(c => c.id === coinId);
+        return total + (coin ? holding.amount * coin.price : 0);
+      }, 0);
+      
+      const totalValue = state.cash + holdingsValue;
+      
+      document.getElementById('totalPortfolioValue').textContent = '$' + formatPrice(totalValue);
+      document.getElementById('cashBalance').textContent = '$' + formatPrice(state.cash);
+      document.getElementById('holdingsValue').textContent = '$' + formatPrice(holdingsValue);
+      document.getElementById('availableBalance').textContent = 'Available: $' + formatPrice(state.cash);
+      
+      const dailyEl = document.getElementById('dailyPnL');
+      dailyEl.textContent = (state.dailyPnL >= 0 ? '+' : '') + '$' + formatPrice(Math.abs(state.dailyPnL));
+      dailyEl.className = 'header-stat-value ' + (state.dailyPnL >= 0 ? 'positive' : 'negative');
+      
+      const allTimeEl = document.getElementById('allTimePnL');
+      allTimeEl.textContent = (state.allTimePnL >= 0 ? '+' : '') + '$' + formatPrice(Math.abs(state.allTimePnL));
+      allTimeEl.className = 'header-stat-value ' + (state.allTimePnL >= 0 ? 'positive' : 'negative');
+      
+      // Render holdings
+      const container = document.getElementById('holdingsList');
+      const entries = Object.entries(state.holdings);
+      
+      if (entries.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 13px;">No holdings yet</p>';
+        return;
+      }
+      
+      container.innerHTML = entries.map(([coinId, holding]) => {
+        const coin = COINS.find(c => c.id === coinId);
+        if (!coin) return '';
+        
+        const currentValue = holding.amount * coin.price;
+        const pnl = currentValue - holding.cost;
+        const pnlPercent = ((currentValue / holding.cost) - 1) * 100;
+        
+        return `
+          <div class="holding-item">
+            <div class="holding-icon">${coin.icon}</div>
+            <div class="holding-info">
+              <div class="holding-name">${coin.symbol}</div>
+              <div class="holding-amount">${holding.amount.toFixed(6)} @ $${formatPrice(holding.avgPrice)}</div>
+            </div>
+            <div class="holding-value">
+              <div class="holding-total">$${formatPrice(currentValue)}</div>
+              <div class="holding-pnl" style="color: ${pnl >= 0 ? 'var(--green)' : 'var(--red)'}">
+                ${pnl >= 0 ? '+' : ''}$${formatPrice(Math.abs(pnl))} (${pnlPercent >= 0 ? '+' : ''}${pnlPercent.toFixed(2)}%)
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateOpenOrders() {
+      const container = document.getElementById('openOrders');
+      
+      if (state.openOrders.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 13px;">No open orders</p>';
+        return;
+      }
+      
+      container.innerHTML = state.openOrders.map((order, index) => `
+        <div class="order-item">
+          <div class="order-item-header">
+            <span class="order-type-badge ${order.side}">${order.side.toUpperCase()} ${order.type.toUpperCase()}</span>
+            <button class="order-cancel" onclick="cancelOrder(${index})">Cancel</button>
+          </div>
+          <div class="order-details">
+            <span>${order.coinSymbol}</span>
+            <span>Price: <strong>$${formatPrice(order.price)}</strong></span>
+            <span>Amount: <strong>$${formatPrice(order.amount)}</strong></span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateStakingApy() {
+      const coin = state.selectedCoin;
+      document.getElementById('stakingApy').textContent = coin.apy.toFixed(1) + '% APY';
+    }
+
+    function updateStats() {
+      document.getElementById('totalTrades').textContent = state.totalTrades;
+      document.getElementById('winRate').textContent = state.totalTrades > 0 
+        ? Math.round((state.wins / state.totalTrades) * 100) + '%' 
+        : '0%';
+      document.getElementById('btcDominance').textContent = (50 + Math.random() * 5).toFixed(1) + '%';
+    }
+
+    function updateLevelDisplay() {
+      document.getElementById('userLevel').textContent = state.level;
+      const xpForLevel = state.level * 100;
+      const xpProgress = (state.xp % 100) / 100 * 100;
+      document.getElementById('xpFill').style.width = xpProgress + '%';
+    }
+
+    function updateOrderSummary() {
+      const amount = parseFloat(document.getElementById('tradeAmount').value) || 0;
+      const coin = state.selectedCoin;
+      const leverage = state.leverage;
+      
+      const positionSize = (amount * leverage) / coin.price;
+      const totalValue = amount * leverage;
+      
+      document.getElementById('summaryOrderType').textContent = 
+        state.orderType.charAt(0).toUpperCase() + state.orderType.slice(1) + ' ' + 
+        (state.tradeSide === 'buy' ? 'Buy' : 'Sell');
+      document.getElementById('summaryPositionSize').textContent = positionSize.toFixed(6) + ' ' + coin.symbol;
+      document.getElementById('summaryLeverage').textContent = leverage + 'x';
+      document.getElementById('summaryTotal').textContent = '$' + formatPrice(totalValue);
+      
+      // Calculate liquidation price
+      if (leverage > 1) {
+        const liqPercent = 100 / leverage;
+        const liqPrice = state.tradeSide === 'buy' 
+          ? coin.price * (1 - liqPercent / 100)
+          : coin.price * (1 + liqPercent / 100);
+        document.getElementById('summaryLiquidation').textContent = '$' + formatPrice(liqPrice);
+      } else {
+        document.getElementById('summaryLiquidation').textContent = '-';
+      }
+    }
+
+    // ==================== TRADING ====================
+    function executeTrade() {
+      const amount = parseFloat(document.getElementById('tradeAmount').value) || 0;
+      
+      if (amount <= 0) {
+        showToast('error', 'Invalid Amount', 'Please enter a valid trade amount');
+        return;
+      }
+      
+      if (amount > state.cash) {
+        showToast('error', 'Insufficient Funds', 'You don\'t have enough balance');
+        return;
+      }
+      
+      const coin = state.selectedCoin;
+      const leverage = state.leverage;
+      const side = state.tradeSide;
+      const orderType = state.orderType;
+      
+      // Check for limit/stop orders
+      if (orderType === 'limit' || orderType === 'stop' || orderType === 'oco') {
+        const price = orderType === 'stop' 
+          ? parseFloat(document.getElementById('stopPrice').value)
+          : parseFloat(document.getElementById('limitPrice').value);
+        
+        if (!price || price <= 0) {
+          showToast('error', 'Invalid Price', 'Please enter a valid price');
+          return;
+        }
+        
+        state.openOrders.push({
+          type: orderType,
+          side: side,
+          coinId: coin.id,
+          coinSymbol: coin.symbol,
+          price: price,
+          amount: amount,
+          leverage: leverage,
+          timestamp: Date.now()
         });
-    });
-}
-loadDonations();
-</script>
+        
+        showToast('info', 'Order Placed', `${orderType.toUpperCase()} order placed for ${coin.symbol}`);
+        updateOpenOrders();
+        document.getElementById('tradeAmount').value = '';
+        return;
+      }
+      
+      // Market order execution
+      const positionSize = (amount * leverage) / coin.price;
+      const stopLossPercent = parseFloat(document.getElementById('stopLossPercent').value) || 5;
+      const takeProfitPercent = parseFloat(document.getElementById('takeProfitPercent').value) || 10;
+      
+      // Simulate price movement
+      const volatility = leverage > 10 ? 0.08 : 0.05;
+      const priceChange = (Math.random() - 0.5) * volatility * leverage;
+      const newPrice = coin.price * (1 + priceChange);
+      
+      let pnl = 0;
+      if (side === 'buy') {
+        pnl = positionSize * (newPrice - coin.price);
+      } else {
+        pnl = positionSize * (coin.price - newPrice);
+      }
+      
+      // Apply stop loss / take profit
+      const pnlPercent = (pnl / amount) * 100;
+      
+      if (pnlPercent <= -stopLossPercent) {
+        pnl = -amount * (stopLossPercent / 100);
+      } else if (pnlPercent >= takeProfitPercent) {
+        pnl = amount * (takeProfitPercent / 100);
+      }
+      
+      // Update state
+      state.cash -= amount;
+      state.cash += amount + pnl;
+      state.totalTrades++;
+      state.allTimePnL += pnl;
+      state.dailyPnL += pnl;
+      
+      if (pnl > 0) {
+        state.wins++;
+        state.winStreak++;
+      } else {
+        state.losses++;
+        state.winStreak = 0;
+      }
+      
+      // Add XP
+      addXP(Math.abs(Math.round(pnl / 10)));
+      
+      // Update holdings for spot buy
+      if (side === 'buy' && leverage === 1) {
+        if (!state.holdings[coin.id]) {
+          state.holdings[coin.id] = { amount: 0, cost: 0, avgPrice: 0 };
+        }
+        state.holdings[coin.id].amount += positionSize;
+        state.holdings[coin.id].cost += amount;
+        state.holdings[coin.id].avgPrice = state.holdings[coin.id].cost / state.holdings[coin.id].amount;
+      }
+      
+      // Check achievements
+      checkAchievement('first_trade');
+      if (amount >= 10000) checkAchievement('whale');
+      if (leverage >= 50) checkAchievement('leverage_master');
+      if (state.winStreak >= 5) checkAchievement('win_streak');
+      if (state.allTimePnL >= 10000) checkAchievement('profit_10k');
+      if (Object.keys(state.holdings).length >= 5) checkAchievement('diversified');
+      
+      // Show result
+      if (pnl < 0) {
+        showMummyRoast(pnl);
+      } else {
+        showMummyWin(pnl);
+      }
+      
+      // Update UI
+      updatePortfolio();
+      updateStats();
+      document.getElementById('tradeAmount').value = '';
+      
+      // Update coin price
+      coin.price = newPrice;
+      coin.change += priceChange * 10;
+      renderWatchlist();
+      updateSelectedCoinDisplay();
+      generatePriceHistory();
+    }
+
+    function cancelOrder(index) {
+      state.openOrders.splice(index, 1);
+      updateOpenOrders();
+      showToast('info', 'Order Cancelled', 'Your order has been cancelled');
+    }
+
+    // ==================== MUMMY MODAL ====================
+    function showMummyRoast(loss) {
+      const roast = MUMMY_ROASTS[Math.floor(Math.random() * MUMMY_ROASTS.length)];
+      
+      document.getElementById('modalIcon').textContent = '👵';
+      document.getElementById('modalTitle').textContent = 'Mummy Says...';
+      document.getElementById('modalTitle').className = 'modal-title loss';
+      document.getElementById('modalMessage').textContent = roast;
+      document.getElementById('modalAmount').textContent = '-$' + formatPrice(Math.abs(loss));
+      document.getElementById('modalAmount').className = 'modal-amount loss';
+      document.querySelector('.modal-btn').textContent = 'Sorry Mummy 😔';
+      
+      document.getElementById('mummyModal').classList.add('show');
+    }
+
+    function showMummyWin(profit) {
+      const message = MUMMY_WINS[Math.floor(Math.random() * MUMMY_WINS.length)];
+      
+      document.getElementById('modalIcon').textContent = '🎉';
+      document.getElementById('modalTitle').textContent = 'Mummy is Proud!';
+      document.getElementById('modalTitle').className = 'modal-title win';
+      document.getElementById('modalMessage').textContent = message;
+      document.getElementById('modalAmount').textContent = '+$' + formatPrice(profit);
+      document.getElementById('modalAmount').className = 'modal-amount win';
+      document.querySelector('.modal-btn').textContent = 'Thanks Mummy! 🙏';
+      
+      document.getElementById('mummyModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('mummyModal').classList.remove('show');
+    }
+
+    // ==================== ACHIEVEMENTS & XP ====================
+    function addXP(amount) {
+      state.xp += amount;
+      
+      const xpForLevel = state.level * 100;
+      if (state.xp >= xpForLevel) {
+        state.level++;
+        state.xp = state.xp - xpForLevel;
+        showToast('achievement', '🎉 Level Up!', `You reached Level ${state.level}!`);
+      }
+      
+      updateLevelDisplay();
+    }
+
+    function checkAchievement(id) {
+      const achievement = state.achievements.find(a => a.id === id);
+      
+      if (achievement && !achievement.unlocked) {
+        // Additional conditions
+        if (id === 'news_trader' && state.newsTradeCount < 3) return;
+        if (id === 'win_streak' && state.winStreak < 5) return;
+        
+        achievement.unlocked = true;
+        showToast('achievement', '🏆 Achievement Unlocked!', achievement.name + ': ' + achievement.desc);
+        addXP(50);
+        renderAchievements();
+      }
+    }
+
+    // ==================== TOASTS ====================
+    function showToast(type, title, message) {
+      const container = document.getElementById('toastContainer');
+      
+      const icons = {
+        success: '✅',
+        error: '❌',
+        info: 'ℹ️',
+        achievement: '🏆'
+      };
+      
+      const toast = document.createElement('div');
+      toast.className = 'toast ' + type;
+      toast.innerHTML = `
+        <div class="toast-icon">${icons[type]}</div>
+        <div class="toast-content">
+          <div class="toast-title">${title}</div>
+          <div class="toast-message">${message}</div>
+        </div>
+      `;
+      
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideIn 0.3s ease reverse';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    // ==================== HELPERS ====================
+    function formatPrice(price) {
+      if (price >= 1000) return price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (price >= 1) return price.toFixed(2);
+      return price.toFixed(4);
+    }
+
+    function formatLargeNumber(num) {
+      if (num >= 1e12) return '$' + (num / 1e12).toFixed(2) + 'T';
+      if (num >= 1e9) return '$' + (num / 1e9).toFixed(2) + 'B';
+      if (num >= 1e6) return '$' + (num / 1e6).toFixed(2) + 'M';
+      return '$' + num.toLocaleString();
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    function initEventListeners() {
+      // Coin search
+      document.getElementById('coinSearch').addEventListener('input', renderWatchlist);
+      
+      // Trade tabs
+      document.querySelectorAll('.trade-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('.trade-tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          state.tradeSide = this.dataset.side;
+          
+          const btn = document.getElementById('executeBtn');
+          btn.className = 'execute-btn ' + state.tradeSide;
+          btn.textContent = 'Place ' + (state.tradeSide === 'buy' ? 'Buy' : 'Sell') + ' Order';
+          
+          updateOrderSummary();
+        });
+      });
+      
+      // Order type buttons
+      document.querySelectorAll('.order-type-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.order-type-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          state.orderType = this.dataset.type;
+          
+          document.getElementById('limitPriceGroup').style.display = 
+            ['limit', 'oco'].includes(state.orderType) ? 'block' : 'none';
+          document.getElementById('stopPriceGroup').style.display = 
+            ['stop', 'oco'].includes(state.orderType) ? 'block' : 'none';
+          
+          updateOrderSummary();
+        });
+      });
+      
+      // Quick buttons
+      document.querySelectorAll('.quick-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const percent = parseInt(this.dataset.percent);
+          const amount = state.cash * (percent / 100);
+          document.getElementById('tradeAmount').value = amount.toFixed(2);
+          updateOrderSummary();
+        });
+      });
+      
+      // Leverage slider
+      document.getElementById('leverageSlider').addEventListener('input', function() {
+        state.leverage = parseInt(this.value);
+        document.getElementById('leverageValue').textContent = state.leverage + 'x';
+        document.getElementById('leverageWarning').classList.toggle('show', state.leverage >= 25);
+        updateOrderSummary();
+      });
+      
+      // Leverage marks
+      document.querySelectorAll('.leverage-mark').forEach(mark => {
+        mark.addEventListener('click', function() {
+          const lev = parseInt(this.dataset.lev);
+          document.getElementById('leverageSlider').value = lev;
+          state.leverage = lev;
+          document.getElementById('leverageValue').textContent = lev + 'x';
+          document.getElementById('leverageWarning').classList.toggle('show', lev >= 25);
+          updateOrderSummary();
+        });
+      });
+      
+      // Trade amount input
+      document.getElementById('tradeAmount').addEventListener('input', updateOrderSummary);
+      
+      // Execute button
+      document.getElementById('executeBtn').addEventListener('click', executeTrade);
+      
+      // Timeframe buttons
+      document.querySelectorAll('.timeframe-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          state.timeframe = this.dataset.tf;
+          generatePriceHistory();
+        });
+      });
+      
+      // Stake button
+      document.getElementById('stakeBtn').addEventListener('click', function() {
+        showToast('success', 'Staking Active', `Earning ${state.selectedCoin.apy}% APY on ${state.selectedCoin.symbol}`);
+      });
+      
+      // Modal close on backdrop click
+      document.getElementById('mummyModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+      });
+    }
+
+    // ==================== PRICE SIMULATION ====================
+    function simulatePrices() {
+      COINS.forEach(coin => {
+        const volatility = coin.price > 1000 ? 0.0005 : 0.001;
+        const change = (Math.random() - 0.5) * volatility;
+        coin.price *= (1 + change);
+        coin.change += change * 100;
+        
+        // Keep change bounded
+        if (Math.abs(coin.change) > 15) {
+          coin.change *= 0.9;
+        }
+      });
+      
+      renderWatchlist();
+      updateSelectedCoinDisplay();
+      
+      // Add new price point
+      const coin = state.selectedCoin;
+      if (state.priceHistory[coin.id]) {
+        state.priceHistory[coin.id].push({
+          time: Date.now(),
+          price: coin.price
+        });
+        
+        // Keep history bounded
+        if (state.priceHistory[coin.id].length > 100) {
+          state.priceHistory[coin.id].shift();
+        }
+        
+        updateChartData();
+      }
+      
+      // Check pending orders
+      checkPendingOrders();
+    }
+
+    function checkPendingOrders() {
+      state.openOrders = state.openOrders.filter(order => {
+        const coin = COINS.find(c => c.id === order.coinId);
+        if (!coin) return false;
+        
+        let triggered = false;
+        
+        if (order.type === 'limit') {
+          if (order.side === 'buy' && coin.price <= order.price) triggered = true;
+          if (order.side === 'sell' && coin.price >= order.price) triggered = true;
+        }
+        
+        if (order.type === 'stop') {
+          if (order.side === 'buy' && coin.price >= order.price) triggered = true;
+          if (order.side === 'sell' && coin.price <= order.price) triggered = true;
+        }
+        
+        if (triggered) {
+          showToast('success', 'Order Filled', `${order.type.toUpperCase()} ${order.side} order for ${order.coinSymbol} filled at $${formatPrice(order.price)}`);
+          
+          // Execute the order
+          state.totalTrades++;
+          addXP(10);
+          updateStats();
+        }
+        
+        return !triggered;
+      });
+      
+      updateOpenOrders();
+    }
+
+    // ==================== INIT ====================
+    function init() {
+      initChart();
+      initEventListeners();
+      renderWatchlist();
+      updateSelectedCoinDisplay();
+      renderNews();
+      renderAchievements();
+      updatePortfolio();
+      updateOpenOrders();
+      updateOrderBook();
+      updateRecentTrades();
+      updateStakingApy();
+      updateStats();
+      updateLevelDisplay();
+      updateOrderSummary();
+      
+      // Start price simulation
+      setInterval(simulatePrices, 2000);
+      setInterval(updateOrderBook, 5000);
+      setInterval(updateRecentTrades, 3000);
+    }
+
+    // Start the app
+    init();
+  </script>
 </body>
 </html>
